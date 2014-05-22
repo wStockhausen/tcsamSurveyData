@@ -1,0 +1,199 @@
+#'
+#'@title Function to calculate cpue by survey haul from station, haul and individual crab info.
+#'
+#'@param tbl_hauls   :
+#'@param tbl_indivs  :
+#'@param in.csv      : name of csv file w/ individual crab info to read (if tbl_indivs is not given)
+#'@param  bySex=FALSE,
+#'@param  byShellCondition=FALSE,
+#'@param  byMaturity=FALSE,
+#'@param  bySize=FALSE,
+#'@param  binSizes=FALSE,
+#'@param  cutpts=seq(from=25,to=185,by=5),
+#'@param  truncate.low=TRUE,
+#'@param  truncate.high=FALSE,
+#'@param export  : boolean flag to write results to csv file
+#'@param out.csv : output file name
+#'@param out.dir : output file directory 
+#'
+#'@return data frame of cpue (numbers and weight) by year, stratum, station, haul and other factor levels
+#'
+#'@details \cr
+#'\cr Note: if tbl and in.csv are both NULL, the user is prompted to enter a csv file with biomass by stratum info. \cr
+#'Notes: \cr
+#'   CPUE in numbers is in no/(sq. nm.)
+#'   CPUE in weight  is in mt/(sq. nm.)
+#'
+#' @import sqldf
+#' @importFrom tcltk tk_choose.files
+#' @importFrom wtsUtilities addFilter
+#'      
+#'@export
+#'
+calcCPUE.ByHaul<-function(tbl_hauls,
+                          tbl_indivs=NULL,
+                          in.csv=NULL,
+                          bySex=FALSE,
+                          byShellCondition=FALSE,
+                          byMaturity=FALSE,
+                          bySize=FALSE,
+                          binSizes=FALSE,
+                          cutpts=seq(from=25,to=185,by=5),
+                          truncate.low=TRUE,
+                          truncate.high=FALSE,
+                          export=FALSE,
+                          out.csv='cpue.ByHaul.csv',
+                          out.dir=NULL){
+    if (is.null(tbl_indivs)){
+        cat("Reading csv file for individual crab info.\n",sep='')
+        if (is.null(in.csv)) {
+            Filters<-addFilter("csv","csv files (*.csv)","*.csv");
+            in.csv<-tk_choose.files(caption=paste("Select csv file with individual crab info"),
+                                    multi=FALSE,filters=matrix(Filters[c("csv"),],1,2,byrow=TRUE));
+            if (is.null(in.csv)|(in.csv=='')) return(NULL);
+        }
+        if (is.null(out.dir)) {
+            out.dir<-dirname(file.path('.'));
+            if (!is.null(in.csv)) {out.dir<-dirname(file.path(in.csv));}
+        }
+        cat("Output directory will be '",out.dir,"'\n",sep='');
+        
+        tbl_indivs<-read.csv(in.csv,stringsAsFactors=FALSE);
+        cat("Done reading input csv file.\n")
+    }
+    
+    #make some shorter variables
+    bySx<-bySex;bySC<-byShellCondition;byMt<-byMaturity;bySz<-bySize;
+    
+    #define a function for substituting query conditions
+    subst.cond<-function(qry,byCond,col,lbl){
+        if (byCond) {
+            qry<-gsub(paste("&&",lbl,sep=''),paste(col,",",sep=''),qry);    
+            qry<-gsub(paste("&&by",lbl,sep=''),paste(",",col,sep=''),qry);    
+        } else {
+            qry<-gsub(paste("&&",lbl,sep=''),'',qry);    
+            qry<-gsub(paste("&&by",lbl,sep=''),'',qry);    
+        }
+        return(qry);
+    }
+    
+    if (binSizes){
+      #expand cutpts to truncate or not
+      nCtPts<-length(cutpts);
+      ctpts.tmp<-cutpts;
+      if (!truncate.low ) ctpts.tmp[1]<-0;
+      if (!truncate.high) ctpts.tmp[nCtPts]<-Inf;
+      #apply cutpts to sizes
+      cuts<-cut(tbl_indivs$SIZE,ctpts.tmp,right=FALSE,labels=FALSE)
+      tbl_indivs$SIZE<-cutpts[cuts];
+    }
+    
+    #Calculate and sum cpue by year, haul, station and factor levels (e.g., sex, shell condition)
+    #over individuals for hauls w/ nonzero catches.
+    #Note that this DOES NOT average over hauls, as calcCPUE.ByStation(...) does.
+    qry<-"select
+            HAULJOIN,
+            &&Sx&&SC&&Mt&&Sz
+            sum(numIndivs) as numIndivs,
+            sum(SAMPLING_FACTOR) as expNUM,
+            sum(SAMPLING_FACTOR*CALCULATED_WEIGHT) as expWGT
+          from
+            tbl_indivs
+          group by
+            HAULJOIN&&bySx&&bySC&&byMt&&bySz
+          order by
+            HAULJOIN&&bySx&&bySC&&byMt&&bySz;";
+    qry<-subst.cond(qry,bySx,"SEX",            'Sx');
+    qry<-subst.cond(qry,bySC,"SHELL_CONDITION",'SC');
+    qry<-subst.cond(qry,byMt,"MATURITY",       'Mt');
+    qry<-subst.cond(qry,bySz,"SIZE",           'Sz');
+    cat("\nquery is:\n",qry,"\n");
+    tbl_sums<-sqldf(qry);
+    
+    #create table of years,strata,stations,hauls x uniq "factors" (e.g., sex, shell condition,...)
+    if (bySx|bySC|byMt|bySz){
+        cols<-paste(subst.cond("&&col",bySx,"SEX","col"),
+                    subst.cond("&&col",bySC,"SHELL_CONDITION","col"),
+                    subst.cond("&&col",byMt,"MATURITY","col"),
+                    subst.cond("&&col",bySz,"SIZE","col"),
+                    sep='');
+        qry<-"select distinct
+                &&cols
+                1 as DUMMY
+              from
+                tbl_sums as s
+              order by
+                &&colsDUMMY;";
+        qry<-gsub("&&cols",cols,qry);
+        cat("\nquery is:\n",qry,"\n");
+        tbl_ufctrs<-sqldf(qry);
+        
+        qry<-"select *
+              from 
+                (select YEAR,STRATUM,GIS_STATION,HAULJOIN,AREA_SWEPT_VARIABLE from tbl_hauls),
+                tbl_ufctrs;"
+        tbl_uhfs<-sqldf(qry);
+    } else {
+        qry<-"select YEAR,STRATUM,GIS_STATION,HAULJOIN,AREA_SWEPT_VARIABLE from tbl_hauls;"
+        tbl_uhfs<-sqldf(qry);
+    }
+    
+    #expand sums to hauls w/ zero catches and calculate cpue
+    cols<-'u.YEAR,
+           u.STRATUM,
+           u.GIS_STATION,
+           u.HAULJOIN';
+    if (bySx) cols<-paste(cols,',u.SEX',            sep='')
+    if (bySC) cols<-paste(cols,',u.SHELL_CONDITION',sep='')
+    if (byMt) cols<-paste(cols,',u.MATURITY',       sep='')
+    if (bySz) cols<-paste(cols,',u.SIZE',           sep='')
+    qry<-"select
+            &&cols,
+            numIndivs,
+            expNum/AREA_SWEPT_VARIABLE as numCPUE,
+            expWgt/AREA_SWEPT_VARIABLE as wgtCPUE
+          from
+            tbl_uhfs as u left join
+            tbl_sums as s
+          on
+            u.HAULJOIN=s.HAULJOIN
+            &&bySx
+            &&bySC
+            &&byMt
+            &&bySz
+          order by
+            &&cols;";
+    if (!bySx){qry<-gsub('&&bySx','',qry);} else {qry<-gsub('&&bySx','and u.SEX            =s.SEX',qry);}
+    if (!bySC){qry<-gsub('&&bySC','',qry);} else {qry<-gsub('&&bySC','and u.SHELL_CONDITION=s.SHELL_CONDITION',qry);}
+    if (!byMt){qry<-gsub('&&byMt','',qry);} else {qry<-gsub('&&byMt','and u.MATURITY       =s.MATURITY',qry);}
+    if (!bySz){qry<-gsub('&&bySz','',qry);} else {qry<-gsub('&&bySz','and u.SIZE           =s.SIZE',qry);}
+    qry<-gsub("&&cols",cols,qry)
+    cat("\nquery is:\n",qry,"\n");
+    tbl_cpue<-sqldf(qry);
+    
+    #replace NA's with 0's. Have to convert to numeric as NA in first row converts remainder to character.
+    idx<-which(is.na(tbl_cpue$numIndivs));
+    tbl_cpue$numIndivs<-as.numeric(tbl_cpue$numIndivs); tbl_cpue$numIndivs[idx]<-0; 
+    tbl_cpue$numCPUE  <-as.numeric(tbl_cpue$numCPUE);   tbl_cpue$numCPUE[idx]  <-0; 
+    tbl_cpue$wgtCPUE  <-as.numeric(tbl_cpue$wgtCPUE);   tbl_cpue$wgtCPUE[idx]  <-0; 
+    
+    tbl_cpue$wgtCPUE<-tbl_cpue$wgtCPUE/1.0E6;#convert cpue in weight from g/(sq nm) to t/(sq nm)
+    
+    if (export){
+        if (!is.null(out.dir)){
+            cat("\nTesting existence of folder '",out.dir,"'\n",sep='')
+            if (!file.exists(out.dir)){
+                cat("Creating folder '",out.dir,"' for output.\n",sep='')
+                dir.create(out.dir);
+            } else {
+                cat("Using folder '",out.dir,"' for output.\n",sep='')
+            }
+            out.csv<-file.path(out.dir,out.csv)
+        }
+        write.csv(tbl_cpue,out.csv,na='',row.names=FALSE);
+    }
+    
+    return(tbl_cpue)
+}
+
+#tbl.cpue<-calcCPUE.ByHaul(tbl.hauls,tbl.BTC.MAA.indivs,export=FALSE)
