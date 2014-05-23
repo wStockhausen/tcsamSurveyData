@@ -5,13 +5,15 @@
 #'@description This function provides a list of dataframes suitable for converting 
 #'from survey codes to assessment codes and descriptions
 #'
-#'@return a list with the following elements:
-#'sex : table to convert between survey and assessment sex codes
-#'shell_condition : table to convert between survey and assessment shell condition codes
-#'clutch_size : table to convert between survey and assessment clutch size codes
-#'strata.BTC : 
-#'strata.orig.BTC : 
-#'strata.EW166 : 
+#'@return a list with the following elements: \cr
+#'\itemize{
+#'\item sex             : table to convert between survey and assessment sex codes
+#'\item shell_condition : table to convert between survey and assessment shell condition codes
+#'\item clutch_size     : table to convert between survey and assessment clutch size codes
+#'\item strata.BTC      : revised strata for Bairdi Tanner crab
+#'\item strata.orig.BTC : original strata for Bairdi Tanner crab
+#'\item strata.EW166    : E/W 166W strata
+#'}
 #'
 #'@export
 #'

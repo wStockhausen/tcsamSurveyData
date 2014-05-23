@@ -1,17 +1,17 @@
 \name{calcBiomass.EBS}
 \alias{calcBiomass.EBS}
-\title{Function to calculate total biomass from a biomass-by-stratum data frame or csv file.}
+\title{Calculate total abundance and biomass from a by-stratum data frame or csv file.}
 \usage{
 calcBiomass.EBS(tbl = NULL, in.csv = NULL, export = TRUE,
-  out.csv = "SurveyBiomass.csv", out.dir = NULL)
+  out.csv = "SurveyBiomass.csv", out.dir = NULL, verbosity = 1)
 }
 \arguments{
-  \item{tbl}{: data frame with biomass by stratum info from
-  call to calcBiomass.ByStratum(...) or
+  \item{tbl}{: data frame with abundance/biomass by stratum
+  info from call to calcBiomass.ByStratum(...) or
   calcBiomass.EW166(...)}
 
-  \item{in.csv}{: csv file with biomass by stratum info
-  from call to calcBiomass.ByStratum(...) or
+  \item{in.csv}{: csv file with abundance/biomass by
+  stratum info from call to calcBiomass.ByStratum(...) or
   calcBiomass.EW166(...)}
 
   \item{export}{: boolean flag to write results to csv
@@ -20,17 +20,35 @@ calcBiomass.EBS(tbl = NULL, in.csv = NULL, export = TRUE,
   \item{out.csv}{: output file name}
 
   \item{out.dir}{: output file directory}
+
+  \item{verbosity}{: integer flag indicating level of
+  printed output (0=off,1=minimal,2=full)}
 }
 \value{
-data frame w/ abundance, biomass by year
+data frame with columns: \cr \itemize{ \item YEAR = survey
+year \item other user-defined factors (e.g., sex,
+shell_condition) \item numStations = number of stations
+included \item numHauls = number of hauls included \item
+numIndivs = number of individuals sampled \item TOT_AREA =
+total area included in strata \item totABUNDANCE = total
+abundance estimate \item stdABUNDANCE = std deviation of
+total abundance estimate \item cvABUNDANCE = cv of total
+abundance estimate \item totBIOMASS = estimate of total
+biomass estimate \item stdBIOMASS = std deviation of total
+biomass estimate \item cvBIOMASS = cv of total biomass
+estimate }
 }
 \description{
-
+This function calculates total abundance and biomass from a
+by-stratum data frame or csv file.
 }
 \details{
-\cr Note: if tbl and in.csv are both NULL, the user is
-prompted to enter a csv file with biomass by stratum info
-\cr Notes: \cr Abundance is in 10^6 individuals \cr Biomass
-is in 10^3 mt \cr
+
+
+If \code{tbl} and \code{in.csv} are both NULL, the user is
+prompted to enter a csv file with biomass by stratum info.
+\cr \cr Notes: \cr \itemize{ \item Area is in square
+nautical miles \item Abundance is in 10^6 individuals \item
+Biomass is in 10^3 mt }
 }
 

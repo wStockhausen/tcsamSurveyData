@@ -2,7 +2,13 @@
 \alias{testTrawlSurveyCalcs}
 \title{Test trawl survey functions.}
 \usage{
-testTrawlSurveyCalcs()
+testTrawlSurveyCalcs(out.dir = NULL, verbosity = 1)
+}
+\arguments{
+  \item{out.dir}{= directory for output files}
+
+  \item{verbosity}{= integer flag indicating level of
+  printed output (0=off,1=minimal,2=full)}
 }
 \description{
 This function provides a test of the trawl survey
@@ -11,13 +17,16 @@ functions.
 \details{
 
 
-This function prompts the user for survey data and strata
-files. It then calls selectStrata.TrawlSurvey for Tanner
-crab (Bairdi tanner crab, 'BTC') twice, once for the
-revised strata, once for the original strata. It then
-selects hauls and individuals, calculates biomass time
-series, cpue by haul and station, and biomass time series
-by stratum, E/W 166W, and total and outputs all (or most)
-to csv files in the user's working directory.
+This function prompts the user for input survey data and
+strata files. It then calls
+\code{\link{selectStrata.TrawlSurvey}} for Tanner crab
+(Bairdi tanner crab, 'BTC') twice, once for the revised
+strata, once for the original strata. It then selects hauls
+and individuals, calculates biomass time series, cpue by
+haul and station, and biomass time series by stratum, E/W
+166W, and total and outputs all (or most) to csv files in
+the directory specified by \code{out.dir}.\cr \cr Note: if
+\code{out.dir=NULL}, the directory associated with the
+trawl survey data file will be used as \code{out.dir}
 }
 

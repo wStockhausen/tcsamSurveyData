@@ -1,9 +1,10 @@
 \name{calcBiomass.ByStratum}
 \alias{calcBiomass.ByStratum}
-\title{Function to calculate cpue by survey station from trawl survey files.}
+\title{Calculate average cpue, numbers and biomass by stratum from AFSC trawl survey data.}
 \usage{
 calcBiomass.ByStratum(tbl_strata, tbl_cpue = NULL, in.csv = NULL,
-  export = FALSE, out.csv = "BiomassByStratum.csv", out.dir = NULL)
+  export = FALSE, out.csv = "BiomassByStratum.csv", out.dir = NULL,
+  verbosity = 1)
 }
 \arguments{
   \item{tbl_strata}{: data frame w/ stations/strata from
@@ -21,19 +22,36 @@ calcBiomass.ByStratum(tbl_strata, tbl_cpue = NULL, in.csv = NULL,
   \item{out.csv}{: output file name}
 
   \item{out.dir}{: output file directory}
+
+  \item{verbosity}{: integer flag indicating level of
+  printed output (0=off,1=minimal,2=full)}
 }
 \value{
 data frame with average cpue (numbers, weight), abundance
-and biomass by stratum.
+and biomass by stratum. Columns are \cr \itemize{ \item
+YEAR \item STRATUM \item STRATUM_AREA \item other
+user-defined factors \item numStations \item numHauls \item
+numIndivs \item avgNUMCPUE \item seNUMCPUE \item avgWGTCPUE
+\item seWGTCPUE \item totABUNDANCE = estimated abundance
+(by stratum) \item stdABUNDANCE = std deviation of
+estimated abundance (by stratum) \item cvABUNDANCE = cv of
+estimated abundance (by stratum) \item totBIOMASS =
+estimated biomass (by stratum) \item stdBIOMASS = std
+deviation of estimated biomass (by stratum) \item cvBIOMASS
+= cv of estimated biomass (by stratum) }
 }
 \description{
-Note: if tbl_cpue and in.csv are both NULL, the user is
-prompted to enter a csv file with cpue info. \cr Other
-notes: \cr CPUE in numbers is in no/(sq. nm.) \cr CPUE in
-weight is in mt/(sq. nm.) \cr Abundance is in 10^6 indivs
-\cr Biomass is in 10^3 mt \cr
+This function calculates average cpue, numbers and biomass
+by stratum from cpue (by survey station or by haul).
 }
 \details{
 
+
+If tbl_cpue and in.csv are both NULL, the user is prompted
+to enter a csv file with cpue info. \cr \cr Other notes:
+\cr \itemize{ \item Area is in square nautical miles \item
+CPUE in numbers is in no/(sq. nm.)  \item CPUE in weight is
+in mt/(sq. nm.)  \item Abundance is in 10^6 indivs \item
+Biomass is in 10^3 mt }
 }
 

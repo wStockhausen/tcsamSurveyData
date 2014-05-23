@@ -7,8 +7,9 @@
 #'@param species   : code ('BKC','BTC','RKC','OTC') indicating species
 #'@param useOrigStrata: boolean to use Bob Foy's "original" strata, rather than the revised strata
 #'@param export    : boolean flag to export results to csv file
+#'@param verbosity : integer flag indicating level of printed output (0=off,1=minimal,2=full)
 #'
-#'@details note: if neither tbl or in.csv is given, the user will be prompted for a csv file via a file dialog box
+#'@details If neither tbl or in.csv is given, the user will be prompted for a csv file via a file dialog box
 #'
 #' @return a dataframe with strata
 #' 
@@ -29,9 +30,11 @@ selectStrata.TrawlSurvey<-function(tbl_hauls,
                                    useOrigStrata=FALSE,
                                    export=FALSE,
                                    out.csv=paste('SelectedStations',species,'csv',sep='.'),
-                                   out.dir=NULL){
+                                   out.dir=NULL,
+                                   verbosity=1){
+    if (verbosity>1) cat("starting selectStations.TrawlSurvey.\n");
+    
     if (is.null(tbl)){
-        cat("Reading AFSC crab survey strata file (csv) for station info.\n",sep='')
         if (is.null(in.csv)) {
             Filters<-addFilter("csv","csv files (*.csv)","*.csv");
             in.csv<-tk_choose.files(caption=paste("Select AFSC crab survey strata file"),
@@ -42,10 +45,11 @@ selectStrata.TrawlSurvey<-function(tbl_hauls,
             out.dir<-dirname(file.path('.'));
             if (!is.null(in.csv)) {out.dir<-dirname(file.path(in.csv));}
         }
-        cat("Output directory will be '",out.dir,"'\n",sep='');
+        if (verbosity>0) cat("Output directory for selectStations.TrawlSurvey will be '",out.dir,"'\n",sep='');
         
+        if (verbosity>1) cat("Reading AFSC crab survey strata file (csv) for station info.\n",sep='')
         tbl<-read.csv(in.csv,stringsAsFactors=FALSE);
-        cat("Done reading input csv file.\n")
+        if (verbosity>1) cat("Done reading input csv file.\n")
     }
     
     #rearrange columns, drop some
@@ -77,7 +81,7 @@ selectStrata.TrawlSurvey<-function(tbl_hauls,
             SURVEY_YEAR,STRATUM
           order by
             SURVEY_YEAR,STRATUM;"
-    cat("\nquery is:\n",qry,"\n");
+    if (verbosity>1) cat("\nquery is:\n",qry,"\n");
     tbl_areas1<-sqldf(qry);
     
     qry<-"select
@@ -97,23 +101,24 @@ selectStrata.TrawlSurvey<-function(tbl_hauls,
           order by
             t.SURVEY_YEAR,s.STRATUM,t.STATION_ID;"
     
-    cat("\nquery is:\n",qry,"\n");
+    if (verbosity>1) cat("\nquery is:\n",qry,"\n");
     tbl<-sqldf(qry)
     
     if (export){
         if (!is.null(out.dir)){
-            cat("\nTesting existence of folder '",out.dir,"'\n",sep='')
+            if (verbosity>1) cat("\nTesting existence of folder '",out.dir,"'\n",sep='')
             if (!file.exists(out.dir)){
-                cat("Creating folder '",out.dir,"' for output.\n",sep='')
+                if (verbosity>0) cat("Creating folder '",out.dir,"' for output.\n",sep='')
                 dir.create(out.dir);
             } else {
-                cat("Using folder '",out.dir,"' for output.\n",sep='')
+                if (verbosity>0) cat("Using folder '",out.dir,"' for output.\n",sep='')
             }
             out.csv<-file.path(out.dir,out.csv)
         }
         write.csv(tbl,out.csv,na='',row.names=FALSE);
     }
     
+    if (verbosity>1) cat("finished selectStations.TrawlSurvey.\n");
     return(tbl)
 }
 

@@ -6,7 +6,7 @@ calcCPUE.ByHaul(tbl_hauls, tbl_indivs = NULL, in.csv = NULL,
   bySex = FALSE, byShellCondition = FALSE, byMaturity = FALSE,
   bySize = FALSE, binSizes = FALSE, cutpts = seq(from = 25, to = 185, by =
   5), truncate.low = TRUE, truncate.high = FALSE, export = FALSE,
-  out.csv = "cpue.ByHaul.csv", out.dir = NULL)
+  out.csv = "cpue.ByHaul.csv", out.dir = NULL, verbosity = 1)
 }
 \arguments{
   \item{tbl_hauls}{:}
@@ -38,6 +38,9 @@ calcCPUE.ByHaul(tbl_hauls, tbl_indivs = NULL, in.csv = NULL,
   \item{out.csv}{: output file name}
 
   \item{out.dir}{: output file directory}
+
+  \item{verbosity}{: integer flag indicating level of
+  printed output (0=off,1=minimal,2=full)}
 }
 \value{
 data frame of cpue (numbers and weight) by year, stratum,
@@ -49,7 +52,7 @@ station, haul and other factor levels
 \details{
 \cr \cr Note: if tbl and in.csv are both NULL, the user is
 prompted to enter a csv file with biomass by stratum info.
-\cr Notes: \cr CPUE in numbers is in no/(sq. nm.)  CPUE in
-weight is in mt/(sq. nm.)
+\cr \cr Other notes: \cr \itemize{ \item CPUE in numbers is
+in no/(sq. nm.) \item CPUE in weight is in mt/(sq. nm.) }
 }
 

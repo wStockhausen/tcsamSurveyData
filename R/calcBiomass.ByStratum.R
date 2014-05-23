@@ -1,5 +1,5 @@
 #'
-#'@title Function to calculate cpue by survey station from trawl survey files.
+#'@title Calculate average cpue, numbers and biomass by stratum from AFSC trawl survey data.
 #'
 #'@param   tbl_strata : data frame w/ stations/strata from call to selectStrata.TrawlSurvey(...)
 #'@param   tbl_cpue   : data frame w/ cpue by year, station, other factor levels
@@ -7,16 +7,40 @@
 #'@param   export  : boolean flag to write results to csv file
 #'@param   out.csv : output file name
 #'@param   out.dir : output file directory 
+#'@param verbosity : integer flag indicating level of printed output (0=off,1=minimal,2=full)
 #'
-#'@description Note: if tbl_cpue and in.csv are both NULL, the user is prompted to enter a csv file with cpue info. \cr
-#'Other notes: \cr
-#'   CPUE in numbers is in no/(sq. nm.) \cr
-#'   CPUE in weight  is in mt/(sq. nm.) \cr
-#'   Abundance is in 10^6 indivs \cr
-#'   Biomass   is in 10^3 mt \cr
+#'@description This function calculates average cpue, numbers and biomass by stratum from cpue (by survey station or by haul).
 #'
+#'@details If tbl_cpue and in.csv are both NULL, the user is prompted to enter a csv file with cpue info. \cr
+#'\cr Other notes: \cr
+#'\itemize{
+#'   \item   Area is in square nautical miles
+#'   \item CPUE in numbers is in no/(sq. nm.)
+#'   \item CPUE in weight  is in mt/(sq. nm.) 
+#'   \item Abundance is in 10^6 indivs 
+#'   \item Biomass   is in 10^3 mt
+#'}
 #'
-#'@return data frame with average cpue (numbers, weight), abundance and biomass by stratum.
+#'@return data frame with average cpue (numbers, weight), abundance and biomass by stratum. Columns are \cr
+#'\itemize{
+#'\item  YEAR
+#'\item  STRATUM
+#'\item  STRATUM_AREA
+#'\item  other user-defined factors
+#'\item  numStations
+#'\item  numHauls
+#'\item  numIndivs
+#'\item  avgNUMCPUE
+#'\item  seNUMCPUE
+#'\item  avgWGTCPUE
+#'\item  seWGTCPUE
+#'\item  totABUNDANCE = estimated abundance (by stratum)
+#'\item  stdABUNDANCE = std deviation of estimated abundance (by stratum)
+#'\item  cvABUNDANCE  = cv of estimated abundance (by stratum)
+#'\item  totBIOMASS = estimated biomass (by stratum)
+#'\item  stdBIOMASS = std deviation of estimated biomass (by stratum)
+#'\item  cvBIOMASS  = cv of estimated biomass (by stratum)
+#'}
 #'
 #' @import sqldf
 #' @importFrom tcltk tk_choose.files
@@ -30,10 +54,10 @@ calcBiomass.ByStratum<-function(tbl_strata,
                                 in.csv=NULL,
                                 export=FALSE,
                                 out.csv='BiomassByStratum.csv',
-                                out.dir=NULL){
-    
+                                out.dir=NULL,
+                                verbosity=1){
+    if (verbosity>1) cat("starting calcBiomass.ByStratum\n");
     if (is.null(tbl_cpue)){
-        cat("Reading csv file for cpue by haul or station.\n",sep='')
         if (is.null(in.csv)) {
             Filters<-addFilter("csv","csv files (*.csv)","*.csv");
             in.csv<-tk_choose.files(caption=paste("Select csv file with cpue by haul or station"),
@@ -44,10 +68,11 @@ calcBiomass.ByStratum<-function(tbl_strata,
             out.dir<-dirname(file.path('.'));
             if (!is.null(in.csv)) {out.dir<-dirname(file.path(in.csv));}
         }
-        cat("Output directory will be '",out.dir,"'\n",sep='');
+        if (verbosity>0) cat("Output directory for calcBiomass.ByStratum will be '",out.dir,"'\n",sep='');
         
+        if (verbosity>0) cat("Reading csv file for cpue by haul or station.\n")
         tbl_cpue<-read.csv(in.csv,stringsAsFactors=FALSE);
-        cat("Done reading input csv file.\n")
+        if (verbosity>0) cat("Done reading input csv file.\n")
     }
     
     #determine columns of cpue table
@@ -97,7 +122,7 @@ calcBiomass.ByStratum<-function(tbl_strata,
     } else {
         qry<-gsub("&&facs",paste(paste("c.",facs,sep='',collapse=","),",",sep=''),qry);
     }
-    cat("\nquery is:\n",qry,"\n");
+    if (verbosity>1) cat("\nquery is:\n",qry,"\n");
     tbl1<-sqldf(qry);
     
     #calculate number of unique stations
@@ -122,7 +147,7 @@ calcBiomass.ByStratum<-function(tbl_strata,
     } else {
         qry<-gsub("&&facs",paste(',',facs,sep='',collapse=''),qry);
     }
-    cat("\nquery is:\n",qry,"\n");
+    if (verbosity>1) cat("\nquery is:\n",qry,"\n");
     tbl2<-sqldf(qry);
     
     #calculate variances
@@ -162,7 +187,7 @@ calcBiomass.ByStratum<-function(tbl_strata,
         str<-paste(',a.',facs,sep='',collapse='');
         qry<-gsub("&&bycols",str,qry);
     }
-    cat("\nquery is:\n",qry,"\n");
+    if (verbosity>1) cat("\nquery is:\n",qry,"\n");
     tbl3<-sqldf(qry);
     
     #compute std. errors of means from variances and scale to totals by stratum
@@ -179,18 +204,19 @@ calcBiomass.ByStratum<-function(tbl_strata,
     
     if (export){
         if (!is.null(out.dir)){
-            cat("\nTesting existence of folder '",out.dir,"'\n",sep='')
+            if (verbosity>1) cat("\nTesting existence of folder '",out.dir,"'\n",sep='')
             if (!file.exists(out.dir)){
-                cat("Creating folder '",out.dir,"' for output.\n",sep='')
+                if (verbosity>0) cat("Creating folder '",out.dir,"' for output.\n",sep='')
                 dir.create(out.dir);
             } else {
-                cat("Using folder '",out.dir,"' for output.\n",sep='')
+                if (verbosity>0) cat("Using folder '",out.dir,"' for output.\n",sep='')
             }
             out.csv<-file.path(out.dir,out.csv)
         }
         write.csv(tbl3,out.csv,na='',row.names=FALSE);
     }
     
+    if (verbosity>1) cat("finished calcBiomass.ByStratum\n");
     return(tbl3);
 }
 

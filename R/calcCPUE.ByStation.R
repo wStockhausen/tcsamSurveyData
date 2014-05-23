@@ -6,14 +6,17 @@
 #'@param export  : boolean flag to write results to csv file
 #'@param out.csv : output file name
 #'@param out.dir : output file directory 
+#'@param verbosity : integer flag indicating level of printed output (0=off,1=minimal,2=full)
 #'
 #'@return   data frame of cpue (numbers and weight) by year, stratum, station and other factor levels
 #'
 #'@details \cr
 #'Notes: \cr
-#'   CPUE in numbers is in no/(sq. nm.) \cr
-#'   CPUE in weight  is in mt/(sq. nm.) \cr
-#'   CPUE is calculated only for stations at which at least 1 haul was conducted
+#'\itemize{
+#'\item   CPUE in numbers is in no/(sq. nm.) \cr
+#'\item   CPUE in weight  is in mt/(sq. nm.) \cr
+#'\item   CPUE is calculated only for stations at which at least 1 haul was conducted
+#'}
 #'
 #' @import sqldf
 #' @importFrom tcltk tk_choose.files
@@ -25,9 +28,11 @@ calcCPUE.ByStation<-function(tbl_cpue=NULL,
                              in.csv=NULL,
                              export=FALSE,
                              out.csv='cpue.ByStation.csv',
-                             out.dir=NULL){
+                             out.dir=NULL,
+                             verbosity=1){
+    if (verbosity>1) cat("starting calcCPUE.ByStation\n");
+    
     if (is.null(tbl_cpue)){
-        cat("Reading csv file for cpue by haul results.\n",sep='')
         if (is.null(in.csv)) {
             Filters<-addFilter("csv","csv files (*.csv)","*.csv");
             in.csv<-tk_choose.files(caption=paste("Select csv file with cpue by haul info"),
@@ -38,10 +43,11 @@ calcCPUE.ByStation<-function(tbl_cpue=NULL,
             out.dir<-dirname(file.path('.'));
             if (!is.null(in.csv)) {out.dir<-dirname(file.path(in.csv));}
         }
-        cat("Output directory will be '",out.dir,"'\n",sep='');
+        if (verbosity>0) cat("Output directory for calcCPUE.ByStation will be '",out.dir,"'\n",sep='');
         
+        if (verbosity>1) cat("Reading csv file for cpue by haul results.\n",sep='')
         tbl_cpue<-read.csv(in.csv,stringsAsFactors=FALSE);
-        cat("Done reading input csv file.\n")
+        if (verbosity>1) cat("Done reading input csv file.\n")
     }
     
     #determine names of factor columns (if any) in cpue table
@@ -73,23 +79,24 @@ calcCPUE.ByStation<-function(tbl_cpue=NULL,
           order by
             YEAR,STRATUM,GIS_STATION&&cols;";
     qry<-gsub("&&cols",cols,qry)
-    cat("\nquery is:\n",qry,"\n");
+    if (verbosity>1) cat("\nquery is:\n",qry,"\n");
     tbl_cpue<-sqldf(qry);
     
     if (export){
         if (!is.null(out.dir)){
-            cat("\nTesting existence of folder '",out.dir,"'\n",sep='')
+            if (verbosity>1) cat("\nTesting existence of folder '",out.dir,"'\n",sep='')
             if (!file.exists(out.dir)){
-                cat("Creating folder '",out.dir,"' for output.\n",sep='')
+                if (verbosity>0) cat("Creating folder '",out.dir,"' for output.\n",sep='')
                 dir.create(out.dir);
             } else {
-                cat("Using folder '",out.dir,"' for output.\n",sep='')
+                if (verbosity>0) cat("Using folder '",out.dir,"' for output.\n",sep='')
             }
             out.csv<-file.path(out.dir,out.csv)
         }
         write.csv(tbl_cpue,out.csv,na='',row.names=FALSE);
     }
     
+    if (verbosity>1) cat("finished calcCPUE.ByStation\n");
     return(tbl_cpue)
 }
 

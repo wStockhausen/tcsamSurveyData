@@ -10,10 +10,12 @@
 #' @param maturity       : one of 'IMMATURE','MATURE' or 'ALL' for narrowing selection of individuals
 #' @param minWidth : minimum size (width) of individuals to select 
 #' @param maxWidth : maximum size (width) of individuals to select 
+#'@param verbosity : integer flag indicating level of printed output (0=off,1=minimal,2=full)
 #'
 #' @return dataframe
-#' @details If neither tbl or in.csv is given, the user will be prompted for a csv file via a file dialog box
-#'Weights are in grams.
+#' 
+#' @details If neither tbl or in.csv is given, the user will be prompted for a csv file via a file dialog box.\cr
+#'\itemize{\item Weights are in grams.}
 #' 
 #' @import sqldf
 #' @import tcsamFunctions
@@ -42,9 +44,11 @@ selectIndivs.TrawlSurvey<-function(tbl_hauls,
                                    maturity=c('IMMATURE','MATURE','ALL'),
                                    calcMaleMaturity=FALSE,
                                    minSize=-Inf,
-                                   maxSize=Inf){
+                                   maxSize=Inf,
+                                   verbosity=1){
+    if (verbosity>1) cat("starting selectIndivs.TrawlSurvey.\n");
+    
     if (is.null(tbl)){
-        cat("Reading AFSC crab trawl survey csv file for individual crab info.\n",sep='')
         if (is.null(in.csv)) {
             Filters<-addFilter("csv","csv files (*.csv)","*.csv");
             in.csv<-tk_choose.files(caption=paste("Select AFSC crab trawl survey file"),
@@ -55,10 +59,11 @@ selectIndivs.TrawlSurvey<-function(tbl_hauls,
             out.dir<-dirname(file.path('.'));
             if (!is.null(in.csv)) {out.dir<-dirname(file.path(in.csv));}
         }
-        cat("Output directory will be '",out.dir,"'\n",sep='');
+        if (verbosity>0) cat("Output directory for selectIndivs.TrawlSurvey will be '",out.dir,"'\n",sep='');
         
+        if (verbosity>1) cat("Reading AFSC crab trawl survey csv file for individual crab info.\n",sep='')
         tbl<-read.csv(in.csv,stringsAsFactors=FALSE);
-        cat("Done reading input csv file.\n")
+        if (verbosity>1) cat("Done reading input csv file.\n")
     }
     #identify size column (WIDTH, LENGTH) and standardize name to SIZE
     nms<-names(tbl);
@@ -83,7 +88,7 @@ selectIndivs.TrawlSurvey<-function(tbl_hauls,
           where
             t.HAULJOIN=h.HAULJOIN;";
     qry<-gsub("&&cols",paste("t.",cols,sep='',collapse=","),qry);    
-    cat("\nquery is:\n",qry,"\n");
+    if (verbosity>1) cat("\nquery is:\n",qry,"\n");
     tbl<-sqldf(qry);
     
     #assign -1 to NA's in column CLUTCH_SIZE (i.e., males) to simplify SQL code
@@ -157,7 +162,7 @@ selectIndivs.TrawlSurvey<-function(tbl_hauls,
     qry<-gsub("&&sq.sex",sq.sex,qry)
     qry<-gsub("&&sq.sc", sq.sc, qry)
     qry<-gsub("&&sq.mat",sq.mat,qry)
-    cat("\nquery is:\n",qry,"\n");
+    if (verbosity>1) cat("\nquery is:\n",qry,"\n");
     
     tbl<-sqldf(qry);
     
@@ -194,18 +199,19 @@ selectIndivs.TrawlSurvey<-function(tbl_hauls,
     
     if (export){
         if (!is.null(out.dir)){
-            cat("\nTesting existence of folder '",out.dir,"'\n",sep='')
+            if (verbosity>1) cat("\nTesting existence of folder '",out.dir,"'\n",sep='')
             if (!file.exists(out.dir)){
-                cat("Creating folder '",out.dir,"' for output.\n",sep='')
+                if (verbosity>0) cat("Creating folder '",out.dir,"' for output.\n",sep='')
                 dir.create(out.dir);
             } else {
-                cat("Using folder '",out.dir,"' for output.\n",sep='')
+                if (verbosity>0) cat("Using folder '",out.dir,"' for output.\n",sep='')
             }
             out.csv<-file.path(out.dir,out.csv)
         }
         write.csv(tbl,out.csv,na='',row.names=FALSE);
     }
     
+    if (verbosity>1) cat("finished selectIndivs.TrawlSurvey.\n");
     return(tbl)
 }
 

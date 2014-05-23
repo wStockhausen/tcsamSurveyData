@@ -7,7 +7,7 @@ selectIndivs.TrawlSurvey(tbl_hauls, tbl = NULL, col.Size = "WIDTH",
   out.dir = NULL, sex = c("MALE", "FEMALE", "ALL"),
   shell_condition = c("NEW_SHELL", "OLD_SHELL", "ALL"),
   maturity = c("IMMATURE", "MATURE", "ALL"), calcMaleMaturity = FALSE,
-  minSize = -Inf, maxSize = Inf)
+  minSize = -Inf, maxSize = Inf, verbosity = 1)
 }
 \arguments{
   \item{tbl_hauls}{: hauls table (dataframe) from call to
@@ -36,6 +36,9 @@ selectIndivs.TrawlSurvey(tbl_hauls, tbl = NULL, col.Size = "WIDTH",
 
   \item{maxWidth}{: maximum size (width) of individuals to
   select}
+
+  \item{verbosity}{: integer flag indicating level of
+  printed output (0=off,1=minimal,2=full)}
 }
 \value{
 dataframe
@@ -45,7 +48,7 @@ dataframe
 }
 \details{
 If neither tbl or in.csv is given, the user will be
-prompted for a csv file via a file dialog box Weights are
-in grams.
+prompted for a csv file via a file dialog box.\cr
+\itemize{\item Weights are in grams.}
 }
 

@@ -5,12 +5,12 @@
 selectStrata.TrawlSurvey(tbl_hauls, tbl = NULL, in.csv = NULL,
   species = "BTC", useOrigStrata = FALSE, export = FALSE,
   out.csv = paste("SelectedStations", species, "csv", sep = "."),
-  out.dir = NULL)
+  out.dir = NULL, verbosity = 1)
 
 selectStrata.TrawlSurvey(tbl_hauls, tbl = NULL, in.csv = NULL,
   species = "BTC", useOrigStrata = FALSE, export = FALSE,
   out.csv = paste("SelectedStations", species, "csv", sep = "."),
-  out.dir = NULL)
+  out.dir = NULL, verbosity = 1)
 }
 \arguments{
   \item{tbl_hauls}{: hauls table (dataframe) from call to
@@ -32,6 +32,9 @@ selectStrata.TrawlSurvey(tbl_hauls, tbl = NULL, in.csv = NULL,
   \item{export}{: boolean flag to export results to csv
   file}
 
+  \item{verbosity}{: integer flag indicating level of
+  printed output (0=off,1=minimal,2=full)}
+
   \item{tbl_hauls}{: hauls table (dataframe) from call to
   selectHauls.TrawlSurvey(...) [required]}
 
@@ -50,6 +53,9 @@ selectStrata.TrawlSurvey(tbl_hauls, tbl = NULL, in.csv = NULL,
 
   \item{export}{: boolean flag to export results to csv
   file}
+
+  \item{verbosity}{: integer flag indicating level of
+  printed output (0=off,1=minimal,2=full)}
 }
 \value{
 a dataframe with strata
@@ -60,10 +66,10 @@ a dataframe with strata
 
 }
 \details{
-note: if neither tbl or in.csv is given, the user will be
+If neither tbl or in.csv is given, the user will be
 prompted for a csv file via a file dialog box
 
-note: if neither tbl or in.csv is given, the user will be
+If neither tbl or in.csv is given, the user will be
 prompted for a csv file via a file dialog box
 }
 

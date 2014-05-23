@@ -1,20 +1,40 @@
 #'
-#'Calculates biomass/abundance for EW166 from a biomass by stratum data frame or csv file.
+#'@title Calculate abundance, biomass by year, east/west of 166W, and other factors from a biomass-by-stratum data frame or csv file.
 #'
-#'@param tbl   : data frame with biomass by stratum info from call to calcBiomass.ByStratum(...)
-#'@param in.csv: csv file with biomass by stratum info from call to calcBiomass.ByStratum(...)
+#'@description This function estimates abundance, biomass by year, east/west of 166W from a biomass-by-stratum data frame or csv file.
+#'
+#'@param tbl    : data frame with biomass by stratum info from call to \code{\link{calcBiomass.ByStratum}}
+#'@param in.csv : csv file with biomass by stratum info from call to \code{\link{calcBiomass.ByStratum}}
 #'@param strata.revd : data frame w/ conversion from original strata to EW166 strata
 #'@param export  : boolean flag to write results to csv file
 #'@param out.csv : output file name
 #'@param out.dir : output file directory 
+#'@param verbosity : integer flag indicating level of printed output (0=off,1=minimal,2=full)
 #'
-#'@return   data frame w/ abundance, biomass by year, EW166 strata, factors
+#'@return  Dataframe w/ estimates of abundance, biomass by year, strata as east/west of 166W, and other factors. Columns are \cr
+#'\itemize{
+#'\item  YEAR         = survey year
+#'\item  STRATUM      = 'EAST' or 'WEST' of 166W
+#'\item  STRATUM_AREA = area of stratum
+#'\item  other user-defined factors (e.g., sex, shell_condition)
+#'\item  numStations = number of stations included
+#'\item  numHauls    = number of hauls included
+#'\item  numIndivs   = number of individuals sampled
+#'\item  totABUNDANCE = estimated abundance
+#'\item  stdABUNDANCE = std deviation of estimated abundance
+#'\item  cvABUNDANCE  = cv of estiamted abundance
+#'\item  totBIOMASS = estimated biomass
+#'\item  stdBIOMASS = std deviation of estimated biomass 
+#'\item  cvBIOMASS  = cv of estimated biomass
+#'}
 #'
-#'@details \cr
-#'\cr Note: if tbl and in.csv are both NULL, the user is prompted to enter a csv file with biomass by stratum info. \cr
+#'@details Note: if tbl and in.csv are both NULL, the user is prompted to enter a csv file with biomass by stratum info. \cr
 #'Notes: \cr
-#'   Abundance is in 10^6 individuals \cr
-#'   Biomass   is in 10^3 mt \cr
+#'\itemize{
+#'\item   Area is in square nautical miles
+#'\item   Abundance is in 10^6 individuals
+#'\item   Biomass   is in 10^3 mt
+#'}
 #'
 #' @import sqldf
 #' @importFrom tcltk tk_choose.files
@@ -27,10 +47,11 @@ calcBiomass.EW166<-function(tbl=NULL,
                           strata_revd=Codes.TrawlSurvey()[["strata.EW166"]],
                           export=TRUE,
                           out.csv='SurveyBiomass.csv',
-                          out.dir=NULL){
+                          out.dir=NULL,
+                          verbosity=1){
+    if (verbosity>1) cat("starting calcBiomass.EW166\n");
     
     if (is.null(tbl)){
-        cat("Reading csv file for biomass by stratum info.\n",sep='')
         if (is.null(in.csv)) {
             Filters<-addFilter("csv","csv files (*.csv)","*.csv");
             in.csv<-tk_choose.files(caption=paste("Select csv file with biomass by stratum info"),
@@ -41,10 +62,11 @@ calcBiomass.EW166<-function(tbl=NULL,
             out.dir<-dirname(file.path('.'));
             if (!is.null(in.csv)) {out.dir<-dirname(file.path(in.csv));}
         }
-        cat("Output directory will be '",out.dir,"'\n",sep='');
+        if (verbosity>0) cat("Output directory for calcBiomass.EW166 will be '",out.dir,"'\n",sep='');
         
+        if (verbosity>1) cat("Reading csv file for biomass by stratum info.\n",sep='')
         tbl<-read.csv(in.csv,stringsAsFactors=FALSE);
-        cat("Done reading input csv file.\n")
+        if (verbosity>1) cat("Done reading input csv file.\n")
     }
     
     #determine columns of biomass by stratum table
@@ -84,7 +106,7 @@ calcBiomass.EW166<-function(tbl=NULL,
     } else {
         qry<-gsub("&&cols",paste(',t.',cols,collapse=""),qry);
     }
-    cat("\nquery is:\n",qry,"\n");
+    if (verbosity>1) cat("\nquery is:\n",qry,"\n");
     tbl1<-sqldf(qry);
     #convert columns to final values
     tbl1$stdABUNDANCE<-sqrt(tbl1$stdABUNDANCE);#convert from var to stdv
@@ -94,18 +116,19 @@ calcBiomass.EW166<-function(tbl=NULL,
                                  
     if (export){
         if (!is.null(out.dir)){
-            cat("\nTesting existence of folder '",out.dir,"'\n",sep='')
+            if (verbosity>1) cat("\nTesting existence of folder '",out.dir,"'\n",sep='')
             if (!file.exists(out.dir)){
-                cat("Creating folder '",out.dir,"' for output.\n",sep='')
+                if (verbosity>0) cat("Creating folder '",out.dir,"' for output.\n",sep='')
                 dir.create(out.dir);
             } else {
-                cat("Using folder '",out.dir,"' for output.\n",sep='')
+                if (verbosity>0) cat("Using folder '",out.dir,"' for output.\n",sep='')
             }
             out.csv<-file.path(out.dir,out.csv)
         }
         write.csv(tbl1,out.csv,na='',row.names=FALSE);
     }
     
+    if (verbosity>1) cat("finished calcBiomass.EW166\n");
     return(tbl1)
 }
 

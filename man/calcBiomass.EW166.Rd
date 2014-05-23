@@ -4,14 +4,14 @@
 \usage{
 calcBiomass.EW166(tbl = NULL, in.csv = NULL,
   strata_revd = Codes.TrawlSurvey()[["strata.EW166"]], export = TRUE,
-  out.csv = "SurveyBiomass.csv", out.dir = NULL)
+  out.csv = "SurveyBiomass.csv", out.dir = NULL, verbosity = 1)
 }
 \arguments{
   \item{tbl}{: data frame with biomass by stratum info from
   call to calcBiomass.ByStratum(...)}
 
-  \item{in.csv:}{csv file with biomass by stratum info from
-  call to calcBiomass.ByStratum(...)}
+  \item{in.csv}{: csv file with biomass by stratum info
+  from call to calcBiomass.ByStratum(...)}
 
   \item{strata.revd}{: data frame w/ conversion from
   original strata to EW166 strata}
@@ -22,19 +22,34 @@ calcBiomass.EW166(tbl = NULL, in.csv = NULL,
   \item{out.csv}{: output file name}
 
   \item{out.dir}{: output file directory}
+
+  \item{verbosity}{: integer flag indicating level of
+  printed output (0=off,1=minimal,2=full)}
 }
 \value{
-data frame w/ abundance, biomass by year, EW166 strata,
-factors
+Dataframe w/ estimates of abundance, biomass by year, EW166
+strata, and other factors. Columns are \cr \itemize{ \item
+YEAR = survey year \item STRATUM = EAST or WEST of 166W
+\item STRATUM_AREA = area of stratum \item other
+user-defined factors (e.g., sex, shell_condition) \item
+numStations = number of stations included \item numHauls =
+number of hauls included \item numIndivs = number of
+individuals sampled \item totABUNDANCE = estimated
+abundance \item stdABUNDANCE = std deviation of estimated
+abundance \item cvABUNDANCE = cv of estiamted abundance
+\item totBIOMASS = estimated biomass \item stdBIOMASS = std
+deviation of estimated biomass \item cvBIOMASS = cv of
+estimated biomass }
 }
 \description{
 Calculates biomass/abundance for EW166 from a biomass by
 stratum data frame or csv file.
 }
 \details{
-\cr \cr Note: if tbl and in.csv are both NULL, the user is
-prompted to enter a csv file with biomass by stratum info.
-\cr Notes: \cr Abundance is in 10^6 individuals \cr Biomass
-is in 10^3 mt \cr
+Note: if tbl and in.csv are both NULL, the user is prompted
+to enter a csv file with biomass by stratum info. \cr
+Notes: \cr \itemize{ \item Area is in square nautical miles
+\item Abundance is in 10^6 individuals \item Biomass is in
+10^3 mt }
 }
 

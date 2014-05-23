@@ -1,38 +1,39 @@
 #'
 #'@title Function to calculate cpue by survey haul from station, haul and individual crab info.
 #'
-#'@param tbl.hauls   :
-#'@param tbl.indivs  :
-#'@param tbl.strata  : data frame with strata to use
-#'@param calcCPUE.byStation=TRUE,
-#'@param calcBiomass.byEW166=TRUE,
-#'@param bySex=FALSE,
-#'@param byShellCondition=FALSE,
-#'@param byMaturity=FALSE,
-#'@param bySize=FALSE,
-#'@param binSizes=FALSE,
-#'@param cutpts=seq(from=0,to=185,by=5),
-#'@param truncate.low=TRUE,
-#'@param truncate.high=FALSE,
-#'@param export.cpue.byH=FALSE,
-#'@param export.cpue.byS=FALSE,
-#'@param #'@param export.bio.byStrata=FALSE,
-#'@param export.bio.EW166=FALSE,
-#'@param export.totBio=FALSE,
-#'@param out.csv.cpue.byH='cpue.byH.csv',
-#'@param out.csv.cpue.byS='cpue.byS.csv',
-#'@param out.csv.bio.byStrata='bio.byStrata.csv',
-#'@param out.csv.bio.EW166='bio.EW166.csv',
-#'@param out.csv.totBio='totBiomass.csv',
-#'@param out.dir=NULL)
+#'@param tbl.hauls   : dataframe with hauls info (output from \code{\link{selectHauls.TrawlSurvey}})
+#'@param tbl.indivs  : dataframe with individual crab info (output from \code{\link{selectIndivs.TrawlSurvey}})
+#'@param tbl.strata  : dataframe with susrvey strata info (output from \code{\link{selectStrata.TrawlSurvey}})
+#'@param calcCPUE.byStation = TRUE (otherwise calc cpue using calcCPUE.ByHaul)
+#'@param calcBiomass.byEW166 = TRUE
+#'@param bySex = FALSE
+#'@param byShellCondition = FALSE
+#'@param byMaturity = FALSE
+#'@param bySize = FALSE
+#'@param binSizes = FALSE
+#'@param cutpts = seq(from=0,to=185,by=5)
+#'@param truncate.low = TRUE
+#'@param truncate.high = FALSE
+#'@param export.cpue.byH = FALSE
+#'@param export.cpue.byS = FALSE
+#'@param export.bio.byStrata = FALSE
+#'@param export.bio.EW166 = FALSE
+#'@param export.totBio = FALSE
+#'@param out.csv.cpue.byH = 'cpue.byH.csv'
+#'@param out.csv.cpue.byS = 'cpue.byS.csv'
+#'@param out.csv.bio.byStrata = 'bio.byStrata.csv'
+#'@param out.csv.bio.EW166 = 'bio.EW166.csv'
+#'@param out.csv.totBio = 'totBiomass.csv'
+#'@param out.dir = output directory
+#'@param verbosity : integer flag indicating level of printed output (0=off,1=minimal,2=full)
 #'
-#'@return   list of data frames \cr
-#'\tabular{rll}{  
-#' [,1] \tab cpue.byH     \tab : data frame of cpue (numbers and weight) by year, haul and other factor levels \cr
-#' [,2] \tab cpue.byS     \tab : data frame of cpue (numbers and weight) by year, station and other factor levels (optional) \cr
-#' [,3] \tab bio.byStrata \tab : data frame with abundance, biomass by year, stratum and other factor levels \cr
-#' [,4] \tab bio.EW166    \tab : data frame with abundance, biomass by year, EW166 split and other factor levels (optional) \cr
-#' [,5] \tab bio.tot      \tab : data frame with abundance, biomass by year and other factor levels \cr
+#'@return   a list with the following elements: \cr
+#'\itemize{  
+#' \item cpue.byH     \tab : data frame of cpue (numbers and weight) by year, haul and other factor levels
+#' \item cpue.byS     \tab : data frame of cpue (numbers and weight) by year, station and other factor levels (optional)
+#' \item bio.byStrata \tab : data frame with abundance, biomass by year, stratum and other factor levels
+#' \item bio.EW166    \tab : data frame with abundance, biomass by year, EW166 split and other factor levels (optional)
+#' \item bio.tot      \tab : data frame with abundance, biomass by year and other factor levels
 #'}
 #'       
 #'@details 
@@ -68,7 +69,10 @@ doBiomassCalcs<-function(tbl.strata,
                          out.csv.bio.byStrata='bio.byStrata.csv',
                          out.csv.bio.EW166='bio.EW166.csv',
                          out.csv.totBio='totBiomass.csv',
-                         out.dir=NULL){
+                         out.dir=NULL,
+                         verbosity=1){
+    
+    if (verbosity>1) cat("starting doBiomassCalcs.\n");
     
     res<-list();#empty list for output
     
@@ -85,7 +89,8 @@ doBiomassCalcs<-function(tbl.strata,
                               truncate.high=truncate.high,
                               export=export.cpue.byH,
                               out.csv=out.csv.cpue.byH,
-                              out.dir=out.dir);
+                              out.dir=out.dir,
+                              verbosity=verbosity);
     res[["cpue.byH"]]<-cpue.byH;
 
     
@@ -95,20 +100,23 @@ doBiomassCalcs<-function(tbl.strata,
         cpue.byS<-calcCPUE.ByStation(cpue.byH,
                                      export=export.cpue.byS,
                                      out.csv=out.csv.cpue.byS,
-                                     out.dir=out.dir);
+                                     out.dir=out.dir,
+                                     verbosity=verbosity);
         res[["cpue.byS"]]<-cpue.byS;
         
         bio.byStr<-calcBiomass.ByStratum(tbl.strata,
-                                         cpue.byH,
+                                         cpue.byS,
                                          export=export.bio.byStrata,
                                          out.csv=out.csv.bio.byStrata,
-                                         out.dir=out.dir);
+                                         out.dir=out.dir,
+                                         verbosity=verbosity);
     } else {
         bio.byStr<-calcBiomass.ByStratum(tbl.strata,
                                          cpue.byH,
                                          export=export.bio.byStrata,
                                          out.csv=out.csv.bio.byStrata,
-                                         out.dir=out.dir);
+                                         out.dir=out.dir,
+                                         verbosity=verbosity);
     }
     res[["bio.byStr"]]<-bio.byStr;
     
@@ -118,19 +126,23 @@ doBiomassCalcs<-function(tbl.strata,
         bio.EW166<-calcBiomass.EW166(bio.byStr,
                                      export=export.bio.EW166,
                                      out.csv=out.csv.bio.EW166,
-                                     out.dir=out.dir);
+                                     out.dir=out.dir,
+                                     verbosity=verbosity);
         res[["bio.EW166"]]<-bio.EW166;
         bio.tot<-calcBiomass.EBS(bio.EW166,
                                  export=export.totBio,
                                  out.csv=out.csv.totBio,
-                                 out.dir=out.dir)
+                                 out.dir=out.dir,
+                                 verbosity=verbosity)
     } else {
         bio.tot<-calcBiomass.EBS(bio.byStr,
                                  export=export.totBio,
                                  out.csv=out.csv.totBio,
-                                 out.dir=out.dir)
+                                 out.dir=out.dir,
+                                 verbosity=verbosity)
     }
     res[["bio.tot"]]<-bio.tot;
     
+    if (verbosity>1) cat("finished doBiomassCalcs.\n");
     return(res)
 }

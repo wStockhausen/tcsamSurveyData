@@ -1,8 +1,10 @@
 #'
-#'@title Function to calculate cpue by survey haul from station, haul and individual crab info.
+#'@title Calculate cpue by survey haul and other factors from station, haul and individual crab info.
 #'
-#'@param tbl_hauls   :
-#'@param tbl_indivs  :
+#'@description Function to calculate cpue by survey haul and other factors (e.g., sex) from station, haul and individual crab info.
+#'
+#'@param tbl_hauls   : dataframe from call to \code{\link{selectHauls.TrawlSurvey}}
+#'@param tbl_indivs  : dataframe from call to \code{\link{selectIndivs.TrawlSurvey}}
 #'@param in.csv      : name of csv file w/ individual crab info to read (if tbl_indivs is not given)
 #'@param  bySex=FALSE,
 #'@param  byShellCondition=FALSE,
@@ -15,14 +17,17 @@
 #'@param export  : boolean flag to write results to csv file
 #'@param out.csv : output file name
 #'@param out.dir : output file directory 
+#'@param verbosity : integer flag indicating level of printed output (0=off,1=minimal,2=full)
 #'
 #'@return data frame of cpue (numbers and weight) by year, stratum, station, haul and other factor levels
 #'
 #'@details \cr
 #'\cr Note: if tbl and in.csv are both NULL, the user is prompted to enter a csv file with biomass by stratum info. \cr
-#'Notes: \cr
-#'   CPUE in numbers is in no/(sq. nm.)
-#'   CPUE in weight  is in mt/(sq. nm.)
+#'\cr Other notes: \cr
+#'\itemize{
+#'\item   CPUE in numbers is in no/(sq. nm.)
+#'\item   CPUE in weight  is in mt/(sq. nm.)
+#'}
 #'
 #' @import sqldf
 #' @importFrom tcltk tk_choose.files
@@ -43,9 +48,11 @@ calcCPUE.ByHaul<-function(tbl_hauls,
                           truncate.high=FALSE,
                           export=FALSE,
                           out.csv='cpue.ByHaul.csv',
-                          out.dir=NULL){
+                          out.dir=NULL,
+                          verbosity=1){
+    if (verbosity>1) cat("starting calcCPUE.ByHaul\n");
+    
     if (is.null(tbl_indivs)){
-        cat("Reading csv file for individual crab info.\n",sep='')
         if (is.null(in.csv)) {
             Filters<-addFilter("csv","csv files (*.csv)","*.csv");
             in.csv<-tk_choose.files(caption=paste("Select csv file with individual crab info"),
@@ -56,10 +63,11 @@ calcCPUE.ByHaul<-function(tbl_hauls,
             out.dir<-dirname(file.path('.'));
             if (!is.null(in.csv)) {out.dir<-dirname(file.path(in.csv));}
         }
-        cat("Output directory will be '",out.dir,"'\n",sep='');
+        if (verbosity>0) cat("Output directory for calcCPUE.ByHaul will be '",out.dir,"'\n",sep='');
         
+        if (verbosity>1) cat("Reading csv file for individual crab info.\n",sep='')
         tbl_indivs<-read.csv(in.csv,stringsAsFactors=FALSE);
-        cat("Done reading input csv file.\n")
+        if (verbosity>1) cat("Done reading input csv file.\n")
     }
     
     #make some shorter variables
@@ -107,7 +115,7 @@ calcCPUE.ByHaul<-function(tbl_hauls,
     qry<-subst.cond(qry,bySC,"SHELL_CONDITION",'SC');
     qry<-subst.cond(qry,byMt,"MATURITY",       'Mt');
     qry<-subst.cond(qry,bySz,"SIZE",           'Sz');
-    cat("\nquery is:\n",qry,"\n");
+    if (verbosity>1) cat("\nquery is:\n",qry,"\n");
     tbl_sums<-sqldf(qry);
     
     #create table of years,strata,stations,hauls x uniq "factors" (e.g., sex, shell condition,...)
@@ -125,7 +133,7 @@ calcCPUE.ByHaul<-function(tbl_hauls,
               order by
                 &&colsDUMMY;";
         qry<-gsub("&&cols",cols,qry);
-        cat("\nquery is:\n",qry,"\n");
+        if (verbosity>1) cat("\nquery is:\n",qry,"\n");
         tbl_ufctrs<-sqldf(qry);
         
         qry<-"select *
@@ -168,7 +176,7 @@ calcCPUE.ByHaul<-function(tbl_hauls,
     if (!byMt){qry<-gsub('&&byMt','',qry);} else {qry<-gsub('&&byMt','and u.MATURITY       =s.MATURITY',qry);}
     if (!bySz){qry<-gsub('&&bySz','',qry);} else {qry<-gsub('&&bySz','and u.SIZE           =s.SIZE',qry);}
     qry<-gsub("&&cols",cols,qry)
-    cat("\nquery is:\n",qry,"\n");
+    if (verbosity>1) cat("\nquery is:\n",qry,"\n");
     tbl_cpue<-sqldf(qry);
     
     #replace NA's with 0's. Have to convert to numeric as NA in first row converts remainder to character.
@@ -181,18 +189,19 @@ calcCPUE.ByHaul<-function(tbl_hauls,
     
     if (export){
         if (!is.null(out.dir)){
-            cat("\nTesting existence of folder '",out.dir,"'\n",sep='')
+            if (verbosity>1) cat("\nTesting existence of folder '",out.dir,"'\n",sep='')
             if (!file.exists(out.dir)){
-                cat("Creating folder '",out.dir,"' for output.\n",sep='')
+                if (verbosity>0) cat("Creating folder '",out.dir,"' for output.\n",sep='')
                 dir.create(out.dir);
             } else {
-                cat("Using folder '",out.dir,"' for output.\n",sep='')
+                if (verbosity>0) cat("Using folder '",out.dir,"' for output.\n",sep='')
             }
             out.csv<-file.path(out.dir,out.csv)
         }
         write.csv(tbl_cpue,out.csv,na='',row.names=FALSE);
     }
     
+    if (verbosity>1) cat("finished calcCPUE.ByHaul\n");
     return(tbl_cpue)
 }
 
