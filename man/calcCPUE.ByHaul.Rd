@@ -1,6 +1,6 @@
 \name{calcCPUE.ByHaul}
 \alias{calcCPUE.ByHaul}
-\title{Function to calculate cpue by survey haul from station, haul and individual crab info.}
+\title{Calculate cpue by survey haul and other factors from station, haul and individual crab info.}
 \usage{
 calcCPUE.ByHaul(tbl_hauls, tbl_indivs = NULL, in.csv = NULL,
   bySex = FALSE, byShellCondition = FALSE, byMaturity = FALSE,
@@ -9,9 +9,11 @@ calcCPUE.ByHaul(tbl_hauls, tbl_indivs = NULL, in.csv = NULL,
   out.csv = "cpue.ByHaul.csv", out.dir = NULL, verbosity = 1)
 }
 \arguments{
-  \item{tbl_hauls}{:}
+  \item{tbl_hauls}{: dataframe from call to
+  \code{\link{selectHauls.TrawlSurvey}}}
 
-  \item{tbl_indivs}{:}
+  \item{tbl_indivs}{: dataframe from call to
+  \code{\link{selectIndivs.TrawlSurvey}}}
 
   \item{in.csv}{: name of csv file w/ individual crab info
   to read (if tbl_indivs is not given)}
@@ -47,9 +49,12 @@ data frame of cpue (numbers and weight) by year, stratum,
 station, haul and other factor levels
 }
 \description{
-
+Function to calculate cpue by survey haul and other factors
+(e.g., sex) from station, haul and individual crab info.
 }
 \details{
+
+
 \cr \cr Note: if tbl and in.csv are both NULL, the user is
 prompted to enter a csv file with biomass by stratum info.
 \cr \cr Other notes: \cr \itemize{ \item CPUE in numbers is
