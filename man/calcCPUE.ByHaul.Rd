@@ -2,37 +2,37 @@
 \alias{calcCPUE.ByHaul}
 \title{Calculate cpue by survey haul and other factors from station, haul and individual crab info.}
 \usage{
-calcCPUE.ByHaul(tbl_hauls, tbl_indivs = NULL, in.csv = NULL,
-  bySex = FALSE, byShellCondition = FALSE, byMaturity = FALSE,
-  bySize = FALSE, binSizes = FALSE, cutpts = seq(from = 25, to = 185, by =
-  5), truncate.low = TRUE, truncate.high = FALSE, export = FALSE,
-  out.csv = "cpue.ByHaul.csv", out.dir = NULL, verbosity = 1)
+calcCPUE.ByHaul(tbl_hauls, tbl_indivs = NULL, bySex = FALSE,
+  byShellCondition = FALSE, byMaturity = FALSE, bySize = FALSE,
+  cutpts = seq(from = 25, to = 185, by = 5), truncate.low = TRUE,
+  truncate.high = FALSE, export = FALSE, out.csv = "cpue.ByHaul.csv",
+  out.dir = NULL, verbosity = 1)
 }
 \arguments{
   \item{tbl_hauls}{: dataframe from call to
-  \code{\link{selectHauls.TrawlSurvey}}}
+  \code{\link{selectHauls.TrawlSurvey}} [required]}
 
   \item{tbl_indivs}{: dataframe from call to
-  \code{\link{selectIndivs.TrawlSurvey}}}
+  \code{\link{selectIndivs.TrawlSurvey}} (or crab survey
+  filename, or NULL)}
 
-  \item{in.csv}{: name of csv file w/ individual crab info
-  to read (if tbl_indivs is not given)}
+  \item{bySex}{: flag (T/F) to calc by sex}
 
-  \item{bySex=FALSE,}{}
+  \item{byShellCondition}{: flag (T/F) to calc by shell
+  condition}
 
-  \item{byShellCondition=FALSE,}{}
+  \item{byMaturity}{: flag (T/F) to calc by maturity state}
 
-  \item{byMaturity=FALSE,}{}
+  \item{bySize}{: flag (T/F) to calc by size}
 
-  \item{bySize=FALSE,}{}
+  \item{cutpts}{: vector of cutpoints to create size bins
+  from}
 
-  \item{binSizes=FALSE,}{}
+  \item{truncate.low}{: flag (T/F) to exclude individuals
+  smaller than minSize}
 
-  \item{cutpts=seq(from=25,to=185,by=5),}{}
-
-  \item{truncate.low=TRUE,}{}
-
-  \item{truncate.high=FALSE,}{}
+  \item{truncate.high}{: flag (T/F) to exclude individuals
+  larger than maxSize}
 
   \item{export}{: boolean flag to write results to csv
   file}

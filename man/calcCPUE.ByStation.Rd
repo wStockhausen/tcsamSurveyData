@@ -2,15 +2,13 @@
 \alias{calcCPUE.ByStation}
 \title{Function to calculate cpue by survey station, averaging over cpue by haul.}
 \usage{
-calcCPUE.ByStation(tbl_cpue = NULL, in.csv = NULL, export = FALSE,
+calcCPUE.ByStation(tbl_cpue = NULL, export = FALSE,
   out.csv = "cpue.ByStation.csv", out.dir = NULL, verbosity = 1)
 }
 \arguments{
   \item{tbl_cpue}{: data frame w/ cpue by haul from call to
-  calcCPUE.ByHaul(...)}
-
-  \item{in.csv}{: name of csv file w/ cpue by haul (if
-  tbl_cpue is not given)}
+  calcCPUE.ByHaul(...), or name of csv file w/ cpue by
+  haul, or NULL to choose file}
 
   \item{export}{: boolean flag to write results to csv
   file}

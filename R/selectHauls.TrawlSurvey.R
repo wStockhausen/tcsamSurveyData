@@ -1,12 +1,11 @@
 #'
 #'@title Function to extract NMFS crab survey hauls data from Excel csv file format by year.
 #'
-#'@param tbl_strata - data frame from call to selectStrata.TrawlSurvey(...) [required]
-#'@param tbl        - trawl survey data table from previous call (ignored if NULL)
-#'@param in.csv     - trawl survey data as csv file              (ignored if NULL)
+#'@param tbl_strata - dataframe from call to selectStrata.TrawlSurvey(...) [required]
+#'@param tbl        - trawl survey dataframe from previous call (or name of trawl survey csv datafile, or NULL)              (ignored if NULL)
 #'@param export  - boolean flag to export results to csv file
 #'@param out.csv - name of output csv file                    (ignored if NULL)
-#'@param out.dir - base path for output csv file              (ignored if NULL)
+#'@param out.dir - base path for output csv file              (set to folder of input csv file or current working directory)
 #'@param Years      - vector of survey years to include in output             (ignored if NULL)
 #'@param HaulTypes  - vector of haul types to include in output               (ignored if NULL)
 #'@param YearRange  - vector of min, max survey years to include in output    (ignored if NULL)
@@ -33,7 +32,6 @@
 #source("../Utilities/addFilter.R",chdir=TRUE)
 selectHauls.TrawlSurvey<-function(tbl_strata,
                                   tbl=NULL,
-                                  in.csv=NULL,
                                   export=FALSE,
                                   out.csv="SelectedSurveyHauls.csv",
                                   out.dir=NULL,
@@ -46,24 +44,33 @@ selectHauls.TrawlSurvey<-function(tbl_strata,
                                   verbosity=1){
     if (verbosity>1) cat("starting selectHauls.TrawlSurvey.\n");
     
-    if (is.null(tbl)){
-        if (is.null(in.csv)) {
-            Filters<-addFilter("csv","csv files (*.csv)","*.csv");
-            in.csv<-tk_choose.files(caption=paste("Select AFSC crab trawl survey file"),
-                                    multi=FALSE,filters=matrix(Filters[c("csv"),],1,2,byrow=TRUE));
+    
+    if (!is.data.frame(tbl_strata)) {
+        cat("Error in selectHauls.TrawlSurvey:",
+            "tbl_strata is NULL. Must supply tbl_strata.",
+            "Aborting...",sep='\n');
+        return(NULL);
+    }
+    
+    in.csv<-NULL;
+    if (!is.data.frame(tbl)){
+        if (!is.character(tbl)) {
+            in.csv<-wtsUtilities::selectFile(ext="csv",caption="Select AFSC crab trawl survey file");
             if (is.null(in.csv)|(in.csv=='')) return(NULL);
+        } else {
+            in.csv<-tbl;#tbl is a filename
         }
-        if (is.null(out.dir)) {
-            out.dir<-dirname(file.path('.'));
-            if (!is.null(in.csv)) {out.dir<-dirname(file.path(in.csv));}
-        }
-        if (verbosity>0) cat("Output directory for selectHauls.TrawlSurvey will be '",out.dir,"'\n",sep='');
-        
         if (verbosity>1) cat("Reading AFSC crab trawl survey csv file for hauls info.\n",sep='')
         tbl<-read.csv(in.csv,stringsAsFactors=FALSE);
         if (verbosity>1) cat("Done reading input csv file.\n")
     }
     
+    if (is.null(out.dir)) {
+        out.dir<-dirname(file.path('.'));
+        if (!is.null(in.csv)) {out.dir<-dirname(file.path(in.csv));}
+    }
+    if (verbosity>0) cat("Output directory for selectHauls.TrawlSurvey will be '",out.dir,"'\n",sep='');
+        
     yrs<-tbl$START_DATE%%10000;
     tbl$YEAR<-yrs;
     uniq.yrs<-unique(yrs);

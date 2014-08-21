@@ -1,8 +1,7 @@
 #'
 #'@title Calculate total abundance and biomass from a by-stratum data frame or csv file.
 #'
-#'@param tbl     : data frame with abundance/biomass by stratum info from call to \code{\link{calcBiomass.ByStratum}} or calcBiomass.EW166(...)
-#'@param in.csv  : csv file with abundance/biomass by stratum info from call to \code{\link{calcBiomass.ByStratum}} or calcBiomass.EW166(...)
+#'@param tbl     : data frame with abundance/biomass by stratum info from call to \code{\link{calcBiomass.ByStratum} or \link{calcBiomass.EW166}}, or a csv file from such a call, or NULL
 #'@param export  : boolean flag to write results to csv file
 #'@param out.csv : output file name
 #'@param out.dir : output file directory 
@@ -49,23 +48,24 @@ calcBiomass.EBS<-function(tbl=NULL,
                           verbosity=1){    
     if (verbosity>1) cat("starting calcBiomass.EBS\n");
     
-    if (is.null(tbl)){
-        if (is.null(in.csv)) {
-            Filters<-addFilter("csv","csv files (*.csv)","*.csv");
-            in.csv<-tk_choose.files(caption=paste("Select csv file with biomass by stratum info"),
-                                    multi=FALSE,filters=matrix(Filters[c("csv"),],1,2,byrow=TRUE));
+    in.csv<-NULL;
+    if (!is.data.frame(tbl)){
+        if (!is.character(tbl)) {
+            in.csv<-wtsUtilities::selectFile(ext="csv",caption="Select csv file with biomas-by-stratum info");
             if (is.null(in.csv)|(in.csv=='')) return(NULL);
+        } else {
+            in.csv<-tbl;#tbl is a filename
         }
-        if (is.null(out.dir)) {
-            out.dir<-dirname(file.path('.'));
-            if (!is.null(in.csv)) {out.dir<-dirname(file.path(in.csv));}
-        }
-        if (verbosity>0) cat("Output directory for calcBiomass.EBS will be '",out.dir,"'\n",sep='');
-        
-        if (verbosity>1) cat("Reading csv file for biomass by stratum info.\n",sep='')
+        if (verbosity>1) cat("Reading csv file for biomass-by-stratum info.\n",sep='')
         tbl<-read.csv(in.csv,stringsAsFactors=FALSE);
         if (verbosity>1) cat("Done reading input csv file.\n")
     }
+    
+    if (is.null(out.dir)) {
+        out.dir<-dirname(file.path('.'));
+        if (!is.null(in.csv)) {out.dir<-dirname(file.path(in.csv));}
+    }
+    if (verbosity>0) cat("Output directory for calcBiomass.EBS will be '",out.dir,"'\n",sep='');
     
     #determine columns of biomass by stratum table
     cols<-names(tbl); 

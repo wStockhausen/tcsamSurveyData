@@ -3,13 +3,12 @@
 #'
 #'@description This function estimates abundance, biomass by year, east/west of 166W from a biomass-by-stratum data frame or csv file.
 #'
-#'@param tbl    : data frame with biomass by stratum info from call to \code{\link{calcBiomass.ByStratum}}
-#'@param in.csv : csv file with biomass by stratum info from call to \code{\link{calcBiomass.ByStratum}}
-#'@param strata.revd : data frame w/ conversion from original strata to EW166 strata
-#'@param export  : boolean flag to write results to csv file
-#'@param out.csv : output file name
-#'@param out.dir : output file directory 
-#'@param verbosity : integer flag indicating level of printed output (0=off,1=minimal,2=full)
+#'@param tbl         : data frame with biomass by stratum info from call to \code{\link{calcBiomass.ByStratum}} or csv file with biomass by stratum info, or NULL
+#'@param strata_revd : data frame w/ conversion from original strata to EW166 strata
+#'@param export      : boolean flag to write results to csv file
+#'@param out.csv     : output file name
+#'@param out.dir     : output file directory 
+#'@param verbosity   : integer flag indicating level of printed output (0=off,1=minimal,2=full)
 #'
 #'@return  Dataframe w/ estimates of abundance, biomass by year, strata as east/west of 166W, and other factors. Columns are \cr
 #'\itemize{
@@ -37,13 +36,11 @@
 #'}
 #'
 #' @import sqldf
-#' @importFrom tcltk tk_choose.files
-#' @importFrom wtsUtilities addFilter
+#' @importFrom wtsUtilities selectFile
 #'      
 #'@export
 #'
 calcBiomass.EW166<-function(tbl=NULL,
-                          in.csv=NULL,
                           strata_revd=Codes.TrawlSurvey()[["strata.EW166"]],
                           export=TRUE,
                           out.csv='SurveyBiomass.csv',
@@ -51,23 +48,24 @@ calcBiomass.EW166<-function(tbl=NULL,
                           verbosity=1){
     if (verbosity>1) cat("starting calcBiomass.EW166\n");
     
-    if (is.null(tbl)){
-        if (is.null(in.csv)) {
-            Filters<-addFilter("csv","csv files (*.csv)","*.csv");
-            in.csv<-tk_choose.files(caption=paste("Select csv file with biomass by stratum info"),
-                                    multi=FALSE,filters=matrix(Filters[c("csv"),],1,2,byrow=TRUE));
+    in.csv<-NULL;
+    if (!is.data.frame(tbl)){
+        if (!is.character(tbl)) {
+            in.csv<-wtsUtilities::selectFile(ext="csv",caption="Select csv file with biomas-by-stratum info");
             if (is.null(in.csv)|(in.csv=='')) return(NULL);
+        } else {
+            in.csv<-tbl;#tbl is a filename
         }
-        if (is.null(out.dir)) {
-            out.dir<-dirname(file.path('.'));
-            if (!is.null(in.csv)) {out.dir<-dirname(file.path(in.csv));}
-        }
-        if (verbosity>0) cat("Output directory for calcBiomass.EW166 will be '",out.dir,"'\n",sep='');
-        
-        if (verbosity>1) cat("Reading csv file for biomass by stratum info.\n",sep='')
+        if (verbosity>1) cat("Reading csv file for biomass-by-stratum info.\n",sep='')
         tbl<-read.csv(in.csv,stringsAsFactors=FALSE);
         if (verbosity>1) cat("Done reading input csv file.\n")
     }
+    
+    if (is.null(out.dir)) {
+        out.dir<-dirname(file.path('.'));
+        if (!is.null(in.csv)) {out.dir<-dirname(file.path(in.csv));}
+    }
+    if (verbosity>0) cat("Output directory for calcBiomass.EW166 will be '",out.dir,"'\n",sep='');
     
     #determine columns of biomass by stratum table
     cols<-names(tbl); 

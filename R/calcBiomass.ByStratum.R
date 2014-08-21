@@ -2,8 +2,7 @@
 #'@title Calculate average cpue, numbers and biomass by stratum from AFSC trawl survey data.
 #'
 #'@param   tbl_strata : data frame w/ stations/strata from call to selectStrata.TrawlSurvey(...)
-#'@param   tbl_cpue   : data frame w/ cpue by year, station, other factor levels
-#'@param   in.csv     : csv file w/ cpue by year, station, other factor levels
+#'@param   tbl_cpue   : data frame w/ cpue by year, station, other factor levels (or csv filename or NULL)
 #'@param   export  : boolean flag to write results to csv file
 #'@param   out.csv : output file name
 #'@param   out.dir : output file directory 
@@ -11,7 +10,7 @@
 #'
 #'@description This function calculates average cpue, numbers and biomass by stratum from cpue (by survey station or by haul).
 #'
-#'@details If tbl_cpue and in.csv are both NULL, the user is prompted to enter a csv file with cpue info. \cr
+#'@details If tbl_cpue is NULL, the user is prompted to enter a csv file with cpue info. \cr
 #'\cr Other notes: \cr
 #'\itemize{
 #'   \item   Area is in square nautical miles
@@ -43,37 +42,44 @@
 #'}
 #'
 #' @import sqldf
-#' @importFrom tcltk tk_choose.files
-#' @importFrom wtsUtilities addFilter
+#' @importFrom wtsUtilities selectFile
 #'
 #'@export
 #'
 #######################################################################
 calcBiomass.ByStratum<-function(tbl_strata,
                                 tbl_cpue=NULL,
-                                in.csv=NULL,
                                 export=FALSE,
                                 out.csv='BiomassByStratum.csv',
                                 out.dir=NULL,
                                 verbosity=1){
     if (verbosity>1) cat("starting calcBiomass.ByStratum\n");
-    if (is.null(tbl_cpue)){
-        if (is.null(in.csv)) {
-            Filters<-addFilter("csv","csv files (*.csv)","*.csv");
-            in.csv<-tk_choose.files(caption=paste("Select csv file with cpue by haul or station"),
-                                    multi=FALSE,filters=matrix(Filters[c("csv"),],1,2,byrow=TRUE));
-            if (is.null(in.csv)|(in.csv=='')) return(NULL);
-        }
-        if (is.null(out.dir)) {
-            out.dir<-dirname(file.path('.'));
-            if (!is.null(in.csv)) {out.dir<-dirname(file.path(in.csv));}
-        }
-        if (verbosity>0) cat("Output directory for calcBiomass.ByStratum will be '",out.dir,"'\n",sep='');
-        
-        if (verbosity>0) cat("Reading csv file for cpue by haul or station.\n")
-        tbl_cpue<-read.csv(in.csv,stringsAsFactors=FALSE);
-        if (verbosity>0) cat("Done reading input csv file.\n")
+    
+    if (!is.data.frame(tbl_strata)) {
+        cat("Error in calcBiomass.ByStratum:",
+            "tbl_strata is NULL. Must supply tbl_strata.",
+            "Aborting...",sep='\n');
+        return(NULL);
     }
+    
+    in.csv<-NULL;
+    if (!is.data.frame(tbl_cpue)){
+        if (!is.character(tbl_cpue)) {
+            in.csv<-wtsUtilities::selectFile(ext="csv",caption="Select csv file with CPUE-by-haul or -by-station info");
+            if (is.null(in.csv)|(in.csv=='')) return(NULL);
+        } else {
+            in.csv<-tbl_cpue;#tbl is a filename
+        }
+        if (verbosity>1) cat("Reading csv file for CPUE-by-haul or -by-station info.\n",sep='')
+        tbl<-read.csv(in.csv,stringsAsFactors=FALSE);
+        if (verbosity>1) cat("Done reading input csv file.\n")
+    }
+    
+    if (is.null(out.dir)) {
+        out.dir<-dirname(file.path('.'));
+        if (!is.null(in.csv)) {out.dir<-dirname(file.path(in.csv));}
+    }
+    if (verbosity>0) cat("Output directory for calcCPUE.ByStratum will be '",out.dir,"'\n",sep='');
     
     #determine columns of cpue table
     cols<-names(tbl_cpue); 

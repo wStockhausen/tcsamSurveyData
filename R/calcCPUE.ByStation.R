@@ -1,8 +1,7 @@
 #'
 #'@title Function to calculate cpue by survey station, averaging over cpue by haul. 
 #'
-#'@param   tbl_cpue : data frame w/ cpue by haul from call to calcCPUE.ByHaul(...)
-#'@param   in.csv    : name of csv file w/ cpue by haul (if tbl_cpue is not given)
+#'@param   tbl_cpue : data frame w/ cpue by haul from call to calcCPUE.ByHaul(...), or name of csv file w/ cpue by haul, or NULL to choose file
 #'@param export  : boolean flag to write results to csv file
 #'@param out.csv : output file name
 #'@param out.dir : output file directory 
@@ -19,36 +18,35 @@
 #'}
 #'
 #' @import sqldf
-#' @importFrom tcltk tk_choose.files
-#' @importFrom wtsUtilities addFilter
+#' @importFrom wtsUtilities selectFile
 #'      
 #'@export
 #'
 calcCPUE.ByStation<-function(tbl_cpue=NULL,
-                             in.csv=NULL,
                              export=FALSE,
                              out.csv='cpue.ByStation.csv',
                              out.dir=NULL,
                              verbosity=1){
     if (verbosity>1) cat("starting calcCPUE.ByStation\n");
     
-    if (is.null(tbl_cpue)){
-        if (is.null(in.csv)) {
-            Filters<-addFilter("csv","csv files (*.csv)","*.csv");
-            in.csv<-tk_choose.files(caption=paste("Select csv file with cpue by haul info"),
-                                    multi=FALSE,filters=matrix(Filters[c("csv"),],1,2,byrow=TRUE));
+    in.csv<-NULL;
+    if (!is.data.frame(tbl_cpue)){
+        if (!is.character(tbl_cpue)) {
+            in.csv<-wtsUtilities::selectFile(ext="csv",caption="Select csv file with CPUE-by-haul info");
             if (is.null(in.csv)|(in.csv=='')) return(NULL);
+        } else {
+            in.csv<-tbl_cpue;#tbl is a filename
         }
-        if (is.null(out.dir)) {
-            out.dir<-dirname(file.path('.'));
-            if (!is.null(in.csv)) {out.dir<-dirname(file.path(in.csv));}
-        }
-        if (verbosity>0) cat("Output directory for calcCPUE.ByStation will be '",out.dir,"'\n",sep='');
-        
-        if (verbosity>1) cat("Reading csv file for cpue by haul results.\n",sep='')
-        tbl_cpue<-read.csv(in.csv,stringsAsFactors=FALSE);
+        if (verbosity>1) cat("Reading csv file for CPUE-by-haul info.\n",sep='')
+        tbl<-read.csv(in.csv,stringsAsFactors=FALSE);
         if (verbosity>1) cat("Done reading input csv file.\n")
     }
+    
+    if (is.null(out.dir)) {
+        out.dir<-dirname(file.path('.'));
+        if (!is.null(in.csv)) {out.dir<-dirname(file.path(in.csv));}
+    }
+    if (verbosity>0) cat("Output directory for calcCPUE.ByStation will be '",out.dir,"'\n",sep='');
     
     #determine names of factor columns (if any) in cpue table
     cols<-names(tbl_cpue); 

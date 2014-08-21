@@ -1,0 +1,43 @@
+\name{getChelaHeights}
+\alias{getChelaHeights}
+\title{Function to extract chela height data on males w/ selected characteristics from NMFS trawl survey csv files.}
+\usage{
+getChelaHeights(tbl_hauls, tbl = NULL, col.Size = "WIDTH", export = FALSE,
+  out.csv = "ChelaHeights.csv", out.dir = NULL,
+  shell_condition = c("NEW_SHELL", "OLD_SHELL", "ALL"), minSize = -Inf,
+  maxSize = Inf, verbosity = 1)
+}
+\arguments{
+  \item{tbl_hauls}{: hauls table (dataframe) from call to
+  selectHauls.TrawlSurvey(...) [required]}
+
+  \item{tbl}{: table (dataframe) of survey data (or
+  filename of survey csv file, or NULL)}
+
+  \item{export}{: boolean flag to export results to csv
+  file}
+
+  \item{shell_condition:}{one of 'NEW_SHELL','OLD_SHELL' or
+  'ALL' for narrowing selection of individuals}
+
+  \item{minWidth}{: minimum size (width) of individuals to
+  select}
+
+  \item{maxWidth}{: maximum size (width) of individuals to
+  select}
+
+  \item{verbosity:}{integer flag indicating level of
+  printed output (0=off,1=minimal,2=full)}
+}
+\value{
+dataframe
+}
+\description{
+
+}
+\details{
+If tbl is NULL, the user will be prompted for a survey csv
+file via a file dialog box.\cr \itemize{\item Weights are
+in grams.}
+}
+

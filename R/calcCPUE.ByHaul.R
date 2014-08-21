@@ -3,17 +3,15 @@
 #'
 #'@description Function to calculate cpue by survey haul and other factors (e.g., sex) from station, haul and individual crab info.
 #'
-#'@param tbl_hauls   : dataframe from call to \code{\link{selectHauls.TrawlSurvey}}
-#'@param tbl_indivs  : dataframe from call to \code{\link{selectIndivs.TrawlSurvey}}
-#'@param in.csv      : name of csv file w/ individual crab info to read (if tbl_indivs is not given)
-#'@param  bySex=FALSE,
-#'@param  byShellCondition=FALSE,
-#'@param  byMaturity=FALSE,
-#'@param  bySize=FALSE,
-#'@param  binSizes=FALSE,
-#'@param  cutpts=seq(from=25,to=185,by=5),
-#'@param  truncate.low=TRUE,
-#'@param  truncate.high=FALSE,
+#'@param tbl_hauls   : dataframe from call to \code{\link{selectHauls.TrawlSurvey}} [required]
+#'@param tbl_indivs  : dataframe from call to \code{\link{selectIndivs.TrawlSurvey}} (or crab survey filename, or NULL)
+#'@param  bySex            : flag (T/F) to calc by sex
+#'@param  byShellCondition : flag (T/F) to calc by shell condition
+#'@param  byMaturity       : flag (T/F) to calc by maturity state
+#'@param  bySize        : flag (T/F) to calc by size
+#'@param  cutpts        : vector of cutpoints to create size bins from
+#'@param  truncate.low  : flag (T/F) to exclude individuals smaller than minSize
+#'@param  truncate.high : flag (T/F) to exclude individuals larger than maxSize
 #'@param export  : boolean flag to write results to csv file
 #'@param out.csv : output file name
 #'@param out.dir : output file directory 
@@ -30,19 +28,16 @@
 #'}
 #'
 #' @import sqldf
-#' @importFrom tcltk tk_choose.files
-#' @importFrom wtsUtilities addFilter
+#' @importFrom wtsUtilities selectFile
 #'      
 #'@export
 #'
 calcCPUE.ByHaul<-function(tbl_hauls,
                           tbl_indivs=NULL,
-                          in.csv=NULL,
                           bySex=FALSE,
                           byShellCondition=FALSE,
                           byMaturity=FALSE,
                           bySize=FALSE,
-                          binSizes=FALSE,
                           cutpts=seq(from=25,to=185,by=5),
                           truncate.low=TRUE,
                           truncate.high=FALSE,
@@ -50,25 +45,34 @@ calcCPUE.ByHaul<-function(tbl_hauls,
                           out.csv='cpue.ByHaul.csv',
                           out.dir=NULL,
                           verbosity=1){
-    if (verbosity>1) cat("starting calcCPUE.ByHaul\n");
+    if (verbosity>0) cat("starting calcCPUE.ByHaul\n");
     
-    if (is.null(tbl_indivs)){
-        if (is.null(in.csv)) {
-            Filters<-addFilter("csv","csv files (*.csv)","*.csv");
-            in.csv<-tk_choose.files(caption=paste("Select csv file with individual crab info"),
-                                    multi=FALSE,filters=matrix(Filters[c("csv"),],1,2,byrow=TRUE));
+    
+    if (!is.data.frame(tbl_hauls)) {
+        cat("Error in calcCPUE.ByHaul:",
+            "tbl_hauls is NULL. Must supply tbl_hauls.",
+            "Aborting...",sep='\n');
+        return(NULL);
+    }
+    
+    in.csv<-NULL;
+    if (!is.data.frame(tbl_indivs)){
+        if (!is.character(tbl_indivs)) {
+            in.csv<-wtsUtilities::selectFile(ext="csv",caption="Select AFSC crab trawl survey file");
             if (is.null(in.csv)|(in.csv=='')) return(NULL);
+        } else {
+            in.csv<-tbl_indivs;#tbl is a filename
         }
-        if (is.null(out.dir)) {
-            out.dir<-dirname(file.path('.'));
-            if (!is.null(in.csv)) {out.dir<-dirname(file.path(in.csv));}
-        }
-        if (verbosity>0) cat("Output directory for calcCPUE.ByHaul will be '",out.dir,"'\n",sep='');
-        
-        if (verbosity>1) cat("Reading csv file for individual crab info.\n",sep='')
-        tbl_indivs<-read.csv(in.csv,stringsAsFactors=FALSE);
+        if (verbosity>1) cat("Reading AFSC crab trawl survey csv file for individual crab info.\n",sep='')
+        tbl<-read.csv(in.csv,stringsAsFactors=FALSE);
         if (verbosity>1) cat("Done reading input csv file.\n")
     }
+    
+    if (is.null(out.dir)) {
+        out.dir<-dirname(file.path('.'));
+        if (!is.null(in.csv)) {out.dir<-dirname(file.path(in.csv));}
+    }
+    if (verbosity>0) cat("Output directory for calcCPUE.ByHaul will be '",out.dir,"'\n",sep='');
     
     #make some shorter variables
     bySx<-bySex;bySC<-byShellCondition;byMt<-byMaturity;bySz<-bySize;
@@ -85,7 +89,7 @@ calcCPUE.ByHaul<-function(tbl_hauls,
         return(qry);
     }
     
-    if (binSizes){
+    if (bySize){
       #expand cutpts to truncate or not
       nCtPts<-length(cutpts);
       ctpts.tmp<-cutpts;

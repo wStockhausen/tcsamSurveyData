@@ -5,5 +5,6 @@ Version: 1.0
 Date: 2014-05-20
 Author: William Stockhausen
 Maintainer: William Stockhausen <william.stockhausen@noaa.gov>
-Description: Provides a set of functions to calculate 
+Description: Provides a set of functions to calculate abundance, biomass, size frequencies from nmfs EBS survey data.
 License: MIT
+Imports: sqldf, tcsamFunctions, wtsUtilities

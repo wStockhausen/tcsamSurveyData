@@ -1,21 +1,27 @@
 #'
 #'@title Function to extract crab station data and strata information from a NMFS trawl survey strata file.
 #'
-#'@param tbl_hauls : hauls table (dataframe) from call to selectHauls.TrawlSurvey(...) [required]
-#'@param tbl       : table (dataframe) of survey station/strata data (from read.csv() called on survey station/strata csv file)
-#'@param in.csv    : name of survey station/strata csv file to read (if tbl is not given)
+#'@description Same as selectStations.TrawlSurvey(...)
+#'
+#'@param tbl       : table (dataframe) of survey station/strata data (or name of survey station/strata csv file, or NULL)
 #'@param species   : code ('BKC','BTC','RKC','OTC') indicating species
 #'@param useOrigStrata: boolean to use Bob Foy's "original" strata, rather than the revised strata
 #'@param export    : boolean flag to export results to csv file
 #'@param verbosity : integer flag indicating level of printed output (0=off,1=minimal,2=full)
 #'
-#'@details If neither tbl or in.csv is given, the user will be prompted for a csv file via a file dialog box
+#'@details If tbl is NULL, the user will be prompted for a csv file via a file dialog box.
+#'Returned dataframe has columns:
+#'\itemize{\item {YEAR}
+#'         \item {STRATUM}
+#'         \item {STRATUM_CODE}
+#'         \item {STRATUM_AREA}
+#'         \item {GIS_STATION}
+#'         }
 #'
-#' @return a dataframe with strata
+#' @return a dataframe with strata/stations info.
 #' 
 #' @import sqldf
-#' @importFrom tcltk tk_choose.files
-#' @importFrom wtsUtilities addFilter
+#' @importFrom wtsUtilities selectFile
 #' 
 #' @export
 #' 
@@ -23,34 +29,33 @@
 #library("tcltk")
 #source("Codes.TrawlSurvey.R",chdir=TRUE)
 #source("../Utilities/addFilter.R",chdir=TRUE)
-selectStrata.TrawlSurvey<-function(tbl_hauls,
-                                   tbl=NULL,
-                                   in.csv=NULL,
+selectStrata.TrawlSurvey<-function(tbl=NULL,
                                    species='BTC',
                                    useOrigStrata=FALSE,
                                    export=FALSE,
                                    out.csv=paste('SelectedStations',species,'csv',sep='.'),
                                    out.dir=NULL,
                                    verbosity=1){
-    if (verbosity>1) cat("starting selectStrata.TrawlSurvey.\n");
+    if (verbosity>0) cat("starting selectStrata.TrawlSurvey.\n");
     
-    if (is.null(tbl)){
-        if (is.null(in.csv)) {
-            Filters<-addFilter("csv","csv files (*.csv)","*.csv");
-            in.csv<-tk_choose.files(caption=paste("Select AFSC crab survey strata file"),
-                                    multi=FALSE,filters=matrix(Filters[c("csv"),],1,2,byrow=TRUE));
+    in.csv<-NULL;
+    if (!is.data.frame(tbl)){
+        if (!is.character(tbl)) {
+            in.csv<-wtsUtilities::selectFile(ext="csv",caption="Select AFSC crab survey strata file");
             if (is.null(in.csv)|(in.csv=='')) return(NULL);
+        } else {
+            in.csv<-tbl;#tbl is a filename
         }
-        if (is.null(out.dir)) {
-            out.dir<-dirname(file.path('.'));
-            if (!is.null(in.csv)) {out.dir<-dirname(file.path(in.csv));}
-        }
-        if (verbosity>0) cat("Output directory for selectStrata.TrawlSurvey will be '",out.dir,"'\n",sep='');
-        
         if (verbosity>1) cat("Reading AFSC crab survey strata file (csv) for station info.\n",sep='')
         tbl<-read.csv(in.csv,stringsAsFactors=FALSE);
         if (verbosity>1) cat("Done reading input csv file.\n")
     }
+    
+    if (is.null(out.dir)) {
+        out.dir<-dirname(file.path('.'));
+        if (!is.null(in.csv)) {out.dir<-dirname(file.path(in.csv));}
+    }
+    if (verbosity>0) cat("Output directory for selectStrata.TrawlSurvey will be '",out.dir,"'\n",sep='');
     
     #rearrange columns, drop some
     cols<-c("SURVEY_YEAR","STATION_ID","STRATUM","TOTAL_AREA")

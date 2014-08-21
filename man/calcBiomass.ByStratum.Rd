@@ -2,19 +2,15 @@
 \alias{calcBiomass.ByStratum}
 \title{Calculate average cpue, numbers and biomass by stratum from AFSC trawl survey data.}
 \usage{
-calcBiomass.ByStratum(tbl_strata, tbl_cpue = NULL, in.csv = NULL,
-  export = FALSE, out.csv = "BiomassByStratum.csv", out.dir = NULL,
-  verbosity = 1)
+calcBiomass.ByStratum(tbl_strata, tbl_cpue = NULL, export = FALSE,
+  out.csv = "BiomassByStratum.csv", out.dir = NULL, verbosity = 1)
 }
 \arguments{
   \item{tbl_strata}{: data frame w/ stations/strata from
   call to selectStrata.TrawlSurvey(...)}
 
   \item{tbl_cpue}{: data frame w/ cpue by year, station,
-  other factor levels}
-
-  \item{in.csv}{: csv file w/ cpue by year, station, other
-  factor levels}
+  other factor levels (or csv filename or NULL)}
 
   \item{export}{: boolean flag to write results to csv
   file}
@@ -47,11 +43,11 @@ by stratum from cpue (by survey station or by haul).
 \details{
 
 
-If tbl_cpue and in.csv are both NULL, the user is prompted
-to enter a csv file with cpue info. \cr \cr Other notes:
-\cr \itemize{ \item Area is in square nautical miles \item
-CPUE in numbers is in no/(sq. nm.)  \item CPUE in weight is
-in mt/(sq. nm.)  \item Abundance is in 10^6 indivs \item
+If tbl_cpue is NULL, the user is prompted to enter a csv
+file with cpue info. \cr \cr Other notes: \cr \itemize{
+\item Area is in square nautical miles \item CPUE in
+numbers is in no/(sq. nm.)  \item CPUE in weight is in
+mt/(sq. nm.)  \item Abundance is in 10^6 indivs \item
 Biomass is in 10^3 mt }
 }
 

@@ -2,20 +2,18 @@
 \alias{selectHauls.TrawlSurvey}
 \title{Function to extract NMFS crab survey hauls data from Excel csv file format by year.}
 \usage{
-selectHauls.TrawlSurvey(tbl_strata, tbl = NULL, in.csv = NULL,
-  export = FALSE, out.csv = "SelectedSurveyHauls.csv", out.dir = NULL,
-  Years = NULL, HaulTypes = NULL, YearRange = NULL, DepthRange = NULL,
+selectHauls.TrawlSurvey(tbl_strata, tbl = NULL, export = FALSE,
+  out.csv = "SelectedSurveyHauls.csv", out.dir = NULL, Years = NULL,
+  HaulTypes = NULL, YearRange = NULL, DepthRange = NULL,
   LatRange = NULL, LonRange = NULL, verbosity = 1)
 }
 \arguments{
-  \item{tbl_strata}{- data frame from call to
+  \item{tbl_strata}{- dataframe from call to
   selectStrata.TrawlSurvey(...) [required]}
 
-  \item{tbl}{- trawl survey data table from previous call
-  (ignored if NULL)}
-
-  \item{in.csv}{- trawl survey data as csv file (ignored if
-  NULL)}
+  \item{tbl}{- trawl survey dataframe from previous call
+  (or name of trawl survey csv datafile, or NULL) (ignored
+  if NULL)}
 
   \item{export}{- boolean flag to export results to csv
   file}
@@ -23,8 +21,8 @@ selectHauls.TrawlSurvey(tbl_strata, tbl = NULL, in.csv = NULL,
   \item{out.csv}{- name of output csv file (ignored if
   NULL)}
 
-  \item{out.dir}{- base path for output csv file (ignored
-  if NULL)}
+  \item{out.dir}{- base path for output csv file (set to
+  folder of input csv file or current working directory)}
 
   \item{Years}{- vector of survey years to include in
   output (ignored if NULL)}

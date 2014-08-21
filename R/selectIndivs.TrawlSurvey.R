@@ -1,26 +1,43 @@
 #'
-#' @title Function to extract crab data on individuals w/ selected characteristics from NMFS trawl survey csv files.
+#'@title Function to extract crab data on individuals w/ selected characteristics from NMFS trawl survey csv files.
 #' 
-#' @param tbl_hauls : hauls table (dataframe) from call to selectHauls.TrawlSurvey(...) [required]
-#' @param tbl       : table (dataframe) of survey data (from read.csv() called on survey csv file)
-#' @param in.csv    : name of survey csv file to read (if tbl is not given)
-#' @param export    : boolean flag to export results to csv file
-#' @param sex            : one of 'MALE','FEMALE' or 'ALL' for narrowing selection of individuals
-#' @param shell_condition: one of 'NEW_SHELL','OLD_SHELL' or 'ALL' for narrowing selection of individuals
-#' @param maturity       : one of 'IMMATURE','MATURE' or 'ALL' for narrowing selection of individuals
-#' @param minWidth : minimum size (width) of individuals to select 
-#' @param maxWidth : maximum size (width) of individuals to select 
+#'@param tbl_hauls : hauls table (dataframe) from call to selectHauls.TrawlSurvey(...) [required]
+#'@param tbl       : table (dataframe) of survey data (or csv filename or NULL)
+#'@param export    : boolean flag to export results to csv file
+#'@param sex            : one of 'MALE','FEMALE' or 'ALL' for narrowing selection of individuals
+#'@param shell_condition: one of 'NEW_SHELL','OLD_SHELL' or 'ALL' for narrowing selection of individuals
+#'@param maturity       : one of 'IMMATURE','MATURE' or 'ALL' for narrowing selection of individuals
+#'@param minWidth : minimum size (width) of individuals to select 
+#'@param maxWidth : maximum size (width) of individuals to select 
 #'@param verbosity : integer flag indicating level of printed output (0=off,1=minimal,2=full)
 #'
-#' @return dataframe
+#'@return dataframe (see Details for coulmn names)
 #' 
-#' @details If neither tbl or in.csv is given, the user will be prompted for a csv file via a file dialog box.\cr
-#'\itemize{\item Weights are in grams.}
+#'@details If neither tbl or in.csv is given, the user will be prompted for a csv file via a file dialog box.\cr
+#' Returned dataframe will have columns:
+#' \itemize{\item {HAULJOIN}
+#'          \item {numIndivs}
+#'          \item {SEX}
+#'          \item {SHELL_CONDITION}
+#'          \item {MATURITY}
+#'          \item {SEX_CODE}
+#'          \item {SHELL_CONDITION_CODE}
+#'          \item {SIZE}
+#'          \item {EGG_COLOR}
+#'          \item {EGG_CONDITION}
+#'          \item {CLUTCH_SIZE}
+#'          \item {CHERLA_HEIGHT}
+#'          \item {SAMPLING_FACTOR}
+#'          \item {WEIGHT}
+#'          \item {CALCULATED_WEIGHT}
+#'         } \cr
+#' Notes:
+#' \itemize{\item Weights are in grams.}
 #' 
 #' @import sqldf
 #' @import tcsamFunctions
-#' @importFrom tcltk tk_choose.files
 #' @importFrom wtsUtilities addFilter
+#' @importFrom wtsUtilities selectFile
 #' 
 #' @export
 #' 
@@ -35,7 +52,6 @@
 selectIndivs.TrawlSurvey<-function(tbl_hauls,
                                    tbl=NULL,
                                    col.Size='WIDTH',
-                                   in.csv=NULL,
                                    export=FALSE,
                                    out.csv="SelectedIndivs.csv",
                                    out.dir=NULL,
@@ -46,25 +62,34 @@ selectIndivs.TrawlSurvey<-function(tbl_hauls,
                                    minSize=-Inf,
                                    maxSize=Inf,
                                    verbosity=1){
-    if (verbosity>1) cat("starting selectIndivs.TrawlSurvey.\n");
+    if (verbosity>0) cat("starting selectIndivs.TrawlSurvey.\n");
     
-    if (is.null(tbl)){
-        if (is.null(in.csv)) {
-            Filters<-addFilter("csv","csv files (*.csv)","*.csv");
-            in.csv<-tk_choose.files(caption=paste("Select AFSC crab trawl survey file"),
-                                    multi=FALSE,filters=matrix(Filters[c("csv"),],1,2,byrow=TRUE));
+    if (!is.data.frame(tbl_hauls)) {
+        cat("Error in selectIndivs.TrawlSurvey:",
+            "tbl_hauls is NULL. Must supply tbl_hauls.",
+            "Aborting...",sep='\n');
+        return(NULL);
+    }
+    
+    in.csv<-NULL;
+    if (!is.data.frame(tbl)){
+        if (!is.character(tbl)) {
+            in.csv<-wtsUtilities::selectFile(ext="csv",caption="Select AFSC crab trawl survey file");
             if (is.null(in.csv)|(in.csv=='')) return(NULL);
+        } else {
+            in.csv<-tbl;#tbl is a filename
         }
-        if (is.null(out.dir)) {
-            out.dir<-dirname(file.path('.'));
-            if (!is.null(in.csv)) {out.dir<-dirname(file.path(in.csv));}
-        }
-        if (verbosity>0) cat("Output directory for selectIndivs.TrawlSurvey will be '",out.dir,"'\n",sep='');
-        
         if (verbosity>1) cat("Reading AFSC crab trawl survey csv file for individual crab info.\n",sep='')
         tbl<-read.csv(in.csv,stringsAsFactors=FALSE);
         if (verbosity>1) cat("Done reading input csv file.\n")
     }
+    
+    if (is.null(out.dir)) {
+        out.dir<-dirname(file.path('.'));
+        if (!is.null(in.csv)) {out.dir<-dirname(file.path(in.csv));}
+    }
+    if (verbosity>0) cat("Output directory for selectIndivs.TrawlSurvey will be '",out.dir,"'\n",sep='');
+        
     #identify size column (WIDTH, LENGTH) and standardize name to SIZE
     nms<-names(tbl);
     idx<-which(nms==col.Size);

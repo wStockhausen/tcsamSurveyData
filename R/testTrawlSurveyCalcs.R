@@ -15,16 +15,19 @@
 #'\cr Note: if \code{out.dir=NULL}, the directory associated with the 
 #'trawl survey data file will be used as \code{out.dir}
 #'
-#'@importFrom wtsUtilities getCSV
+#'@importFrom wtsUtilities selectFile
 #'
 #'@export
 #'
 testTrawlSurveyCalcs<-function(out.dir=NULL,
                                verbosity=1){
     #read in trawl survey individual crab info and strata info
-    info.Indivs<-getCSV(caption="Select AFSC trawl survey data file")
-    info.Strata<-getCSV(caption="Select AFSC trawl survey strata file")
+    info.Indivs<-wtsUtilities::selectFile("csv",caption="Select AFSC trawl survey data file")
     if (is.null(out.dir)) out.dir<-dirname(info.Indivs);
+    info.Indivs<-read.csv(info.Indivs,stringsAsFactors=FALSE);
+    
+    info.Strata<-wtsUtilities::selectFile("csv",caption="Select AFSC trawl survey strata file")
+    info.Strata<-read.csv(info.Strata,stringsAsFactors=FALSE);
     
     #select strata/stations
     strata.rev<-selectStrata.TrawlSurvey(tbl=info.Strata,species='BTC',verbosity=verbosity)
@@ -47,31 +50,31 @@ testTrawlSurveyCalcs<-function(out.dir=NULL,
                                          out.csv="indivs.csv",
                                          verbosity=verbosity);
     
-    bio.bySex.RS<-doBiomassCalcs(strata.rev,
-                                 tbl.hauls,
-                                 tbl.indivs,
-                                 calcCPUE.byStation=TRUE,
-                                 calcBiomass.byEW166=TRUE,
-                                 bySex=TRUE,
-                                 byShellCondition=FALSE,
-                                 byMaturity=FALSE,
-                                 bySize    =FALSE,
-                                 binSizes  =FALSE,
-                                 cutpts=seq(from=0,to=185,by=5),
-                                 truncate.low =TRUE,
-                                 truncate.high=FALSE,
-                                 export.cpue.byH    =FALSE,
-                                 export.cpue.byS    =FALSE,
-                                 export.bio.byStrata=FALSE,
-                                 export.bio.EW166   =TRUE,
-                                 export.totBio      =TRUE,
-                                 out.csv.cpue.byH='cpue.byH.csv',
-                                 out.csv.cpue.byS='cpue.byS.csv',
-                                 out.csv.bio.byStrata='bio.byStrata.csv',
-                                 out.csv.bio.EW166='bio.RS.bySex.EW166.csv',
-                                 out.csv.totBio='totbio.RS.bySex.csv',
-                                 out.dir=out.dir,
-                                 verbosity=verbosity);
+#     bio.bySex.RS<-doBiomassCalcs(strata.rev,
+#                                  tbl.hauls,
+#                                  tbl.indivs,
+#                                  calcCPUE.byStation=TRUE,
+#                                  calcBiomass.byEW166=TRUE,
+#                                  bySex=TRUE,
+#                                  byShellCondition=FALSE,
+#                                  byMaturity=FALSE,
+#                                  bySize    =FALSE,
+#                                  binSizes  =FALSE,
+#                                  cutpts=seq(from=0,to=185,by=5),
+#                                  truncate.low =TRUE,
+#                                  truncate.high=FALSE,
+#                                  export.cpue.byH    =FALSE,
+#                                  export.cpue.byS    =FALSE,
+#                                  export.bio.byStrata=FALSE,
+#                                  export.bio.EW166   =TRUE,
+#                                  export.totBio      =TRUE,
+#                                  out.csv.cpue.byH='cpue.byH.csv',
+#                                  out.csv.cpue.byS='cpue.byS.csv',
+#                                  out.csv.bio.byStrata='bio.byStrata.csv',
+#                                  out.csv.bio.EW166='bio.RS.bySex.EW166.csv',
+#                                  out.csv.totBio='totbio.RS.bySex.csv',
+#                                  out.dir=out.dir,
+#                                  verbosity=verbosity);
     bio.bySex.OH<-doBiomassCalcs(strata.org,
                                  tbl.hauls,
                                  tbl.indivs,
@@ -97,31 +100,31 @@ testTrawlSurveyCalcs<-function(out.dir=NULL,
                                  out.csv.totBio='totbio.OH.bySex.csv',
                                  out.dir=out.dir,
                                  verbosity=verbosity);
-    bio.RS<-doBiomassCalcs(strata.rev,
-                             tbl.hauls,
-                             tbl.indivs,
-                             calcCPUE.byStation=TRUE,
-                             calcBiomass.byEW166=TRUE,
-                             bySex=FALSE,
-                             byShellCondition=FALSE,
-                             byMaturity=FALSE,
-                             bySize    =FALSE,
-                             binSizes  =FALSE,
-                             cutpts=seq(from=0,to=185,by=5),
-                             truncate.low =TRUE,
-                             truncate.high=FALSE,
-                             export.cpue.byH    =FALSE,
-                             export.cpue.byS    =FALSE,
-                             export.bio.byStrata=TRUE,
-                             export.bio.EW166   =TRUE,
-                             export.totBio      =TRUE,
-                             out.csv.cpue.byH='cpue.byH.csv',
-                             out.csv.cpue.byS='cpue.byS.csv',
-                             out.csv.bio.byStrata='bio.RS.byStrata.csv',
-                             out.csv.bio.EW166='bio.RS.EW166.csv',
-                             out.csv.totBio='totbio.RS.csv',
-                             out.dir=out.dir,
-                             verbosity=verbosity);
+#     bio.RS<-doBiomassCalcs(strata.rev,
+#                              tbl.hauls,
+#                              tbl.indivs,
+#                              calcCPUE.byStation=TRUE,
+#                              calcBiomass.byEW166=TRUE,
+#                              bySex=FALSE,
+#                              byShellCondition=FALSE,
+#                              byMaturity=FALSE,
+#                              bySize    =FALSE,
+#                              binSizes  =FALSE,
+#                              cutpts=seq(from=0,to=185,by=5),
+#                              truncate.low =TRUE,
+#                              truncate.high=FALSE,
+#                              export.cpue.byH    =FALSE,
+#                              export.cpue.byS    =FALSE,
+#                              export.bio.byStrata=TRUE,
+#                              export.bio.EW166   =TRUE,
+#                              export.totBio      =TRUE,
+#                              out.csv.cpue.byH='cpue.byH.csv',
+#                              out.csv.cpue.byS='cpue.byS.csv',
+#                              out.csv.bio.byStrata='bio.RS.byStrata.csv',
+#                              out.csv.bio.EW166='bio.RS.EW166.csv',
+#                              out.csv.totBio='totbio.RS.csv',
+#                              out.dir=out.dir,
+#                              verbosity=verbosity);
     bio.OH<-doBiomassCalcs(strata.org,
                              tbl.hauls,
                              tbl.indivs,

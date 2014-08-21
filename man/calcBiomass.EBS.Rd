@@ -7,13 +7,9 @@ calcBiomass.EBS(tbl = NULL, in.csv = NULL, export = TRUE,
 }
 \arguments{
   \item{tbl}{: data frame with abundance/biomass by stratum
-  info from call to \code{\link{calcBiomass.ByStratum}} or
-  calcBiomass.EW166(...)}
-
-  \item{in.csv}{: csv file with abundance/biomass by
-  stratum info from call to
-  \code{\link{calcBiomass.ByStratum}} or
-  calcBiomass.EW166(...)}
+  info from call to \code{\link{calcBiomass.ByStratum} or
+  \link{calcBiomass.EW166}}, or a csv file from such a
+  call, or NULL}
 
   \item{export}{: boolean flag to write results to csv
   file}
