@@ -16,6 +16,8 @@
 #'         \item {STRATUM_CODE}
 #'         \item {STRATUM_AREA}
 #'         \item {GIS_STATION}
+#'         \item {STATION_LONGITUDE}
+#'         \item {STATION_LATITUDE}
 #'         }
 #'
 #' @return a dataframe with strata/stations info.
@@ -58,9 +60,9 @@ selectStrata.TrawlSurvey<-function(tbl=NULL,
     if (verbosity>0) cat("Output directory for selectStrata.TrawlSurvey will be '",out.dir,"'\n",sep='');
     
     #rearrange columns, drop some
-    cols<-c("SURVEY_YEAR","STATION_ID","STRATUM","TOTAL_AREA")
+    cols<-c("SURVEY_YEAR","STATION_ID","STRATUM","TOTAL_AREA","LONGITUDE","LATITUDE")
     tbl<-tbl[,cols];
-    new.cols<-c("SURVEY_YEAR","STATION_ID","STRATUM_CODE","TOTAL_AREA")
+    new.cols<-c("SURVEY_YEAR","STATION_ID","STRATUM_CODE","TOTAL_AREA","LONGITUDE","LATITUDE")
     names(tbl)<-new.cols;
     
     qry<-"select distinct
@@ -94,7 +96,9 @@ selectStrata.TrawlSurvey<-function(tbl=NULL,
             s.STRATUM as STRATUM,
             t.STRATUM_CODE as STRATUM_CODE,
             a.STRATUM_AREA as STRATUM_AREA,
-            t.STATION_ID as GIS_STATION
+            t.STATION_ID as GIS_STATION,
+            t.LONGITUDE as STATION_LONGITUDE,
+            t.LATITUDE as STATION_LATITUDE
           from
             tbl as t,
             strata as s,

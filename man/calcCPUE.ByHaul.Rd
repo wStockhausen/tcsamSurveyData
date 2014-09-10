@@ -45,8 +45,8 @@ calcCPUE.ByHaul(tbl_hauls, tbl_indivs = NULL, bySex = FALSE,
   printed output (0=off,1=minimal,2=full)}
 }
 \value{
-data frame of cpue (numbers and weight) by year, stratum,
-station, haul and other factor levels
+A dataframe of cpue (numbers and weight) by haul. See
+Details.
 }
 \description{
 Function to calculate cpue by survey haul and other factors
@@ -55,9 +55,15 @@ Function to calculate cpue by survey haul and other factors
 \details{
 
 
-\cr \cr Note: if tbl and in.csv are both NULL, the user is
-prompted to enter a csv file with biomass by stratum info.
-\cr \cr Other notes: \cr \itemize{ \item CPUE in numbers is
-in no/(sq. nm.) \item CPUE in weight is in mt/(sq. nm.) }
+Note: tbl_hauls is required. if tbl_indivs is a dataframe,
+it is used. If it is a character vector, it is interpreted
+as a file name and it is read as a csv file. If it is NULL,
+the user is prompted to choose a file to read. \cr The
+returned dataframe has the following columns: \cr \itemize{
+\item YEAR \item STRATUM \item GIS_STATION \item HAULJOIN
+\item LONGITUDE \item LATITUDE \item requested factors, if
+any \item numIndivs \item numCPUE \item wgtCPUE } \cr Other
+notes: \cr \itemize{ \item CPUE in numbers is in no/(sq.
+nm.) \item CPUE in weight is in mt/(sq. nm.) } \cr
 }
 

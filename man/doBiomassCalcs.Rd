@@ -21,7 +21,7 @@ doBiomassCalcs(tbl.strata, tbl.hauls, tbl.indivs, calcCPUE.byStation = TRUE,
   \item{tbl.indivs}{: dataframe with individual crab info
   (output from \code{\link{selectIndivs.TrawlSurvey}})}
 
-  \item{tbl.strata}{: dataframe with susrvey strata info
+  \item{tbl.strata}{: dataframe with survey strata info
   (output from \code{\link{selectStrata.TrawlSurvey}})}
 
   \item{calcCPUE.byStation}{= TRUE (otherwise calc cpue

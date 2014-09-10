@@ -17,15 +17,30 @@
 #'@param out.dir : output file directory 
 #'@param verbosity : integer flag indicating level of printed output (0=off,1=minimal,2=full)
 #'
-#'@return data frame of cpue (numbers and weight) by year, stratum, station, haul and other factor levels
-#'
-#'@details \cr
-#'\cr Note: if tbl and in.csv are both NULL, the user is prompted to enter a csv file with biomass by stratum info. \cr
+#'@details
+#'Note: tbl_hauls is required. if tbl_indivs is a dataframe, it is used. If it is a character vector, it is
+#'interpreted as a file name and it is read as a csv file. If it is NULL, the user is prompted to choose a file
+#'to read. \cr
+#'The returned dataframe has the following columns: \cr
+#'\itemize{
+#'\item   YEAR
+#'\item   STRATUM
+#'\item   GIS_STATION
+#'\item   HAULJOIN
+#'\item   LONGITUDE
+#'\item   LATITUDE
+#'\item   requested factors, if any
+#'\item   numIndivs
+#'\item   numCPUE
+#'\item   wgtCPUE
+#'}
 #'\cr Other notes: \cr
 #'\itemize{
 #'\item   CPUE in numbers is in no/(sq. nm.)
 #'\item   CPUE in weight  is in mt/(sq. nm.)
-#'}
+#'} \cr
+#'
+#'@return A dataframe of cpue (numbers and weight) by haul. See Details.
 #'
 #' @import sqldf
 #' @importFrom wtsUtilities selectFile
@@ -142,11 +157,19 @@ calcCPUE.ByHaul<-function(tbl_hauls,
         
         qry<-"select *
               from 
-                (select YEAR,STRATUM,GIS_STATION,HAULJOIN,AREA_SWEPT_VARIABLE from tbl_hauls),
+                (select 
+                    YEAR,STRATUM,GIS_STATION,HAULJOIN,
+                    1*MID_LONGITUDE as LONGITUDE,
+                    1*MID_LATITUDE as LATITUDE,
+                    AREA_SWEPT_VARIABLE from tbl_hauls),
                 tbl_ufctrs;"
         tbl_uhfs<-sqldf(qry);
     } else {
-        qry<-"select YEAR,STRATUM,GIS_STATION,HAULJOIN,AREA_SWEPT_VARIABLE from tbl_hauls;"
+        qry<-"select 
+                 YEAR,STRATUM,GIS_STATION,HAULJOIN,
+                 1*MID_LONGITUDE as LONGITUDE,
+                 1*MID_LATITUDE as LATITUDE,
+                 AREA_SWEPT_VARIABLE from tbl_hauls;"
         tbl_uhfs<-sqldf(qry);
     }
     
@@ -154,7 +177,9 @@ calcCPUE.ByHaul<-function(tbl_hauls,
     cols<-'u.YEAR,
            u.STRATUM,
            u.GIS_STATION,
-           u.HAULJOIN';
+           u.HAULJOIN,
+           u.LONGITUDE,
+           u.LATITUDE';
     if (bySx) cols<-paste(cols,',u.SEX',            sep='')
     if (bySC) cols<-paste(cols,',u.SHELL_CONDITION',sep='')
     if (byMt) cols<-paste(cols,',u.MATURITY',       sep='')

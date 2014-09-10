@@ -86,21 +86,21 @@ calcBiomass.ByStratum<-function(tbl_strata,
     nc<-length(cols);
     byHaul<-any(cols=="HAULJOIN");
     if (byHaul){
-        nc0f<-7;#number of col.s w/ no factors if cpue is by haul
+        nc0f<-9;#number of col.s w/ no factors if cpue is by haul
         facs<-'';
         if (nc>nc0f){
-            facs<-cols[5:(nc-3)];#drop the 1st 4 (YEAR,STRATUM,GIS_STATION,HAULJOIN) and last 3 column names (numIndivs,numCPUE,wgtCPUE)
+            facs<-cols[7:(nc-3)];#drop the 1st 6 (YEAR,STRATUM,GIS_STATION,HAULJOIN,HAUL_LONGITUDE,HAUL_LATITUDE) and last 3 column names (numIndivs,numCPUE,wgtCPUE)
         }
         byHaulSub<-"c.HAULJOIN,";
-        numHaulSub<-"1 as numHauls,";#number of hauls/haul (=1, of course)
+        numHaulSub<-"1 as numHauls, 1*(numIndivs>0) as numNonZeroHauls,";#number of hauls/haul (=1, of course)
     } else {
-        nc0f<-7;#number of col.s w/ no factors if cpue is by station
+        nc0f<-10;#number of col.s w/ no factors if cpue is by station
         facs<-'';
         if (nc>nc0f){
-            facs<-cols[4:(nc-4)];#drop the 1st 3 (YEAR,STRATUM,GIS_STATION) and last 4 column names (numHauls,numIndivs,numCPUE,wgtCPUE)
+            facs<-cols[6:(nc-5)];#drop the 1st 5 (YEAR,STRATUM,GIS_STATION,STATION_LONGITUDE,STATION_LATITUDE) and last 5 column names (numHauls,numNonZeroHauls,numIndivs,numCPUE,wgtCPUE)
         }
         byHaulSub<-"";
-        numHaulSub<-"c.numHauls,";#number of hauls/station
+        numHaulSub<-"c.numHauls,c.numNonZeroHauls,";#number of hauls/station
     }
     
     #assign (possibly) new strata to cpue table
@@ -139,6 +139,7 @@ calcBiomass.ByStratum<-function(tbl_strata,
             STRATUM_AREA&&facs,
             count(DISTINCT GIS_STATION) as numStations,
             sum(numHauls)  as numHauls,
+            sum(numNonZeroHauls) as numNonZeroHauls,
             sum(numIndivs) as numIndivs,
             avg(numCPUE)   as avgNUMCPUE,
             avg(wgtCPUE)   as avgWGTCPUE
@@ -163,6 +164,7 @@ calcBiomass.ByStratum<-function(tbl_strata,
             a.STRATUM_AREA as STRATUM_AREA&&facs,
             a.numStations as numStations,
             a.numHauls as numHauls,
+            a.numNonZeroHauls as numNonZeroHauls,
             a.numIndivs as numIndivs,
             avgNUMCPUE,
             avg((numCPUE-avgNUMCPUE)*(numCPUE-avgNUMCPUE)) as seNUMCPUE,

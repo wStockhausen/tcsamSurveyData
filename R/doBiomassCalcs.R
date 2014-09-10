@@ -3,7 +3,7 @@
 #'
 #'@param tbl.hauls   : dataframe with hauls info (output from \code{\link{selectHauls.TrawlSurvey}})
 #'@param tbl.indivs  : dataframe with individual crab info (output from \code{\link{selectIndivs.TrawlSurvey}})
-#'@param tbl.strata  : dataframe with susrvey strata info (output from \code{\link{selectStrata.TrawlSurvey}})
+#'@param tbl.strata  : dataframe with survey strata info (output from \code{\link{selectStrata.TrawlSurvey}})
 #'@param calcCPUE.byStation = TRUE (otherwise calc cpue using calcCPUE.ByHaul)
 #'@param calcBiomass.byEW166 = TRUE
 #'@param bySex = FALSE

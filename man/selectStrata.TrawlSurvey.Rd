@@ -36,6 +36,7 @@ Same as selectStations.TrawlSurvey(...)
 If tbl is NULL, the user will be prompted for a csv file
 via a file dialog box. Returned dataframe has columns:
 \itemize{\item {YEAR} \item {STRATUM} \item {STRATUM_CODE}
-\item {STRATUM_AREA} \item {GIS_STATION} }
+\item {STRATUM_AREA} \item {GIS_STATION} \item
+{STATION_LONGITUDE} \item {STATION_LATITUDE} }
 }
 
