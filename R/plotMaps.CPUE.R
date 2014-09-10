@@ -9,11 +9,11 @@
 #'@param scaleBy : factor to scale the ztype by BEFORE sending to plotMap.CSV
 #'@param zlab    : label for z (cpue) axes on map
 #'@param zunits  : label for z (cpue) units on maps
-#'@param zscl    : max z (after applying scaleBy) for z axis (automatically scaled to max if zscl is NULL)
-#'@param  plotBySex            : flag (T/F) to plot by individual sexes or vector of sexes to plot
-#'@param  plotByShellCondition : flag (T/F) to plot by indiviudvshell condition or vector of sc's to plot
-#'@param  plotByMaturity       : flag (T/F) to plot by maturity state or vector of ms's to plot
-#'@param psFile     : base name for output files
+#'@param zscl    : max z (after applying scaleBy) to use for all maps (automatically scaled to max if zscl is NULL)
+#'@param plotBySex            : flag (T/F) to plot by individual sexes or vector of sexes to plot
+#'@param plotByShellCondition : flag (T/F) to plot by indiviudvshell condition or vector of shell conditions to plot
+#'@param plotByMaturity       : flag (T/F) to plot by maturity state or vector of maturity states to plot
+#'@param basename  : base name for output files (year and factor level combinations will be added)
 #'@param verbosity : integer flag indicating level of printed output (0=off,1=minimal,2=full)
 #'
 #'@return vector or list of zscales used for plots
@@ -27,7 +27,7 @@
 #'@export
 #'
 plotMaps.CPUE<-function(tbl_cpue,
-                        years=2012,
+                        years=NULL,
                         ztype='numCPUE',
                         scaleBy=1,
                         title='Survey',
@@ -39,7 +39,7 @@ plotMaps.CPUE<-function(tbl_cpue,
                         zscl=NULL,
                         xyrng='180/205/54/62',
                         rotate=170,
-                        elev=70,
+                        elev=45,
                         delx=0.5,
                         dely=0.25,
                         blocktype=c('MEAN','SUM'),
@@ -54,7 +54,8 @@ plotMaps.CPUE<-function(tbl_cpue,
                         plt_reflines=TRUE,
                         reflines=list(list(lon=-166+0*seq(from=50,to=80,by=1),lat=seq(from=50,to=80,by=1))),
                         bathymetryFile='/Users/WilliamStockhausen/Programming/R/GitPackages/wtsGMT/data/depthcontour_200500.prn',
-                        cleanup=FALSE,
+                        basename='SurveyMaps',
+                        cleanup=TRUE,
                         verbosity=1){
 
     #figure out whether tbl_cpue is by haul or by station
@@ -70,6 +71,13 @@ plotMaps.CPUE<-function(tbl_cpue,
     }
     nf<-nc-(ns+nd);#number of factor columns for cpue by station
     
+    #determine years, if necessary
+    if (is.null(years)){
+        qry<-"select distinct YEAR from tbl_cpue order by YEAR;"
+        tbl_years<-sqldf(qry);
+        years<-tbl_years$YEARS;
+    }
+    
     #determine factor levels
     if (nf>0){
         facs<-cols[(ns+1):(nc-nd)];
@@ -84,7 +92,7 @@ plotMaps.CPUE<-function(tbl_cpue,
     #plot the maps
     if (nf==0){
         #no factor levels to plot by
-        base.ps<-'surveyMaps'
+        base.ps<-basename;
         psFiles<-vector(mode='character',length=0);
         zscls<-vector(mode='numeric',length=0);
         for (y in years){
@@ -122,6 +130,11 @@ plotMaps.CPUE<-function(tbl_cpue,
         lst.zscls<-vector(mode='list',length=0)
         for (rw in 1:nrw){
             ufac<-tbl_ufacs[rw,];
+            if (!is.data.frame(ufac)){
+                cat("ufac is not a dataframe!\n");
+                ufac<-data.frame(ufac,stringsAsFactors=FALSE);
+                names(ufac)<-facs[1];
+            }
             cat("ufac = \n"); print(ufac);
             cat("plotting maps for factor levels\n")
             facstr<-paste(facs[1],'=',ufac[[facs[1]]],sep='');
@@ -137,7 +150,7 @@ plotMaps.CPUE<-function(tbl_cpue,
             qry<-gsub("&&whr",paste('c.',facs,'=','u.',facs,sep='',collapse=' AND '),qry)
             tbl<-sqldf(qry);
             if (nrow(tbl)>0){
-                base.ps<-'surveyMaps'
+                base.ps<-basename;
                 for (fac in facs) base.ps<-paste(base.ps,paste(fac,'=',ufac[[fac]],sep=''),sep='.');
                 psFiles<-vector(mode='character',length=0);
                 zscls<-vector(mode='numeric',length=0);
