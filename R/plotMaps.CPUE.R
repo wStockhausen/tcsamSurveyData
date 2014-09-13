@@ -9,16 +9,23 @@
 #'@param scaleBy : factor to scale the ztype by BEFORE sending to plotMap.CSV
 #'@param zlab    : label for z (cpue) axes on map
 #'@param zunits  : label for z (cpue) units on maps
-#'@param zscl    : max z (after applying scaleBy) to use for all maps (automatically scaled to max if zscl is NULL)
-#'@param plotBySex            : flag (T/F) to plot by individual sexes or vector of sexes to plot
-#'@param plotByShellCondition : flag (T/F) to plot by indiviudvshell condition or vector of shell conditions to plot
-#'@param plotByMaturity       : flag (T/F) to plot by maturity state or vector of maturity states to plot
+#'@param zscl    : see Details
 #'@param basename  : base name for output files (year and factor level combinations will be added)
 #'@param verbosity : integer flag indicating level of printed output (0=off,1=minimal,2=full)
 #'
-#'@return vector or list of zscales used for plots
+#'@return the max zscale, or a named list (names corresponding to individual factor combinations)
+#'of max zscales that were used for plots. This value can be used to scale all maps 
+#'(if a single numeric value) or maps corresponding to a given factor combination (if
+#'a named list) when running the function on the same cpue values a second time.
 #'
-#'@details Needs to filled in.
+#'@details Needs to filled in. \cr
+#'Note: Multiple values at the same location will be summed prior to being mapped.
+#'\cr
+#'Note: zscl can be NULL, a numeric value, or a named list with numeric values as 
+#'list elements. If NULL, then the max z value for the data plotted on an individual
+#'map will be used to scale that map. If a numeric value, then it is used as the 
+#'z-axis scale for all maps produced. If a named list, the element corresponding to 
+#'each combination of factors will be used as the z-axis scale for that set of maps.
 #'
 #' @import sqldf
 #' @importFrom wtsGMT plotMap.CSV
@@ -33,9 +40,6 @@ plotMaps.CPUE<-function(tbl_cpue,
                         title='Survey',
                         zlab='no. crab',
                         zunits='num/nm@+2@+',
-                        plotBySex=FALSE,
-                        plotByShellCondition=FALSE,
-                        plotByMaturity=FALSE,
                         zscl=NULL,
                         xyrng='180/205/54/62',
                         rotate=170,
@@ -85,7 +89,7 @@ plotMaps.CPUE<-function(tbl_cpue,
         qry<-gsub("&&facs",paste(facs,sep='',collapse=','),qry)
         if (verbosity>1) cat("\nquery is:\n",qry,"\n");
         tbl_ufacs<-sqldf(qry);
-        cat("Unique factor level combinations to be plotted:\n")
+        cat("Unique factor level combinations that could be plotted:\n")
         print(tbl_ufacs);
     }
     
@@ -106,7 +110,8 @@ plotMaps.CPUE<-function(tbl_cpue,
                 zsclp<-wtsGMT::plotMap.CSV(dfr=tblp,
                                             lat='LATITUDE',
                                             lon='LONGITUDE',
-                                            col=ztype,zunits=zunits,zlab=zlab,zscl=zscl,
+                                            col=ztype,zunits=zunits,zlab=zlab,
+                                            zscl=zscl,
                                             title=title,year=yrstr,
                                             rotate=rotate,elev=elev,
                                             plt_bars=plt_bars,
@@ -124,7 +129,7 @@ plotMaps.CPUE<-function(tbl_cpue,
         }
         wtsGMT::createPDF.fromPS(base.ps,psFiles=psFiles)
         if (cleanup){file.remove(psFiles);}
-        return(zscls);
+        return(max(zscls,na.rm=TRUE));
     } else {
         nrw<-nrow(tbl_ufacs);
         lst.zscls<-vector(mode='list',length=0)
@@ -160,12 +165,23 @@ plotMaps.CPUE<-function(tbl_cpue,
                     tblp<-tbl[idx,c('LONGITUDE','LATITUDE',ztype)];
                     if ((nrow(tblp)>0)&&sum(abs(tblp[[ztype]])>0)){
                         cat("Plotting map for ",yrstr,'\n')
+                        #sum ztype data at each location, in case of multiple values
+                        qry<-"select 
+                                LONGITUDE,LATITUDE,
+                                sum(&&ztype) as ZDATA
+                              from tbl
+                              group by LONGITUDE, LATITUDE;"
+                        qry<-gsub("&&ztype",ztype,qry);
+                        tblp<-sqldf(qry)
                         print(tblp);
                         psFile<-paste(base.ps,yrstr,sep='.');
+                        zsclv<-zscl;
+                        if (is.list(zscl)){zsclv<-zscl[[facstr]];}
+                        cat("Using zscl = ",'\n'); print(zsclv);
                         zsclp<-wtsGMT::plotMap.CSV(dfr=tblp,
                                                     lat='LATITUDE',
                                                     lon='LONGITUDE',
-                                                    col=ztype,zunits=zunits,zlab=zlab,zscl=zscl,
+                                                    col='ZDATA',zunits=zunits,zlab=zlab,zscl=zsclv,
                                                     title=title,year=yrstr,
                                                     rotate=rotate,elev=elev,
                                                     plt_bars=plt_bars,
@@ -184,7 +200,7 @@ plotMaps.CPUE<-function(tbl_cpue,
                 if (length(psFiles)>0){
                     wtsGMT::createPDF.fromPS(base.ps,psFiles=psFiles)
                     if (cleanup){file.remove(psFiles);}
-                    lst.zscls[[facstr]]<-zscls;
+                    lst.zscls[[facstr]]<-max(zscls,na.rm=TRUE);
                 }
             } #nrow(tbl)>0
         } #loop over ufacs

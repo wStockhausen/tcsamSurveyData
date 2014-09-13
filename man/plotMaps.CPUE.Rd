@@ -4,7 +4,6 @@
 \usage{
 plotMaps.CPUE(tbl_cpue, years = NULL, ztype = "numCPUE", scaleBy = 1,
   title = "Survey", zlab = "no. crab", zunits = "num/nm@+2@+",
-  plotBySex = FALSE, plotByShellCondition = FALSE, plotByMaturity = FALSE,
   zscl = NULL, xyrng = "180/205/54/62", rotate = 170, elev = 45,
   delx = 0.5, dely = 0.25, blocktype = c("MEAN", "SUM"),
   plt_blocktype = c("SMOOTH", "COARSE"), logtr = FALSE, plt_title = FALSE,
@@ -33,18 +32,7 @@ plotMaps.CPUE(tbl_cpue, years = NULL, ztype = "numCPUE", scaleBy = 1,
 
   \item{zunits}{: label for z (cpue) units on maps}
 
-  \item{zscl}{: max z (after applying scaleBy) to use for
-  all maps (automatically scaled to max if zscl is NULL)}
-
-  \item{plotBySex}{: flag (T/F) to plot by individual sexes
-  or vector of sexes to plot}
-
-  \item{plotByShellCondition}{: flag (T/F) to plot by
-  indiviudvshell condition or vector of shell conditions to
-  plot}
-
-  \item{plotByMaturity}{: flag (T/F) to plot by maturity
-  state or vector of maturity states to plot}
+  \item{zscl}{: see Details}
 
   \item{basename}{: base name for output files (year and
   factor level combinations will be added)}
@@ -53,7 +41,12 @@ plotMaps.CPUE(tbl_cpue, years = NULL, ztype = "numCPUE", scaleBy = 1,
   printed output (0=off,1=minimal,2=full)}
 }
 \value{
-vector or list of zscales used for plots
+the max zscale, or a named list (names corresponding to
+individual factor combinations) of max zscales that were
+used for plots. This value can be used to scale all maps
+(if a single numeric value) or maps corresponding to a
+given factor combination (if a named list) when running the
+function on the same cpue values a second time.
 }
 \description{
 Function to map cpue by survey haul or station and other
@@ -62,6 +55,14 @@ factors (e.g., sex) from cpue info.
 \details{
 
 
-Needs to filled in.
+Needs to filled in. \cr Note: Multiple values at the same
+location will be summed prior to being mapped. \cr Note:
+zscl can be NULL, a numeric value, or a named list with
+numeric values as list elements. If NULL, then the max z
+value for the data plotted on an individual map will be
+used to scale that map. If a numeric value, then it is used
+as the z-axis scale for all maps produced. If a named list,
+the element corresponding to each combination of factors
+will be used as the z-axis scale for that set of maps.
 }
 
