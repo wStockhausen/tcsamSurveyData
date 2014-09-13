@@ -169,7 +169,7 @@ plotMaps.CPUE<-function(tbl_cpue,
                         qry<-"select 
                                 LONGITUDE,LATITUDE,
                                 sum(&&ztype) as ZDATA
-                              from tbl
+                              from tblp
                               group by LONGITUDE, LATITUDE;"
                         qry<-gsub("&&ztype",ztype,qry);
                         tblp<-sqldf(qry)
