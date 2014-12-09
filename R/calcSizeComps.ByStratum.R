@@ -1,8 +1,10 @@
 #'
 #'@title Calculate size compositions by stratum from AFSC trawl survey data.
 #'
-#'@param tbl_strata : data frame from call to \code{\link{selectStrata.TrawlSurvey}}
+#'@param tbl_strata : data frame from call to \code{\link{selectStrata.TrawlSurvey}} [required]
 #'@param tbl_cpue   : data frame from call to \code{\link{calcCPUE.ByHaul}} or \code{\link{calcCPUE.ByStation}}, or filename for csv file, or NULL
+#'@param tbl_hauls  : dataframe from call to \code{\link{selectHauls.TrawlSurvey}} [required only if tbl_cpue not given]
+#'@param tbl_indivs : dataframe from call to \code{\link{selectIndivs.TrawlSurvey}} (or crab survey filename, or NULL) [required only if tbl_cpue not given]
 #'@param avgHaulsByStation : flag (T/F) to average hauls by station before calc'ing size comps
 #'@param bySex            : flag (T/F) to calc by sex
 #'@param byShellCondition : flag (T/F) to calc by shell condition
@@ -10,14 +12,12 @@
 #'@param cutpts        : vector of cutpoints to create size bins from
 #'@param truncate.low  : flag (T/F) to exclude individuals smaller than minSize
 #'@param truncate.high : flag (T/F) to exclude individuals larger than maxSize
-#'@param tbl_hauls  - dataframe from call to \code{\link{selectHauls.TrawlSurvey}} [required]
 #'@param Years      - vector of survey years to include in hauls             (ignored if NULL)
 #'@param HaulTypes  - vector of haul types to include in hauls               (ignored if NULL)
 #'@param YearRange  - vector of min, max survey years to include in hauls    (ignored if NULL)
 #'@param DepthRange - vector of min, max haul depths to include in hauls     (ignored if NULL)
 #'@param LatRange   - vector of min, max haul latitudes to include in hauls  (ignored if NULL)
 #'@param LonRange   - vector of min, max haul longitudes to include in hauls (ignored if NULL)
-#'@param tbl_indivs      : dataframe from call to \code{\link{selectIndivs.TrawlSurvey}} (or crab survey filename, or NULL)
 #'@param col.Size        : name of tbl_indivs column containing size (CL or CW) information
 #'@param sex             : one of 'MALE','FEMALE' or 'ALL' for narrowing selection of individuals
 #'@param shell_condition : one of 'NEW_SHELL','OLD_SHELL' or 'ALL' for narrowing selection of individuals
@@ -49,16 +49,14 @@
 #'\item  YEAR
 #'\item  STRATUM
 #'\item  STRATUM_AREA
-#'\item  other user-defined factors
+#'\item  other user-defined factors (e.g., sex, shell_condition)
+#'\item  SIZE
 #'\item  numStations
 #'\item  numHauls
+#'\item  numNonZeroHauls
 #'\item  numIndivs
-#'\item  totABUNDANCE = estimated abundance (by stratum)
-#'\item  stdABUNDANCE = std deviation of estimated abundance (by stratum)
-#'\item  cvABUNDANCE  = cv of estimated abundance (by stratum)
-#'\item  totBIOMASS = estimated biomass (by stratum)
-#'\item  stdBIOMASS = std deviation of estimated biomass (by stratum)
-#'\item  cvBIOMASS  = cv of estimated biomass (by stratum)
+#'\item  totABUNDANCE = estimated abundance-by-size (by stratum)
+#'\item  totBIOMASS = estimated biomass-by-size (by stratum)
 #'}
 #'
 #' @import sqldf
@@ -69,6 +67,8 @@
 #######################################################################
 calcSizeComps.ByStratum<-function(tbl_strata,
                                   tbl_cpue=NULL,
+                                  tbl_hauls=NULL,
+                                  tbl_indivs=NULL,
                                   avgHaulsByStation=FALSE,
                                   bySex=FALSE,
                                   byShellCondition=FALSE,
@@ -76,17 +76,12 @@ calcSizeComps.ByStratum<-function(tbl_strata,
                                   cutpts=seq(from=25,to=185,by=5),
                                   truncate.low=TRUE,
                                   truncate.high=FALSE,
-                                  export=FALSE,
-                                  out.csv='SizeCompsByStratum.csv',
-                                  out.dir=NULL,
-                                  tbl_hauls=NULL,
                                   Years=NULL,
                                   HaulTypes=NULL,
                                   YearRange=NULL,
                                   DepthRange=NULL,
                                   LatRange=NULL,
                                   LonRange=NULL,
-                                  tbl_indivs=NULL,
                                   col.Size='WIDTH',
                                   sex=c('MALE','FEMALE','ALL'),
                                   shell_condition=c('NEW_SHELL','OLD_SHELL','ALL'),
@@ -94,6 +89,9 @@ calcSizeComps.ByStratum<-function(tbl_strata,
                                   calcMaleMaturity=FALSE,
                                   minSize=-Inf,
                                   maxSize=Inf,
+                                  export=FALSE,
+                                  out.csv='SizeCompsByStratum.csv',
+                                  out.dir=NULL,
                                   verbosity=1){
     if (verbosity>1) cat("starting calcSizeComps.ByStratum\n");
     
@@ -177,7 +175,7 @@ calcSizeComps.ByStratum<-function(tbl_strata,
                                       verbosity=verbosity);
             if (avgHaulsByStation) {
                 cat("averaging cpue by station\n")
-                tbl_cpue<-calcCPUE.ByStation(tbl_cpue);
+                tbl_cpue<-calcCPUE.ByStation(tbl_strata,tbl_cpue);
             }
         }#creating tbl_cpue
     }#read in or created tbl_cpue
@@ -192,22 +190,29 @@ calcSizeComps.ByStratum<-function(tbl_strata,
     ucols<-names(tbl_ufacs);
     qry<-"select 
             &&ucols,
+            -1 as numNonZeroHauls,
             sum(numIndivs) as numIndivs
           from tbl_ufacs
           group by
             &&ucols;";
-    qry<-gsub("&&ucols",paste(ucols[1:(length(ucols)-1)],collapse=","),qry)
+    qry<-gsub("&&ucols",paste(ucols[1:(length(ucols)-2)],collapse=","),qry)
     tbl_ufacs<-sqldf(qry);
     
     tbl_zs<-as.data.frame(list(SIZE=cutpts[1:(length(cutpts)-1)]))
     qry<-"select * from tbl_ufacs, tbl_zs;";
     tbl_uzfacs<-sqldf(qry);
     
-    ucols<-paste("u",names(tbl_uzfacs),sep='.');
-    zcols<-paste("z",names(tbl_uzfacs),sep='.');
+    #rearrange column names to get SIZE at end of other factors (if any)
+    nms<-names(tbl_uzfacs);
+    nc<-length(nms);
+    nmsp<-c(nms[1:(nc-5)],nms[nc],nms[(nc-4):(nc-1)]);
+    
+    ucols<-paste("u",nmsp,sep='.');
+    zcols<-paste("z",nmsp,sep='.');
     ucolstr<-paste(ucols,collapse=",")
     ncols<-length(ucols);
-    joinConds<-paste(ucols[c(1:(ncols-2),ncols)],zcols[c(1:(ncols-2),ncols)],sep='=',collapse=' and ');
+    joinConds<-paste(ucols[1:(ncols-4)],zcols[1:(ncols-4)],sep='=',collapse=' and ');
+#    joinConds<-paste(ucols[c(1:(ncols-2),ncols)],zcols[c(1:(ncols-2),ncols)],sep='=',collapse=' and ');
     
     qry<-"select
             &&ucols,z.totABUNDANCE,z.totBIOMASS

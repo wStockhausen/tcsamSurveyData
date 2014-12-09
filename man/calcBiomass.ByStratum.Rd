@@ -4,7 +4,7 @@
 \title{Calculate average cpue, numbers and biomass by stratum from AFSC trawl survey data.}
 \usage{
 calcBiomass.ByStratum(tbl_strata, tbl_cpue = NULL, export = FALSE,
-  out.csv = "BiomassByStratum.csv", out.dir = NULL, verbosity = 1)
+  out.csv = "SurveyBiomass.ByStratum.csv", out.dir = NULL, verbosity = 1)
 }
 \arguments{
 \item{tbl_strata}{: data frame w/ stations/strata from call to selectStrata.TrawlSurvey(...)}
@@ -28,6 +28,7 @@ data frame with average cpue (numbers, weight), abundance and biomass by stratum
 \item  other user-defined factors
 \item  numStations
 \item  numHauls
+\item  numNonZeroHauls
 \item  numIndivs
 \item  avgNUMCPUE
 \item  seNUMCPUE
@@ -50,7 +51,7 @@ This function calculates average cpue, numbers and biomass by stratum from cpue 
 If tbl_cpue is NULL, the user is prompted to enter a csv file with cpue info. \cr
 \cr Other notes: \cr
 \itemize{
-  \item   Area is in square nautical miles
+  \item Area is in square nautical miles
   \item CPUE in numbers is in no/(sq. nm.)
   \item CPUE in weight  is in mt/(sq. nm.)
   \item Abundance is in 10^6 indivs

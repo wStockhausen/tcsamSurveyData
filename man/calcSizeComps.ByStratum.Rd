@@ -3,22 +3,25 @@
 \alias{calcSizeComps.ByStratum}
 \title{Calculate size compositions by stratum from AFSC trawl survey data.}
 \usage{
-calcSizeComps.ByStratum(tbl_strata, tbl_cpue = NULL,
-  avgHaulsByStation = FALSE, bySex = FALSE, byShellCondition = FALSE,
-  byMaturity = FALSE, cutpts = seq(from = 25, to = 185, by = 5),
-  truncate.low = TRUE, truncate.high = FALSE, export = FALSE,
-  out.csv = "SizeCompsByStratum.csv", out.dir = NULL, tbl_hauls = NULL,
+calcSizeComps.ByStratum(tbl_strata, tbl_cpue = NULL, tbl_hauls = NULL,
+  tbl_indivs = NULL, avgHaulsByStation = FALSE, bySex = FALSE,
+  byShellCondition = FALSE, byMaturity = FALSE, cutpts = seq(from = 25, to
+  = 185, by = 5), truncate.low = TRUE, truncate.high = FALSE,
   Years = NULL, HaulTypes = NULL, YearRange = NULL, DepthRange = NULL,
-  LatRange = NULL, LonRange = NULL, tbl_indivs = NULL,
-  col.Size = "WIDTH", sex = c("MALE", "FEMALE", "ALL"),
-  shell_condition = c("NEW_SHELL", "OLD_SHELL", "ALL"),
+  LatRange = NULL, LonRange = NULL, col.Size = "WIDTH", sex = c("MALE",
+  "FEMALE", "ALL"), shell_condition = c("NEW_SHELL", "OLD_SHELL", "ALL"),
   maturity = c("IMMATURE", "MATURE", "ALL"), calcMaleMaturity = FALSE,
-  minSize = -Inf, maxSize = Inf, verbosity = 1)
+  minSize = -Inf, maxSize = Inf, export = FALSE,
+  out.csv = "SizeCompsByStratum.csv", out.dir = NULL, verbosity = 1)
 }
 \arguments{
-\item{tbl_strata}{: data frame from call to \code{\link{selectStrata.TrawlSurvey}}}
+\item{tbl_strata}{: data frame from call to \code{\link{selectStrata.TrawlSurvey}} [required]}
 
 \item{tbl_cpue}{: data frame from call to \code{\link{calcCPUE.ByHaul}} or \code{\link{calcCPUE.ByStation}}, or filename for csv file, or NULL}
+
+\item{tbl_hauls}{: dataframe from call to \code{\link{selectHauls.TrawlSurvey}} [required only if tbl_cpue not given]}
+
+\item{tbl_indivs}{: dataframe from call to \code{\link{selectIndivs.TrawlSurvey}} (or crab survey filename, or NULL) [required only if tbl_cpue not given]}
 
 \item{avgHaulsByStation}{: flag (T/F) to average hauls by station before calc'ing size comps}
 
@@ -34,14 +37,6 @@ calcSizeComps.ByStratum(tbl_strata, tbl_cpue = NULL,
 
 \item{truncate.high}{: flag (T/F) to exclude individuals larger than maxSize}
 
-\item{export}{: boolean flag to write results to csv file}
-
-\item{out.csv}{: output file name}
-
-\item{out.dir}{: output file directory}
-
-\item{tbl_hauls}{- dataframe from call to \code{\link{selectHauls.TrawlSurvey}} [required]}
-
 \item{Years}{- vector of survey years to include in hauls             (ignored if NULL)}
 
 \item{HaulTypes}{- vector of haul types to include in hauls               (ignored if NULL)}
@@ -53,8 +48,6 @@ calcSizeComps.ByStratum(tbl_strata, tbl_cpue = NULL,
 \item{LatRange}{- vector of min, max haul latitudes to include in hauls  (ignored if NULL)}
 
 \item{LonRange}{- vector of min, max haul longitudes to include in hauls (ignored if NULL)}
-
-\item{tbl_indivs}{: dataframe from call to \code{\link{selectIndivs.TrawlSurvey}} (or crab survey filename, or NULL)}
 
 \item{col.Size}{: name of tbl_indivs column containing size (CL or CW) information}
 
@@ -68,6 +61,12 @@ calcSizeComps.ByStratum(tbl_strata, tbl_cpue = NULL,
 
 \item{maxSize}{: maximum size (width) of individuals to select}
 
+\item{export}{: boolean flag to write results to csv file}
+
+\item{out.csv}{: output file name}
+
+\item{out.dir}{: output file directory}
+
 \item{verbosity}{: integer flag indicating level of printed output (0=off,1=minimal,2=full)}
 
 \item{calcMaleMaturity:}{flag (T/F) to calculate pr(mature|size) for males based on an ogive}
@@ -78,16 +77,14 @@ data frame with size comps by stratum. Columns are \cr
 \item  YEAR
 \item  STRATUM
 \item  STRATUM_AREA
-\item  other user-defined factors
+\item  other user-defined factors (e.g., sex, shell_condition)
+\item  SIZE
 \item  numStations
 \item  numHauls
+\item  numNonZeroHauls
 \item  numIndivs
-\item  totABUNDANCE = estimated abundance (by stratum)
-\item  stdABUNDANCE = std deviation of estimated abundance (by stratum)
-\item  cvABUNDANCE  = cv of estimated abundance (by stratum)
-\item  totBIOMASS = estimated biomass (by stratum)
-\item  stdBIOMASS = std deviation of estimated biomass (by stratum)
-\item  cvBIOMASS  = cv of estimated biomass (by stratum)
+\item  totABUNDANCE = estimated abundance-by-size (by stratum)
+\item  totBIOMASS = estimated biomass-by-size (by stratum)
 }
 }
 \description{

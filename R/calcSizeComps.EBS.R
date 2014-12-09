@@ -1,7 +1,7 @@
 #'
-#'@title Calculate total abundance and biomass from a by-stratum data frame or csv file.
+#'@title Calculate EBS-level size comps (abundance and biomass) from a by-stratum data frame or csv file.
 #'
-#'@param tbl     : data frame with abundance/biomass by stratum info from call to \code{\link{calcBiomass.ByStratum} or \link{calcBiomass.EW166}}, or a csv file from such a call, or NULL
+#'@param tbl     : data frame with size comps by stratum info from call to \code{\link{calcSizeComps.ByStratum} or \link{calcSizeComps.EW166}}, or a csv file from such a call, or NULL
 #'@param export  : boolean flag to write results to csv file
 #'@param out.csv : output file name
 #'@param out.dir : output file directory 
@@ -13,16 +13,13 @@
 #'\item  STRATUM         = 'EBS'
 #'\item  STRATUM_AREA    = area of stratum
 #'\item  other user-defined factors (e.g., sex, shell_condition)
+#'\item  SIZE
 #'\item  numStations     = number of stations included
 #'\item  numHauls        = number of hauls included
 #'\item  numNonZeroHauls = number of hauls included
 #'\item  numIndivs       = number of individuals sampled
-#'\item  totABUNDANCE = total abundance estimate
-#'\item  stdABUNDANCE = std deviation of total abundance estimate
-#'\item  cvABUNDANCE  = cv of total abundance estimate
-#'\item  totBIOMASS = estimate of total biomass estimate
-#'\item  stdBIOMASS = std deviation of total biomass estimate
-#'\item  cvBIOMASS  = cv of total biomass estimate
+#'\item  totABUNDANCE = total abundance-by-size estimate
+#'\item  totBIOMASS = estimate of total biomass-by-size estimate
 #'}
 #'
 #'@description This function calculates total abundance and biomass from a by-stratum data frame or csv file.
@@ -45,20 +42,20 @@
 calcBiomass.EBS<-function(tbl=NULL,
                           in.csv=NULL,
                           export=TRUE,
-                          out.csv='SurveyBiomass.EBS.csv',
+                          out.csv='SurveySizeComps.EBS.csv',
                           out.dir=NULL,
                           verbosity=1){    
-    if (verbosity>1) cat("starting calcBiomass.EBS\n");
+    if (verbosity>1) cat("starting calcSizeComps.EBS\n");
     
     in.csv<-NULL;
     if (!is.data.frame(tbl)){
         if (!is.character(tbl)) {
-            in.csv<-wtsUtilities::selectFile(ext="csv",caption="Select csv file with biomas-by-stratum info");
+            in.csv<-wtsUtilities::selectFile(ext="csv",caption="Select csv file with size comps-by-stratum info");
             if (is.null(in.csv)|(in.csv=='')) return(NULL);
         } else {
             in.csv<-tbl;#tbl is a filename
         }
-        if (verbosity>1) cat("Reading csv file for biomass-by-stratum info.\n",sep='')
+        if (verbosity>1) cat("Reading csv file for size comps-by-stratum info.\n",sep='')
         tbl<-read.csv(in.csv,stringsAsFactors=FALSE);
         if (verbosity>1) cat("Done reading input csv file.\n")
     }
@@ -67,14 +64,14 @@ calcBiomass.EBS<-function(tbl=NULL,
         out.dir<-dirname(file.path('.'));
         if (!is.null(in.csv)) {out.dir<-dirname(file.path(in.csv));}
     }
-    if (verbosity>0) cat("Output directory for calcBiomass.EBS will be '",out.dir,"'\n",sep='');
+    if (verbosity>0) cat("Output directory for calcSizeComps.EBS will be '",out.dir,"'\n",sep='');
     
-    #determine columns of biomass by stratum table
+    #determine columns of size comps by stratum table
+    nc0f<-9;#number of coulmns if SIZE is the only 'factor' in the table
     cols<-names(tbl); 
-    if (any(cols=='avgNUMCPUE')) {nc0f<-17;} else {nc0f<-13;}
     nc<-length(cols);
     if (nc==nc0f){cols<-'';} else 
-    {cols<-cols[4:(3+nc-nc0f)];}#extract factor columns
+    {cols<-cols[4:(3+nc-nc0f)];}#extract factor columns (including SIZE)
                                  
     #
     qry<-"select
@@ -83,14 +80,10 @@ calcBiomass.EBS<-function(tbl=NULL,
             sum(STRATUM_AREA) as STRATUM_AREA&&cols,
             sum(numStations) as numStations,
             sum(numHauls) as numHauls,
-            sum(numNonZeroHauls) as numNonZeroHauls,
+            -1 as numNonZeroHauls,
             sum(numIndivs) as numIndivs,
             sum(totABUNDANCE) as totABUNDANCE,
-            sum(stdABUNDANCE*stdABUNDANCE) as stdABUNDANCE,
-            1.1 as cvABUNDANCE,
-            sum(totBIOMASS) as totBIOMASS,
-            sum(stdBIOMASS*stdBIOMASS) as stdBIOMASS,
-            1.1 as cvBIOMASS
+            sum(totBIOMASS) as totBIOMASS
           from
             tbl
           group by 
@@ -104,16 +97,6 @@ calcBiomass.EBS<-function(tbl=NULL,
     }
     if (verbosity>1) cat("\nquery is:\n",qry,"\n");
     tbl1<-sqldf(qry);
-    #convert columns to final values
-    tbl1$stdABUNDANCE<-sqrt(tbl1$stdABUNDANCE);#convert from var to stdv
-    tbl1$cvABUNDANCE <-tbl1$stdABUNDANCE/tbl1$totABUNDANCE;
-    idx<-is.nan(tbl1$cvABUNDANCE);
-    tbl1$cvABUNDANCE[idx]<-0; 
-    
-    tbl1$stdBIOMASS  <-sqrt(tbl1$stdBIOMASS);  #convert from var to stdv
-    tbl1$cvBIOMASS   <-tbl1$stdBIOMASS/tbl1$totBIOMASS;
-    idx<-is.nan(tbl1$cvBIOMASS);
-    tbl1$cvBIOMASS[idx]<-0; 
                                  
     if (export){
         if (!is.null(out.dir)){
@@ -129,9 +112,6 @@ calcBiomass.EBS<-function(tbl=NULL,
         write.csv(tbl1,out.csv,na='',row.names=FALSE);
     }
     
-    if (verbosity>1) cat("finished calcBiomass.EBS\n");
+    if (verbosity>1) cat("finished calcSizeComps.EBS\n");
     return(tbl1)
 }
-
-#tbl.totBio.frBBS<-calcBiomass.EBS(tbl.BiomassByStratum)
-#tbl.totBio.frEW<-calcBiomass.EBS(tbl.EW166Biomass)
