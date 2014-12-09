@@ -39,12 +39,12 @@
 #'@export
 #'
 #######################################################################
-calcBiomass.EBS<-function(tbl=NULL,
-                          in.csv=NULL,
-                          export=TRUE,
-                          out.csv='SurveySizeComps.EBS.csv',
-                          out.dir=NULL,
-                          verbosity=1){    
+calcSizeComps.EBS<-function(tbl=NULL,
+                            in.csv=NULL,
+                            export=TRUE,
+                            out.csv='SurveySizeComps.EBS.csv',
+                            out.dir=NULL,
+                            verbosity=1){    
     if (verbosity>1) cat("starting calcSizeComps.EBS\n");
     
     in.csv<-NULL;
