@@ -13,7 +13,7 @@
 #'@details If tbl_cpue is NULL, the user is prompted to enter a csv file with cpue info. \cr
 #'\cr Other notes: \cr
 #'\itemize{
-#'   \item   Area is in square nautical miles
+#'   \item Area is in square nautical miles
 #'   \item CPUE in numbers is in no/(sq. nm.)
 #'   \item CPUE in weight  is in mt/(sq. nm.) 
 #'   \item Abundance is in 10^6 indivs 
@@ -28,6 +28,7 @@
 #'\item  other user-defined factors
 #'\item  numStations
 #'\item  numHauls
+#'\item  numNonZeroHauls
 #'\item  numIndivs
 #'\item  avgNUMCPUE
 #'\item  seNUMCPUE
@@ -50,7 +51,7 @@
 calcBiomass.ByStratum<-function(tbl_strata,
                                 tbl_cpue=NULL,
                                 export=FALSE,
-                                out.csv='BiomassByStratum.csv',
+                                out.csv='SurveyBiomass.ByStratum.csv',
                                 out.dir=NULL,
                                 verbosity=1){
     if (verbosity>1) cat("starting calcBiomass.ByStratum\n");
@@ -89,7 +90,7 @@ calcBiomass.ByStratum<-function(tbl_strata,
         nc0f<-9;#number of col.s w/ no factors if cpue is by haul
         facs<-'';
         if (nc>nc0f){
-            facs<-cols[7:(nc-3)];#drop the 1st 6 (YEAR,STRATUM,GIS_STATION,HAULJOIN,HAUL_LONGITUDE,HAUL_LATITUDE) and last 3 column names (numIndivs,numCPUE,wgtCPUE)
+            facs<-cols[7:(nc-3)];#drop the 1st 6 (YEAR,STRATUM,GIS_STATION,HAULJOIN,LONGITUDE,LATITUDE) and last 3 column names (numIndivs,numCPUE,wgtCPUE)
         }
         byHaulSub<-"c.HAULJOIN,";
         numHaulSub<-"1 as numHauls, 1*(numIndivs>0) as numNonZeroHauls,";#number of hauls/haul (=1, of course)
@@ -97,7 +98,7 @@ calcBiomass.ByStratum<-function(tbl_strata,
         nc0f<-10;#number of col.s w/ no factors if cpue is by station
         facs<-'';
         if (nc>nc0f){
-            facs<-cols[6:(nc-5)];#drop the 1st 5 (YEAR,STRATUM,GIS_STATION,STATION_LONGITUDE,STATION_LATITUDE) and last 5 column names (numHauls,numNonZeroHauls,numIndivs,numCPUE,wgtCPUE)
+            facs<-cols[6:(nc-5)];#drop the 1st 5 (YEAR,STRATUM,GIS_STATION,LONGITUDE,LATITUDE) and last 5 column names (numHauls,numNonZeroHauls,numIndivs,numCPUE,wgtCPUE)
         }
         byHaulSub<-"";
         numHaulSub<-"c.numHauls,c.numNonZeroHauls,";#number of hauls/station
@@ -204,11 +205,15 @@ calcBiomass.ByStratum<-function(tbl_strata,
     tbl3$totABUNDANCE<-tbl3$STRATUM_AREA*tbl3$avgNUMCPUE/1.0E6;#scale abundance to millions
     tbl3$stdABUNDANCE<-tbl3$STRATUM_AREA*tbl3$seNUMCPUE /1.0E6;#scale abundance to millions    
     tbl3$cvABUNDANCE <-tbl3$stdABUNDANCE/tbl3$totABUNDANCE;
+    idx<-is.nan(tbl3$cvABUNDANCE);
+    tbl3$cvABUNDANCE[idx]<-0; 
     
     tbl3$seWGTCPUE<-sqrt(((n/(n-1))*tbl3$seWGTCPUE)/n);
     tbl3$totBIOMASS  <-tbl3$STRATUM_AREA*tbl3$avgWGTCPUE/1.0E3;#biomass in 1000's t
     tbl3$stdBIOMASS  <-tbl3$STRATUM_AREA*tbl3$seWGTCPUE/1.0E3; #biomass in 1000's t
     tbl3$cvBIOMASS   <-tbl3$stdBIOMASS/tbl3$totBIOMASS;
+    idx<-is.nan(tbl3$cvBIOMASS);
+    tbl3$cvBIOMASS[idx]<-0; 
     
     if (export){
         if (!is.null(out.dir)){

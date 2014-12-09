@@ -4,7 +4,7 @@
 #'@description This function estimates abundance, biomass by year, east/west of 166W from a biomass-by-stratum data frame or csv file.
 #'
 #'@param tbl         : data frame with biomass by stratum info from call to \code{\link{calcBiomass.ByStratum}} or csv file with biomass by stratum info, or NULL
-#'@param strata_revd : data frame w/ conversion from original strata to EW166 strata
+#'@param strata_toEW166 : data frame w/ conversion from original strata to EW166 strata
 #'@param export      : boolean flag to write results to csv file
 #'@param out.csv     : output file name
 #'@param out.dir     : output file directory 
@@ -12,19 +12,20 @@
 #'
 #'@return  Dataframe w/ estimates of abundance, biomass by year, strata as east/west of 166W, and other factors. Columns are \cr
 #'\itemize{
-#'\item  YEAR         = survey year
-#'\item  STRATUM      = 'EAST' or 'WEST' of 166W
-#'\item  STRATUM_AREA = area of stratum
+#'\item  YEAR            = survey year
+#'\item  STRATUM         = 'EAST' or 'WEST' of 166W
+#'\item  STRATUM_AREA    = area of stratum
 #'\item  other user-defined factors (e.g., sex, shell_condition)
-#'\item  numStations = number of stations included
-#'\item  numHauls    = number of hauls included
-#'\item  numIndivs   = number of individuals sampled
-#'\item  totABUNDANCE = estimated abundance
-#'\item  stdABUNDANCE = std deviation of estimated abundance
-#'\item  cvABUNDANCE  = cv of estiamted abundance
-#'\item  totBIOMASS = estimated biomass
-#'\item  stdBIOMASS = std deviation of estimated biomass 
-#'\item  cvBIOMASS  = cv of estimated biomass
+#'\item  numStations     = number of stations included
+#'\item  numHauls        = number of hauls included
+#'\item  numNonZeroHauls = number of hauls included
+#'\item  numIndivs       = number of individuals sampled
+#'\item  totABUNDANCE    = estimated abundance
+#'\item  stdABUNDANCE    = std deviation of estimated abundance
+#'\item  cvABUNDANCE     = cv of estiamted abundance
+#'\item  totBIOMASS      = estimated biomass
+#'\item  stdBIOMASS      = std deviation of estimated biomass 
+#'\item  cvBIOMASS       = cv of estimated biomass
 #'}
 #'
 #'@details Note: if tbl and in.csv are both NULL, the user is prompted to enter a csv file with biomass by stratum info. \cr
@@ -41,9 +42,9 @@
 #'@export
 #'
 calcBiomass.EW166<-function(tbl=NULL,
-                          strata_revd=Codes.TrawlSurvey()[["strata.EW166"]],
+                          strata_toEW166=Codes.TrawlSurvey()[["strata.EW166"]],
                           export=TRUE,
-                          out.csv='SurveyBiomass.csv',
+                          out.csv='SurveyBiomass.EW166.csv',
                           out.dir=NULL,
                           verbosity=1){
     if (verbosity>1) cat("starting calcBiomass.EW166\n");
@@ -70,47 +71,75 @@ calcBiomass.EW166<-function(tbl=NULL,
     #determine columns of biomass by stratum table
     cols<-names(tbl); 
     nc<-length(cols);
-    if (nc==16){cols<-'';} else 
-    {cols<-cols[4:(nc-13)];}#extract factor columns
+    if (nc==17){cols<-'';} else 
+    {cols<-cols[4:(nc-14)];}#extract factor columns
                                  
-    #note: in the sql code below, instr(X,Y) finds the first occurrence of string Y within string X 
-    #and returns the number of prior characters plus 1, or 0 if Y is nowhere found within X.
-    #So the where clause below tests if stratum_revd.orig is a substring of tbl.STRATUM and, if so,
-    #essentially recodes the value in tbl$STRATUM to corresponding value in stratum_revd$revd.
     qry<-"select
             t.YEAR,
-            s.revd as STRATUM,
-            sum(t.STRATUM_AREA) as STRATUM_AREA&&cols,
-            sum(t.numStations) as numStations,
-            sum(t.numHauls) as numHauls,
-            sum(t.numIndivs) as numIndivs,
-            sum(t.totABUNDANCE) as totABUNDANCE,
-            sum(t.stdABUNDANCE*stdABUNDANCE) as stdABUNDANCE,
+            s.revd as newSTRATUM,
+            t.STRATUM as oldSTRATUM,
+            STRATUM_AREA&&cols,
+            numStations,
+            numHauls,
+            numNonZeroHauls,
+            numIndivs,
+            totABUNDANCE,
+            stdABUNDANCE,
+            totBIOMASS,
+            stdBIOMASS
+          from
+            tbl as t,
+            strata_toEW166 as s
+          where
+            t.STRATUM=s.orig
+          order by 
+            t.YEAR,s.revd,t.STRATUM&&cols;"
+    if (nc==17) {
+        qry<-gsub("&&cols",'',qry);
+    } else {
+        qry<-gsub("&&cols",paste(',t.',cols,collapse="",sep=''),qry);
+    }
+    if (verbosity>1) cat("\nquery is:\n",qry,"\n");
+    tbl2<-sqldf(qry);
+    
+    qry<-"select
+            YEAR,
+            newSTRATUM as STRATUM,
+            sum(STRATUM_AREA) as STRATUM_AREA&&cols,
+            sum(numStations) as numStations,
+            sum(numHauls) as numHauls,
+            sum(numNonZeroHauls) as numNonZeroHauls,
+            sum(numIndivs) as numIndivs,
+            sum(totABUNDANCE) as totABUNDANCE,
+            sum(stdABUNDANCE*stdABUNDANCE) as stdABUNDANCE,
             1.1 as cvABUNDANCE,
             sum(totBIOMASS) as totBIOMASS,
             sum(stdBIOMASS*stdBIOMASS) as stdBIOMASS,
             1.1 as cvBIOMASS
           from
-            tbl as t,
-            strata_revd as s
-          where
-            instr(t.STRATUM,s.orig)>0
+            tbl2
           group by 
-            t.YEAR,s.revd&&cols
+            YEAR,newSTRATUM&&cols
           order by 
-            t.YEAR,s.revd&&cols;"
-    if (nc==16) {
+            YEAR,newSTRATUM&&cols;"
+    if (nc==17) {
         qry<-gsub("&&cols",'',qry);
     } else {
-        qry<-gsub("&&cols",paste(',t.',cols,collapse=""),qry);
+        qry<-gsub("&&cols",paste(',',cols,collapse="",sep=''),qry);
     }
     if (verbosity>1) cat("\nquery is:\n",qry,"\n");
     tbl1<-sqldf(qry);
+    
     #convert columns to final values
     tbl1$stdABUNDANCE<-sqrt(tbl1$stdABUNDANCE);#convert from var to stdv
     tbl1$cvABUNDANCE <-tbl1$stdABUNDANCE/tbl1$totABUNDANCE;
+    idx<-is.nan(tbl1$cvABUNDANCE);
+    tbl1$cvABUNDANCE[idx]<-0; 
+    
     tbl1$stdBIOMASS  <-sqrt(tbl1$stdBIOMASS);  #convert from var to stdv
     tbl1$cvBIOMASS  <-tbl1$stdBIOMASS/tbl1$totBIOMASS;
+    idx<-is.nan(tbl1$cvBIOMASS);
+    tbl1$cvBIOMASS[idx]<-0; 
                                  
     if (export){
         if (!is.null(out.dir)){

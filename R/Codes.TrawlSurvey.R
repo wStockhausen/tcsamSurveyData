@@ -38,7 +38,7 @@ Codes.TrawlSurvey<-function(){
               value          =c("IMMATURE","MATURE","MATURE","MATURE","MATURE","MATURE","MATURE","MATURE","MISSING","UNDETERMINED"));
     lst[["clutch_size"]]<-as.data.frame(mat);
     
-    #Strata for Bairdi Tanner crab: revised strata for standard stations
+    #Revised strata for Bairdi Tanner crab
     strata.BTC<-as.data.frame(list(
                               code    =c(               10,                 11,                 98,             14,                      99,               15,                 16,                17),
                               district=c("East 166 Single","East 166 Multiple","East 166 Hot Spot","Pribilof MTCA","Pribilof MTCA Hot Spot","West 166 Single","West 166 Multiple","St. Matthew MTCA"),
@@ -46,7 +46,7 @@ Codes.TrawlSurvey<-function(){
                               ));
     lst[["strata.BTC"]]<-strata.BTC;
     
-    #Original strata for Bairdi Tanner crab: revised strata for standard stations
+    #Original strata for Bairdi Tanner crab
     strata.BTC<-as.data.frame(list(
                               code    =c(               10,                 11,                 98,             14,                      99,               15,                 16,                17),
                               district=c("East 166 Single","East 166 Multiple","East 166 Hot Spot","Pribilof MTCA","Pribilof MTCA Hot Spot","West 166 Single","West 166 Multiple","St. Matthew MTCA"),
@@ -54,7 +54,7 @@ Codes.TrawlSurvey<-function(){
                               ));
     lst[["strata.orig.BTC"]]<-strata.BTC;
     
-    #Original strata for blue king crab: revised strata for standard stations
+    #Original strata for blue king crab
     strata.BKC<-as.data.frame(list(
                               code    =c(                90,              4,                      99,                  6,                5,                 7,                     9,                   8),
                               district=c("BKC Unstratified","Pribilof MTCA","Pribilof MTCA Hot Spot","Pribilof Multiple","Pribilof Single","St. Matthew MTCA","St. Matthew Multiple","St. Matthew Single"),
@@ -63,8 +63,8 @@ Codes.TrawlSurvey<-function(){
     lst[["strata.orig.BKC"]]<-strata.BKC;
     
     #strata conversions to EW166
-    strata.EW166<-list(orig=c("East 166","Pribilof MTCA","St. Matthew MTCA","West 166"),
-                       revd=c("East 166",     "East 166",        "East 166","West 166")
+    strata.EW166<-list(orig=c("East 166","East 166 Single","East 166 Multiple","East 166 Hot Spot","West 166","Pribilof MTCA","St. Matthew MTCA","Pribilof MTCA Hot Spot","West 166 Single","West 166 Multiple"),
+                       revd=c("East 166",       "East 166",         "East 166",         "East 166","West 166",     "West 166",        "West 166",              "West 166",       "West 166",         "West 166")
                       );
     lst[["strata.EW166"]]<-as.data.frame(strata.EW166);
     return(lst);

@@ -11,10 +11,11 @@
 #'\itemize{
 #'\item  YEAR = survey year
 #'\item  other user-defined factors (e.g., sex, shell_condition)
-#'\item  numStations = number of stations included
-#'\item  numHauls    = number of hauls included
-#'\item  numIndivs   = number of individuals sampled
-#'\item  TOT_AREA    = total area included in strata
+#'\item  numStations     = number of stations included
+#'\item  numHauls        = number of hauls included
+#'\item  numNonZeroHauls = number of hauls included
+#'\item  numIndivs       = number of individuals sampled
+#'\item  TOT_AREA        = total area included in strata
 #'\item  totABUNDANCE = total abundance estimate
 #'\item  stdABUNDANCE = std deviation of total abundance estimate
 #'\item  cvABUNDANCE  = cv of total abundance estimate
@@ -43,7 +44,7 @@
 calcBiomass.EBS<-function(tbl=NULL,
                           in.csv=NULL,
                           export=TRUE,
-                          out.csv='SurveyBiomass.csv',
+                          out.csv='SurveyBiomass.EBS.csv',
                           out.dir=NULL,
                           verbosity=1){    
     if (verbosity>1) cat("starting calcBiomass.EBS\n");
@@ -69,7 +70,7 @@ calcBiomass.EBS<-function(tbl=NULL,
     
     #determine columns of biomass by stratum table
     cols<-names(tbl); 
-    if (any(cols=='avgNUMCPUE')) {nc0f<-16;} else {nc0f<-12;}
+    if (any(cols=='avgNUMCPUE')) {nc0f<-17;} else {nc0f<-13;}
     nc<-length(cols);
     if (nc==nc0f){cols<-'';} else 
     {cols<-cols[4:(3+nc-nc0f)];}#extract factor columns
@@ -79,6 +80,7 @@ calcBiomass.EBS<-function(tbl=NULL,
             YEAR&&cols,
             sum(numStations) as numStations,
             sum(numHauls) as numHauls,
+            sum(numNonZeroHauls) as numNonZeroHauls,
             sum(numIndivs) as numIndivs,
             sum(STRATUM_AREA) as TOT_AREA,
             sum(totABUNDANCE) as totABUNDANCE,
@@ -103,8 +105,13 @@ calcBiomass.EBS<-function(tbl=NULL,
     #convert columns to final values
     tbl1$stdABUNDANCE<-sqrt(tbl1$stdABUNDANCE);#convert from var to stdv
     tbl1$cvABUNDANCE <-tbl1$stdABUNDANCE/tbl1$totABUNDANCE;
+    idx<-is.nan(tbl1$cvABUNDANCE);
+    tbl1$cvABUNDANCE[idx]<-0; 
+    
     tbl1$stdBIOMASS  <-sqrt(tbl1$stdBIOMASS);  #convert from var to stdv
     tbl1$cvBIOMASS   <-tbl1$stdBIOMASS/tbl1$totBIOMASS;
+    idx<-is.nan(tbl1$cvBIOMASS);
+    tbl1$cvBIOMASS[idx]<-0; 
                                  
     if (export){
         if (!is.null(out.dir)){
