@@ -12,7 +12,8 @@ calcSizeComps.ByStratum(tbl_strata, tbl_cpue = NULL, tbl_hauls = NULL,
   "FEMALE", "ALL"), shell_condition = c("NEW_SHELL", "OLD_SHELL", "ALL"),
   maturity = c("IMMATURE", "MATURE", "ALL"), calcMaleMaturity = FALSE,
   minSize = -Inf, maxSize = Inf, export = FALSE,
-  out.csv = "SizeCompsByStratum.csv", out.dir = NULL, verbosity = 1)
+  out.csv = "SurveySizeComps.ByStratum.csv", out.dir = NULL,
+  verbosity = 1)
 }
 \arguments{
 \item{tbl_strata}{: data frame from call to \code{\link{selectStrata.TrawlSurvey}} [required]}
