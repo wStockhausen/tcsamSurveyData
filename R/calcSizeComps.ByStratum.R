@@ -90,7 +90,7 @@ calcSizeComps.ByStratum<-function(tbl_strata,
                                   minSize=-Inf,
                                   maxSize=Inf,
                                   export=FALSE,
-                                  out.csv='SizeCompsByStratum.csv',
+                                  out.csv='SurveySizeComps.ByStratum.csv',
                                   out.dir=NULL,
                                   verbosity=1){
     if (verbosity>1) cat("starting calcSizeComps.ByStratum\n");
