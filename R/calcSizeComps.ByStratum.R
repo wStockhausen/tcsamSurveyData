@@ -59,7 +59,7 @@
 #'\item  totBIOMASS = estimated biomass-by-size (by stratum)
 #'}
 #'
-#' @import sqldf
+#' @importFrom sqldf sqldf
 #' @importFrom wtsUtilities selectFile
 #'
 #'@export
@@ -186,36 +186,32 @@ calcSizeComps.ByStratum<-function(tbl_strata,
     tbl_zcs<-subset(tbl_zcs,select=-c(avgNUMCPUE,avgWGTCPUE,seNUMCPUE,seWGTCPUE,stdABUNDANCE,cvABUNDANCE,stdBIOMASS,cvBIOMASS))
     
     #now expand to all sizes
-    tbl_ufacs<-subset(tbl_zcs,select=-c(SIZE,totABUNDANCE,totBIOMASS));
+    tbl_ufacs<-subset(tbl_zcs,select=-c(SIZE,numIndivs,totABUNDANCE,totBIOMASS));
     ucols<-names(tbl_ufacs);
-    qry<-"select 
+    qry<-"select distinct
             &&ucols,
-            -1 as numNonZeroHauls,
-            sum(numIndivs) as numIndivs
-          from tbl_ufacs
-          group by
-            &&ucols;";
-    qry<-gsub("&&ucols",paste(ucols[1:(length(ucols)-2)],collapse=","),qry)
-    tbl_ufacs<-sqldf(qry);
+            -1 as numNonZeroHauls
+          from tbl_ufacs;";
+    qry<-gsub("&&ucols",paste(ucols[1:(length(ucols)-1)],collapse=","),qry)
+    tbl_ufacs<-sqldf::sqldf(qry);
     
     tbl_zs<-as.data.frame(list(SIZE=cutpts[1:(length(cutpts)-1)]))
     qry<-"select * from tbl_ufacs, tbl_zs;";
-    tbl_uzfacs<-sqldf(qry);
+    tbl_uzfacs<-sqldf::sqldf(qry);
     
     #rearrange column names to get SIZE at end of other factors (if any)
     nms<-names(tbl_uzfacs);
     nc<-length(nms);
-    nmsp<-c(nms[1:(nc-5)],nms[nc],nms[(nc-4):(nc-1)]);
+    nmsp<-c(nms[1:(nc-4)],nms[nc],nms[(nc-3):(nc-1)]);
     
     ucols<-paste("u",nmsp,sep='.');
     zcols<-paste("z",nmsp,sep='.');
     ucolstr<-paste(ucols,collapse=",")
     ncols<-length(ucols);
-    joinConds<-paste(ucols[1:(ncols-4)],zcols[1:(ncols-4)],sep='=',collapse=' and ');
-#    joinConds<-paste(ucols[c(1:(ncols-2),ncols)],zcols[c(1:(ncols-2),ncols)],sep='=',collapse=' and ');
+    joinConds<-paste(ucols[1:(ncols-3)],zcols[1:(ncols-3)],sep='=',collapse=' and ');
     
     qry<-"select
-            &&ucols,z.totABUNDANCE,z.totBIOMASS
+            &&ucols,z.numIndivs,z.totABUNDANCE,z.totBIOMASS
           from
             tbl_uzfacs u left join
             tbl_zcs z
@@ -226,13 +222,14 @@ calcSizeComps.ByStratum<-function(tbl_strata,
     qry<-gsub("&&ucols",ucolstr,qry);
     qry<-gsub("&&joinConds",joinConds,qry);
     cat(qry,'\n')
-    tbl_zcs1<-sqldf(qry);
+    tbl_zcs1<-sqldf::sqldf(qry);
     
-    idx<-is.na(tbl_zcs1$totABUNDANCE);
+    #change NAs to 0s in formerly missing cells
+    idx<-is.na(tbl_zcs1$numIndivs);
+    tbl_zcs1$numIndivs[idx]<-0;
     tbl_zcs1$totABUNDANCE[idx]<-0;
     tbl_zcs1$totBIOMASS[idx]<-0;
-    
-        
+            
     if (export){
         if (!is.null(out.dir)){
             if (verbosity>1) cat("\nTesting existence of folder '",out.dir,"'\n",sep='')
