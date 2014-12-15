@@ -35,7 +35,7 @@
 #'\item   Biomass   is in 10^3 mt
 #'}
 #'
-#' @import sqldf
+#' @importFrom sqldf sqldf
 #' @importFrom tcltk tk_choose.files
 #' @importFrom wtsUtilities addFilter
 #'      
@@ -71,16 +71,16 @@ calcBiomass.EBS<-function(tbl=NULL,
     
     #determine columns of biomass by stratum table
     cols<-names(tbl); 
-    if (any(cols=='avgNUMCPUE')) {nc0f<-17;} else {nc0f<-13;}
     nc<-length(cols);
-    if (nc==nc0f){cols<-'';} else 
-    {cols<-cols[4:(3+nc-nc0f)];}#extract factor columns
+    nc0f<-13;
+    if (nc==nc0f){facs<-'';} else 
+    {facs<-cols[4:(3+nc-nc0f)];}#extract factor columns
                                  
     #
     qry<-"select
             YEAR,
             'EBS' as STRATUM,
-            sum(STRATUM_AREA) as STRATUM_AREA&&cols,
+            sum(STRATUM_AREA) as STRATUM_AREA&&facs,
             sum(numStations) as numStations,
             sum(numHauls) as numHauls,
             sum(numNonZeroHauls) as numNonZeroHauls,
@@ -94,16 +94,16 @@ calcBiomass.EBS<-function(tbl=NULL,
           from
             tbl
           group by 
-            YEAR&&cols
+            YEAR&&facs
           order by 
-            YEAR&&cols;"
+            YEAR&&facs;"
     if (nc==nc0f) {
-        qry<-gsub("&&cols",'',qry);
+        qry<-gsub("&&facs",'',qry);
     } else {
-        qry<-gsub("&&cols",paste(',',cols,collapse=""),qry);
+        qry<-gsub("&&facs",paste(',',facs,collapse=""),qry);
     }
     if (verbosity>1) cat("\nquery is:\n",qry,"\n");
-    tbl1<-sqldf(qry);
+    tbl1<-sqldf::sqldf(qry);
     #convert columns to final values
     tbl1$stdABUNDANCE<-sqrt(tbl1$stdABUNDANCE);#convert from var to stdv
     tbl1$cvABUNDANCE <-tbl1$stdABUNDANCE/tbl1$totABUNDANCE;

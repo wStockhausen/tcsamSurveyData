@@ -30,10 +30,6 @@
 #'\item  numHauls
 #'\item  numNonZeroHauls
 #'\item  numIndivs
-#'\item  avgNUMCPUE
-#'\item  seNUMCPUE
-#'\item  avgWGTCPUE
-#'\item  seWGTCPUE
 #'\item  totABUNDANCE = estimated abundance (by stratum)
 #'\item  stdABUNDANCE = std deviation of estimated abundance (by stratum)
 #'\item  cvABUNDANCE  = cv of estimated abundance (by stratum)
@@ -42,7 +38,7 @@
 #'\item  cvBIOMASS  = cv of estimated biomass (by stratum)
 #'}
 #'
-#' @import sqldf
+#' @importFrom sqldf sqldf
 #' @importFrom wtsUtilities selectFile
 #'
 #'@export
@@ -130,7 +126,7 @@ calcBiomass.ByStratum<-function(tbl_strata,
         qry<-gsub("&&facs",paste(paste("c.",facs,sep='',collapse=","),",",sep=''),qry);
     }
     if (verbosity>1) cat("\nquery is:\n",qry,"\n");
-    tbl1<-sqldf(qry);
+    tbl1<-sqldf::sqldf(qry);
     
     #calculate number of unique stations
     #calculate average cpues over strata
@@ -156,7 +152,7 @@ calcBiomass.ByStratum<-function(tbl_strata,
         qry<-gsub("&&facs",paste(',',facs,sep='',collapse=''),qry);
     }
     if (verbosity>1) cat("\nquery is:\n",qry,"\n");
-    tbl2<-sqldf(qry);
+    tbl2<-sqldf::sqldf(qry);
     
     #calculate variances
     qry<-"select
@@ -197,7 +193,7 @@ calcBiomass.ByStratum<-function(tbl_strata,
         qry<-gsub("&&bycols",str,qry);
     }
     if (verbosity>1) cat("\nquery is:\n",qry,"\n");
-    tbl3<-sqldf(qry);
+    tbl3<-sqldf::sqldf(qry);
     
     #compute std. errors of means from variances and scale to totals by stratum
     if (byHaul){n<-tbl3$numHauls;} else {n<-tbl3$numStations;}
@@ -214,6 +210,8 @@ calcBiomass.ByStratum<-function(tbl_strata,
     tbl3$cvBIOMASS   <-tbl3$stdBIOMASS/tbl3$totBIOMASS;
     idx<-is.nan(tbl3$cvBIOMASS);
     tbl3$cvBIOMASS[idx]<-0; 
+    
+    tbl3<-subset(tbl3,select=-c(avgNUMCPUE,seNUMCPUE,avgWGTCPUE,seWGTCPUE));
     
     if (export){
         if (!is.null(out.dir)){

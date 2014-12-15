@@ -30,10 +30,6 @@ data frame with average cpue (numbers, weight), abundance and biomass by stratum
 \item  numHauls
 \item  numNonZeroHauls
 \item  numIndivs
-\item  avgNUMCPUE
-\item  seNUMCPUE
-\item  avgWGTCPUE
-\item  seWGTCPUE
 \item  totABUNDANCE = estimated abundance (by stratum)
 \item  stdABUNDANCE = std deviation of estimated abundance (by stratum)
 \item  cvABUNDANCE  = cv of estimated abundance (by stratum)

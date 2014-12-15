@@ -1,11 +1,12 @@
 #'
-#'@title Reshape survey size comps dataframe to wide format.
+#'@title Export survey size comps dataframe in wide format for the stock assessment.
 #'
-#'@description Function to reshape a survey size comps dataframe to wide format
+#'@description Function to reshape a survey size comps dataframe in wide format for the stock assessment.
 #'
 #'@param dfr  - dataframe with survey size comps from call to \code{\link{calcSizeComps.ByStratum}} or  \code{\link{calcSizeComps.EW166}} or  \code{\link{calcSizeComps.EBS}}
 #'@param facs - vector of 'factor' column names (e.g., 'SEX', 'MATURITY') for output
-#'@param var  - name of variable to extract ("totABUNDANCE" or "totBIOMASS")
+#'@param var  - variable type to extract ("ABUNDANCE" or "BIOMASS")
+#'@param dropLevels - factor levels to drop 
 #'@param export  - boolean flag to write results to csv file
 #'@param out.csv - output file name
 #'@param out.dir - output file directory 
@@ -25,13 +26,28 @@
 #'
 #'@export
 #'
-reshapeSizeComps.wide<-function(dfr,
+exportSizeComps.wide<-function(dfr,
                                 facs='',
-                                var=c('totABUNDANCE','totBIOMASS'),
+                                var=c('ABUNDANCE','BIOMASS'),
+                                dropLevels=NULL,
                                 export=FALSE,
-                                out.csv='SurveySizeComps.wide.csv',
+                                out.csv=paste('SurveySizeComps',var[1],'wide.csv',sep='.'),
                                 out.dir=NULL,
                                 verbosity=1){
+    
+    #determine data type to plot
+    if (toupper(var[1])=='ABUNDANCE'){
+        ylab<-'abundance';
+    } else if (toupper(var[1])=='BIOMASS'){
+        ylab<-'biomass';
+    } else {
+        cat('Error in plotAggregatedCatchData.\n');
+        cat("unrecognized var = '",var[1],"'.\n");
+        cat("Exiting function\n");
+        return(NULL);
+    }
+    var<-paste("tot",toupper(var[1]),sep='');
+    
     #determine id and measure variables for melting
     nf<-length(facs)
     if (nf>0){
@@ -45,6 +61,14 @@ reshapeSizeComps.wide<-function(dfr,
     
     #melt the input dataframe
     mdfr<-reshape2::melt(dfr,id.vars,measure.vars,factorsAsStrings=TRUE);
+    
+    #drop requested factor levels
+    if (is.list(dropLevels)){
+        dfacs<-names(dropLevels);
+        for (dfac in dfacs){
+            mdfr<-mdfr[!(mdfr[[dfac]] %in% dropLevels[[dfac]]),];
+        }
+    }
     
     #calculate the number of individuals sampled, summing over aggregated factors
     str<-"STRATUM&&facs+YEAR+numStations~.";

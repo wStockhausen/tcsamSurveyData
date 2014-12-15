@@ -33,7 +33,7 @@
 #'\item   Biomass   is in 10^3 mt
 #'}
 #'
-#' @import sqldf
+#' @importFrom sqldf sqldf
 #' @importFrom wtsUtilities selectFile
 #'      
 #'@export
@@ -97,7 +97,7 @@ calcSizeComps.EW166<-function(tbl=NULL,
         qry<-gsub("&&cols",paste(',t.',cols,collapse="",sep=''),qry);
     }
     if (verbosity>1) cat("\nquery is:\n",qry,"\n");
-    tbl2<-sqldf(qry);
+    tbl2<-sqldf::sqldf(qry);
     
     qry<-"select
             YEAR,
@@ -121,7 +121,7 @@ calcSizeComps.EW166<-function(tbl=NULL,
         qry<-gsub("&&cols",paste(',',cols,collapse="",sep=''),qry);
     }
     if (verbosity>1) cat("\nquery is:\n",qry,"\n");
-    tbl1<-sqldf(qry);
+    tbl1<-sqldf::sqldf(qry);
                                  
     if (export){
         if (!is.null(out.dir)){

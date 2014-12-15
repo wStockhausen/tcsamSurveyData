@@ -36,7 +36,7 @@
 #'\item   Biomass   is in 10^3 mt
 #'}
 #'
-#' @import sqldf
+#' @importFrom sqldf sqldf
 #' @importFrom wtsUtilities selectFile
 #'      
 #'@export
@@ -71,14 +71,15 @@ calcBiomass.EW166<-function(tbl=NULL,
     #determine columns of biomass by stratum table
     cols<-names(tbl); 
     nc<-length(cols);
-    if (nc==17){cols<-'';} else 
-    {cols<-cols[4:(nc-14)];}#extract factor columns
+    nc0f<-13;
+    if (nc==nc0f){facs<-'';} else 
+    {facs<-cols[4:(3+nc-nc0f)];}#extract factor columns
                                  
     qry<-"select
             t.YEAR,
             s.revd as newSTRATUM,
             t.STRATUM as oldSTRATUM,
-            STRATUM_AREA&&cols,
+            STRATUM_AREA&&facs,
             numStations,
             numHauls,
             numNonZeroHauls,
@@ -93,19 +94,19 @@ calcBiomass.EW166<-function(tbl=NULL,
           where
             t.STRATUM=s.orig
           order by 
-            t.YEAR,s.revd,t.STRATUM&&cols;"
-    if (nc==17) {
-        qry<-gsub("&&cols",'',qry);
+            t.YEAR,s.revd,t.STRATUM&&facs;"
+    if (nc==13) {
+        qry<-gsub("&&facs",'',qry);
     } else {
-        qry<-gsub("&&cols",paste(',t.',cols,collapse="",sep=''),qry);
+        qry<-gsub("&&facs",paste(',t.',facs,collapse="",sep=''),qry);
     }
     if (verbosity>1) cat("\nquery is:\n",qry,"\n");
-    tbl2<-sqldf(qry);
+    tbl2<-sqldf::sqldf(qry);
     
     qry<-"select
             YEAR,
             newSTRATUM as STRATUM,
-            sum(STRATUM_AREA) as STRATUM_AREA&&cols,
+            sum(STRATUM_AREA) as STRATUM_AREA&&facs,
             sum(numStations) as numStations,
             sum(numHauls) as numHauls,
             sum(numNonZeroHauls) as numNonZeroHauls,
@@ -119,16 +120,16 @@ calcBiomass.EW166<-function(tbl=NULL,
           from
             tbl2
           group by 
-            YEAR,newSTRATUM&&cols
+            YEAR,newSTRATUM&&facs
           order by 
-            YEAR,newSTRATUM&&cols;"
+            YEAR,newSTRATUM&&facs;"
     if (nc==17) {
-        qry<-gsub("&&cols",'',qry);
+        qry<-gsub("&&facs",'',qry);
     } else {
-        qry<-gsub("&&cols",paste(',',cols,collapse="",sep=''),qry);
+        qry<-gsub("&&facs",paste(',',facs,collapse="",sep=''),qry);
     }
     if (verbosity>1) cat("\nquery is:\n",qry,"\n");
-    tbl1<-sqldf(qry);
+    tbl1<-sqldf::sqldf(qry);
     
     #convert columns to final values
     tbl1$stdABUNDANCE<-sqrt(tbl1$stdABUNDANCE);#convert from var to stdv
