@@ -3,15 +3,15 @@
 #'
 #'@param tbl_strata - dataframe from call to selectStrata.TrawlSurvey(...) [required]
 #'@param tbl        - trawl survey dataframe from previous call (or name of trawl survey csv datafile, or NULL)              (ignored if NULL)
-#'@param export  - boolean flag to export results to csv file
-#'@param out.csv - name of output csv file                    (ignored if NULL)
-#'@param out.dir - base path for output csv file              (set to folder of input csv file or current working directory)
 #'@param Years      - vector of survey years to include in output             (ignored if NULL)
 #'@param HaulTypes  - vector of haul types to include in output               (ignored if NULL)
 #'@param YearRange  - vector of min, max survey years to include in output    (ignored if NULL)
 #'@param DepthRange - vector of min, max haul depths to include in output     (ignored if NULL)
 #'@param LatRange   - vector of min, max haul latitudes to include in output  (ignored if NULL)
 #'@param LonRange   - vector of min, max haul longitudes to include in output (ignored if NULL)
+#'@param export  - boolean flag to export results to csv file
+#'@param out.csv - name of output csv file                    (ignored if NULL)
+#'@param out.dir - base path for output csv file              (set to folder of input csv file or current working directory)
 #'@param verbosity : integer flag indicating level of printed output (0=off,1=minimal,2=full)
 #'
 #' @return a dataframe w/ columns \cr
@@ -21,7 +21,7 @@
 #' 
 #'@details If neither tbl or in.csv is given, the user will be prompted for a csv file via a file dialog box
 #' 
-#' @import sqldf
+#' @importFrom sqldf sqldf
 #' @importFrom tcltk tk_choose.files
 #' @importFrom wtsUtilities addFilter
 #' 
@@ -32,15 +32,15 @@
 #source("../Utilities/addFilter.R",chdir=TRUE)
 selectHauls.TrawlSurvey<-function(tbl_strata,
                                   tbl=NULL,
-                                  export=FALSE,
-                                  out.csv="SelectedSurveyHauls.csv",
-                                  out.dir=NULL,
                                   Years=NULL,
                                   HaulTypes=NULL,
                                   YearRange=NULL,
                                   DepthRange=NULL,
                                   LatRange=NULL,
                                   LonRange=NULL,
+                                  export=FALSE,
+                                  out.csv="SelectedSurveyHauls.csv",
+                                  out.dir=NULL,
                                   verbosity=1){
     if (verbosity>1) cat("starting selectHauls.TrawlSurvey.\n");
     
@@ -105,7 +105,7 @@ selectHauls.TrawlSurvey<-function(tbl_strata,
     qry<-gsub("&&where",wc,qry);
     
     if (verbosity>1) cat("\nquery is:\n",qry,"\n");
-    tbl1<-sqldf(qry);
+    tbl1<-sqldf::sqldf(qry);
         
     if (export){
         if (!is.null(out.dir)){

@@ -1,7 +1,7 @@
 #'
-#'@title Plot time series of aggregated catch data.
+#'@title Plot size comps from survey data as bars.
 #'
-#'@description Function to plot time series of aggregated catch data.
+#'@description Function to plot size comps from survey data as bars.
 #'
 #'@param zcs - dataframe from call to one of the calcSizeComps... functions
 #'@param facs - factors to plot by 
@@ -13,7 +13,7 @@
 #'@param nrow - number of rows of plots per page
 #'@param showPlots - flag to show plots immediately
 #'
-#'@return list of ggplot2 objects
+#'@return list of ggplot2 plot objects
 #'
 #'@details The time series for each factor level combination is plotted
 #'separately. Distinct levels of each factor can be dropped from the

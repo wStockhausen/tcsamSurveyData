@@ -3,12 +3,14 @@
 #' 
 #'@param tbl_hauls : hauls table (dataframe) from call to selectHauls.TrawlSurvey(...) [required]
 #'@param tbl       : table (dataframe) of survey data (or csv filename or NULL)
-#'@param export    : boolean flag to export results to csv file
 #'@param sex            : one of 'MALE','FEMALE' or 'ALL' for narrowing selection of individuals
 #'@param shell_condition: one of 'NEW_SHELL','OLD_SHELL' or 'ALL' for narrowing selection of individuals
 #'@param maturity       : one of 'IMMATURE','MATURE' or 'ALL' for narrowing selection of individuals
 #'@param minWidth : minimum size (width) of individuals to select 
 #'@param maxWidth : maximum size (width) of individuals to select 
+#'@param export  - boolean flag to export results to csv file
+#'@param out.csv - name of output csv file                    (ignored if NULL)
+#'@param out.dir - base path for output csv file              (set to folder of input csv file or current working directory)
 #'@param verbosity : integer flag indicating level of printed output (0=off,1=minimal,2=full)
 #'
 #'@return dataframe (see Details for coulmn names)
@@ -34,8 +36,8 @@
 #' Notes:
 #' \itemize{\item Weights are in grams.}
 #' 
-#' @import sqldf
 #' @import tcsamFunctions
+#' @importFrom sqldf sqldf
 #' @importFrom wtsUtilities addFilter
 #' @importFrom wtsUtilities selectFile
 #' 
@@ -52,15 +54,15 @@
 selectIndivs.TrawlSurvey<-function(tbl_hauls,
                                    tbl=NULL,
                                    col.Size='WIDTH',
-                                   export=FALSE,
-                                   out.csv="SelectedIndivs.csv",
-                                   out.dir=NULL,
                                    sex=c('MALE','FEMALE','ALL'),
                                    shell_condition=c('NEW_SHELL','OLD_SHELL','ALL'),
                                    maturity=c('IMMATURE','MATURE','ALL'),
                                    calcMaleMaturity=FALSE,
                                    minSize=-Inf,
                                    maxSize=Inf,
+                                   export=FALSE,
+                                   out.csv="SelectedIndivs.csv",
+                                   out.dir=NULL,
                                    verbosity=1){
     if (verbosity>0) cat("starting selectIndivs.TrawlSurvey.\n");
     
@@ -114,7 +116,7 @@ selectIndivs.TrawlSurvey<-function(tbl_hauls,
             t.HAULJOIN=h.HAULJOIN;";
     qry<-gsub("&&cols",paste("t.",cols,sep='',collapse=","),qry);    
     if (verbosity>1) cat("\nquery is:\n",qry,"\n");
-    tbl<-sqldf(qry);
+    tbl<-sqldf::sqldf(qry);
     
     #assign -1 to NA's in column CLUTCH_SIZE (i.e., males) to simplify SQL code
     idx<-is.na(tbl$CLUTCH_SIZE);
@@ -189,7 +191,7 @@ selectIndivs.TrawlSurvey<-function(tbl_hauls,
     qry<-gsub("&&sq.mat",sq.mat,qry)
     if (verbosity>1) cat("\nquery is:\n",qry,"\n");
     
-    tbl<-sqldf(qry);
+    tbl<-sqldf::sqldf(qry);
     
     #Change back to NA's from -1's in column CLUTCH_SIZE (i.e., males)
     idx<-tbl$CLUTCH_SIZE==-1;
