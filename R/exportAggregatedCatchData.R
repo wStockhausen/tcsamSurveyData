@@ -55,6 +55,11 @@ exportAggregatedCatchData<-function(acd,
     #determine id and measure variables for melting
     nf<-length(facs)
     if (nf>0){
+        for (fac in facs){
+            if (!(fac %in% names(acd))){
+                acd[[fac]]<-"ALL";
+            }
+        }
         id.vars<-c("STRATUM",facs,"YEAR");
     } else {
         id.vars<-c("STRATUM","YEAR")
