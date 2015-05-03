@@ -3,7 +3,7 @@
 #'assessment codes and descriptions.
 #'
 #'@description This function provides a list of dataframes suitable for converting 
-#'from survey codes to assessment codes and descriptions
+#'from survey codes to assessment codes and descriptions.
 #'
 #'@return a list with the following elements: \cr
 #'\itemize{
@@ -38,14 +38,6 @@ Codes.TrawlSurvey<-function(){
               value          =c("IMMATURE","MATURE","MATURE","MATURE","MATURE","MATURE","MATURE","MATURE","MISSING","UNDETERMINED"));
     lst[["clutch_size"]]<-as.data.frame(mat);
     
-    #Revised strata for Bairdi Tanner crab
-    strata.BTC<-as.data.frame(list(
-                              code    =c(               10,                 11,                 98,             14,                      99,               15,                 16,                17),
-                              district=c("East 166 Single","East 166 Multiple","East 166 Hot Spot","Pribilof MTCA","Pribilof MTCA Hot Spot","West 166 Single","West 166 Multiple","St. Matthew MTCA"),
-                              stratum =c(       "East 166",         "East 166",         "East 166","Pribilof MTCA",         "Pribilof MTCA",       "West 166",         "West 166","St. Matthew MTCA")
-                              ));
-    lst[["strata.BTC"]]<-strata.BTC;
-    
     #Original strata for Bairdi Tanner crab
     strata.BTC<-as.data.frame(list(
                               code    =c(               10,                 11,                 98,             14,                      99,               15,                 16,                17),
@@ -53,6 +45,22 @@ Codes.TrawlSurvey<-function(){
                               stratum =c("East 166 Single","East 166 Multiple","East 166 Hot Spot","Pribilof MTCA","Pribilof MTCA Hot Spot","West 166 Single","West 166 Multiple","St. Matthew MTCA")
                               ));
     lst[["strata.orig.BTC"]]<-strata.BTC;
+    
+    #Revised strata for Bairdi Tanner crab
+    strata.BTC<-as.data.frame(list(
+                              code    =c(               10,                 11,                 98,             14,                      99,               15,                 16,                17),
+                              district=c("East 166 Single","East 166 Multiple","East 166 Hot Spot","Pribilof MTCA","Pribilof MTCA Hot Spot","West 166 Single","West 166 Multiple","St. Matthew MTCA"),
+                              stratum =c(       "East 166",         "East 166",         "East 166","Pribilof MTCA",         "Pribilof MTCA",       "West 166",         "West 166","St. Matthew MTCA")
+                              ));
+    lst[["strata.revd.BTC"]]<-strata.BTC;
+    
+    #'New' strata for 2015 for Bairdi Tanner crab
+    strata.BTC<-as.data.frame(list(
+                              code    =c(        10,             14,        15,                17),
+                              district=c("East 166","Pribilof MTCA","West 166","St. Matthew MTCA"),
+                              stratum =c("East 166","Pribilof MTCA","West 166","St. Matthew MTCA")
+                              ));
+    lst[["strata.new2015.BTC"]]<-strata.BTC;
     
     #Original strata for blue king crab
     strata.BKC<-as.data.frame(list(

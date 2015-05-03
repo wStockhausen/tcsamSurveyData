@@ -5,7 +5,7 @@
 \title{Function to extract crab station data and strata information from a NMFS trawl survey strata file.}
 \usage{
 selectStrata.TrawlSurvey(tbl = NULL, species = "BTC",
-  useOrigStrata = FALSE, export = FALSE,
+  strataType = "new2015", export = FALSE,
   out.csv = paste("SelectedStations", species, "csv", sep = "."),
   out.dir = NULL, verbosity = 1)
 }
@@ -18,7 +18,7 @@ selectStrata.TrawlSurvey(tbl = NULL, species = "BTC",
 
 \item{verbosity}{: integer flag indicating level of printed output (0=off,1=minimal,2=full)}
 
-\item{useOrigStrata:}{boolean to use Bob Foy's "original" strata, rather than the revised strata}
+\item{strataType:}{type of strata ('orig','revised','new2015')}
 }
 \value{
 a dataframe with strata/stations info.

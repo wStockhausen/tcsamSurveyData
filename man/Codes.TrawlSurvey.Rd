@@ -20,7 +20,7 @@ a list with the following elements: \cr
 }
 \description{
 This function provides a list of dataframes suitable for converting
-from survey codes to assessment codes and descriptions
+from survey codes to assessment codes and descriptions.
 }
 \details{
 
