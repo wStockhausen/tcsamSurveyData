@@ -21,6 +21,12 @@
 #'
 testTrawlSurveyCalcs<-function(out.dir=NULL,
                                verbosity=1){
+    
+    #select strata/stations
+    strata.org<-selectStrata.TrawlSurvey(tbl=NULL,species='BTC',strataType='orig',   verbosity=verbosity)
+    strata.rev<-selectStrata.TrawlSurvey(tbl=NULL,species='BTC',strataType='revised',verbosity=verbosity)
+    strata.new<-selectStrata.TrawlSurvey(tbl=NULL,species='BTC',strataType='new2015',verbosity=verbosity)
+    
     #read in trawl survey individual crab info and strata info
     info.Indivs<-wtsUtilities::selectFile("csv",caption="Select AFSC trawl survey data file")
     if (is.null(out.dir)) out.dir<-dirname(info.Indivs);
@@ -28,10 +34,6 @@ testTrawlSurveyCalcs<-function(out.dir=NULL,
     
     info.Strata<-wtsUtilities::selectFile("csv",caption="Select AFSC trawl survey strata file")
     info.Strata<-read.csv(info.Strata,stringsAsFactors=FALSE);
-    
-    #select strata/stations
-    strata.rev<-selectStrata.TrawlSurvey(tbl=info.Strata,species='BTC',verbosity=verbosity)
-    strata.org<-selectStrata.TrawlSurvey(tbl=info.Strata,species='BTC',useOrigStrata=TRUE,verbosity=verbosity)
     
     #select hauls
     #tbl.hauls<-selectHauls.TrawlSurvey(strata.org,tbl=tbl.TS.IndivsInfo,HaulTypes=NULL,,export=TRUE,out.csv="SurveyHauls.OrigStrata.csv",verbosity=verbosity);#standard haul_type

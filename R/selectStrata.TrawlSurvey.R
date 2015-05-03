@@ -5,7 +5,7 @@
 #'
 #'@param tbl       : table (dataframe) of survey station/strata data (or name of survey station/strata csv file, or NULL)
 #'@param species   : code ('BKC','BTC','RKC','OTC') indicating species
-#'@param strataType: type of strata ('orig','revised','new2015')
+#'@param strataType: type of strata ('orig','revd','2015')
 #'@param export    : boolean flag to export results to csv file
 #'@param verbosity : integer flag indicating level of printed output (0=off,1=minimal,2=full)
 #'
@@ -33,7 +33,7 @@
 #source("../Utilities/addFilter.R",chdir=TRUE)
 selectStrata.TrawlSurvey<-function(tbl=NULL,
                                    species='BTC',
-                                   strataType='new2015',
+                                   strataType='2015',
                                    export=FALSE,
                                    out.csv=paste('SelectedStations',species,'csv',sep='.'),
                                    out.dir=NULL,
@@ -43,7 +43,7 @@ selectStrata.TrawlSurvey<-function(tbl=NULL,
     in.csv<-NULL;
     if (!is.data.frame(tbl)){
         if (!is.character(tbl)) {
-            in.csv<-wtsUtilities::selectFile(ext="csv",caption="Select AFSC crab survey strata file");
+            in.csv<-wtsUtilities::selectFile(ext="csv",caption=paste("Select AFSC crab survey strata file for strata type",strataType));
             if (is.null(in.csv)|(in.csv=='')) return(NULL);
         } else {
             in.csv<-tbl;#tbl is a filename
@@ -71,12 +71,18 @@ selectStrata.TrawlSurvey<-function(tbl=NULL,
           order by SURVEY_YEAR, STRATUM_CODE;"
     tbl_areas<-sqldf(qry);
     
+    strata<-NULL;
     codes<-Codes.TrawlSurvey();
-    if (tolower(strataType)=='orig')   {strata<-codes[[paste("strata.orig.",species,sep='')]];} else
-    if (tolower(strataType)=='revised'){strata<-codes[[paste("strata.revd",species,sep='')]];} else
-    if (tolower(strataType)=='new2015'){strata<-codes[[paste("strata.2015",species,sep='')]];} else
+    if (tolower(strataType)=='orig'){strata<-codes[[paste("strata.orig",species,sep='.')]];} else
+    if (tolower(strataType)=='revd'){strata<-codes[[paste("strata.revd",species,sep='.')]];} else
+    if (tolower(strataType)=='2015'){strata<-codes[[paste("strata.2015",species,sep='.')]];} else
     {cat("strataType '",strataType,"' not recognized.\nAborting...\n");
      return(NULL);}
+    
+    if (is.null(strata)){
+        cat('table strata is NULL for strataType = "',strataType='"\nAborting...\n');
+        return(NULL);
+    }
     
     qry<-"select
             SURVEY_YEAR,

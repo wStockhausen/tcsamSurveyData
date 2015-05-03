@@ -13,8 +13,9 @@ a list with the following elements: \cr
 \item sex             : table to convert between survey and assessment sex codes
 \item shell_condition : table to convert between survey and assessment shell condition codes
 \item clutch_size     : table to convert between survey and assessment clutch size codes
-\item strata.BTC      : revised strata for Bairdi Tanner crab
 \item strata.orig.BTC : original strata for Bairdi Tanner crab
+\item strata.revd.BTC : revised strata for Bairdi Tanner crab
+\item strata.2015.BTC : 2015 strata for Bairdi Tanner crab
 \item strata.EW166    : E/W 166W strata
 }
 }

@@ -4,10 +4,9 @@
 \alias{selectStrata.TrawlSurvey}
 \title{Function to extract crab station data and strata information from a NMFS trawl survey strata file.}
 \usage{
-selectStrata.TrawlSurvey(tbl = NULL, species = "BTC",
-  strataType = "new2015", export = FALSE,
-  out.csv = paste("SelectedStations", species, "csv", sep = "."),
-  out.dir = NULL, verbosity = 1)
+selectStrata.TrawlSurvey(tbl = NULL, species = "BTC", strataType = "2015",
+  export = FALSE, out.csv = paste("SelectedStations", species, "csv", sep =
+  "."), out.dir = NULL, verbosity = 1)
 }
 \arguments{
 \item{tbl}{: table (dataframe) of survey station/strata data (or name of survey station/strata csv file, or NULL)}
@@ -18,7 +17,7 @@ selectStrata.TrawlSurvey(tbl = NULL, species = "BTC",
 
 \item{verbosity}{: integer flag indicating level of printed output (0=off,1=minimal,2=full)}
 
-\item{strataType:}{type of strata ('orig','revised','new2015')}
+\item{strataType:}{type of strata ('orig','revd','2015')}
 }
 \value{
 a dataframe with strata/stations info.
