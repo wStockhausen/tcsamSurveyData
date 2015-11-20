@@ -7,4 +7,4 @@ Author: William Stockhausen
 Maintainer: William Stockhausen <william.stockhausen@noaa.gov>
 Description: Provides a set of functions to calculate and plot abundance, biomass, size frequencies from nmfs EBS survey data.
 License: MIT
-Imports: ggplot2, plyr, reshape2, sqldf, tcsamFunctions, wtsGMT, wtsUtilities
+Imports: ggmap, ggplot2, plyr, reshape2, rgdal, sqldf, tcsamFunctions, wtsGMT, wtsUtilities
