@@ -77,6 +77,9 @@ a list with the following elements: \cr
 \item {bio.tot}      {: data frame with abundance, biomass by year and other factor levels}
 }
 }
+\description{
+Function to calculate cpue by survey haul from station, haul and individual crab info.
+}
 \details{
 Notes: \itemize{
   \item CPUE in numbers is in no/(sq. nm.) 

@@ -79,18 +79,24 @@ plotSizeComps.ByStratum<-function(zcs,
     
     ##multiply by requested amounts
     if (is.list(multipliers)){
-        mfacs<-names(multipliers);
-        for (mfac in mfacs){
-            mlt <- multipliers[[mfac]]$value;  #value to multiply by
-            lst <- multipliers[[mfac]]$factors;#list identifying factor combination
+        nf<-length(multipliers)
+        for (f in 1:nf){
+            mlt <- multipliers[[f]]$value;  #value to multiply by
+            lst <- multipliers[[f]]$factors;#list identifying factor combination
             ##identify rows corresponding to factor combination
             idx <- TRUE;
             sfacs<-names(lst);
             for (sfac in sfacs){
                 idx<-idx & (mdfr[[sfac]]==lst[[sfac]]);
             }
-            ##apply multiplier to variables
-            for (vr in var) mdfr[[vr]][idx] <- mlt * mdfr[[vr]][idx];
+            cat('Applying ',mlt,' to ',sum(idx),' values out of ',length(idx),' for ',sep='');
+            for (sfac in sfacs) cat(sfac,"==",lst[[sfac]]," ");
+            cat("\n");
+            ##apply multiplier to variables in mdfr
+            for (mvar in measure.vars) {
+                cat('Applying',mlt,'to',mvar,'\n');
+                mdfr$value[idx] <- mlt * mdfr$value[idx];
+            }
         }
     }
     
@@ -118,7 +124,15 @@ plotSizeComps.ByStratum<-function(zcs,
     mxp<-nrow*ncol;
     npg<-ceiling(length(yrs)/mxp)
     
-    if (is.null(rng)) rng<-c(min(0,min(dfr$value,na.rm=TRUE)),max(dfr$value,na.rm=TRUE));
+    if (is.null(rng)) {
+        mn<-min(dfr$value,na.rm=TRUE);
+        mx<-max(dfr$value,na.rm=TRUE);
+        if (mn>=0){
+            rng<-c(0,mx);
+        } else {
+            rng<-max(abs(mn),abs(mx))*c(-1,1);
+        }
+    }
     cat("rng = ",rng,'\n')
     
     fax<-'black';

@@ -1,7 +1,9 @@
 #'
-#'@title test ggmaps plotting.
+#'@title test ggmap plotting.
 #'
-#'@description function to test ggmaps plotting
+#'@description function to test ggmap plotting
+#'
+#'@details test
 #'
 #'@import ggmap
 #'@import ggplot2
@@ -9,7 +11,7 @@
 #'
 #'
 testGGMaps<-function(){
-    require("ggmap")
+    ##require("ggmap")
     x='MALE'
     m='MATURE'
     s='NEW_SHELL'
@@ -27,7 +29,7 @@ testGGMaps<-function(){
     p <- p + geom_point(mapping=aes(x=LONGITUDE,y=LATITUDE,size=wgtCPUE,color=wgtCPUE),data=cpue[cpue$YEAR==year,],alpha=0.5)
     #print(p)
     
-    require('rgdal')
+    ##require('rgdal')
     depth<-readOGR(dsn=path.expand("~/Projects/MapData/Bathymetry"),layer="ShelfBathymetry")
     summary(depth)
     depth.WGS84<-spTransform(depth, CRS("+init=epsg:4326"))

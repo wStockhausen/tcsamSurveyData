@@ -20,6 +20,8 @@
 #'
 #'@return list of ggplot2 plot objects to print
 #'
+#'@details none.
+#'
 #'@importFrom plyr .
 #'@importFrom reshape2 dcast
 #'@importFrom reshape2 melt 

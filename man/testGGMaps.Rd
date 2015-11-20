@@ -2,11 +2,14 @@
 % Please edit documentation in R/testGGMaps.R
 \name{testGGMaps}
 \alias{testGGMaps}
-\title{test ggmaps plotting.}
+\title{test ggmap plotting.}
 \usage{
 testGGMaps()
 }
 \description{
-function to test ggmaps plotting
+function to test ggmap plotting
+}
+\details{
+test
 }
 

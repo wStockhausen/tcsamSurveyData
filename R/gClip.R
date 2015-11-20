@@ -16,9 +16,9 @@
 #' \cr
 #' Also, the bounding box must be in the same coordinate system as th set of polygons.
 #' 
-#' @importFrom raster extent
-#' @import rgeos
-#' @import sp
+#'@importFrom raster extent
+#'@import rgeos
+#'@import sp
 #' 
 #' @export
 #' 

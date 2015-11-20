@@ -12,6 +12,8 @@
 #'
 #'@return ggplot2 plot object to print
 #'
+#'@details none.
+#'
 #'@import ggplot2
 #'
 #'@export

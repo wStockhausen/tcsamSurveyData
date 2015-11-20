@@ -30,8 +30,13 @@ get_stamenmap(bbox = c(left = -180, bottom = 54, right = -155, top = 63),
 }
 \value{
 ggmap object
+
+use with ggmap
 }
 \description{
 Function to retrieve a stamenmap (replaces ggmap::get_stamenmap)
+}
+\details{
+Requires internet connection.
 }
 

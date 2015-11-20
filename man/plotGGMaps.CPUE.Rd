@@ -50,4 +50,7 @@ list of ggplot2 plot objects to print
 \description{
 Function to plot maps of survey cpue by year and other factors using ggmap and ggplot2.
 }
+\details{
+none.
+}
 

@@ -33,6 +33,9 @@ getChelaHeights(tbl_hauls, tbl = NULL, col.Size = "WIDTH",
 \value{
 dataframe
 }
+\description{
+Function to extract chela height data on males w/ selected characteristics from NMFS trawl survey csv files.
+}
 \details{
 If tbl is NULL, the user will be prompted for a survey csv file via a file dialog box.\cr
 \itemize{\item Weights are in grams.}

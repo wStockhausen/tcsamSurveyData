@@ -2,12 +2,19 @@
 % Please edit documentation in R/Codes.TrawlSurvey.R
 \name{Codes.TrawlSurvey}
 \alias{Codes.TrawlSurvey}
-\title{Provides a list of dataframes suitable forconverting from survey codes to
+\title{Provides a list of dataframes suitable for converting from survey codes to
 assessment codes and descriptions.}
 \usage{
 Codes.TrawlSurvey()
 }
 \value{
+a list
+}
+\description{
+This function provides a list of dataframes suitable for converting 
+from survey codes to assessment codes and descriptions.
+}
+\details{
 a list with the following elements: \cr
 \itemize{
 \item sex             : table to convert between survey and assessment sex codes
@@ -18,9 +25,5 @@ a list with the following elements: \cr
 \item strata.2015.BTC : 2015 strata for Bairdi Tanner crab
 \item strata.EW166    : E/W 166W strata
 }
-}
-\description{
-This function provides a list of dataframes suitable for converting 
-from survey codes to assessment codes and descriptions.
 }
 

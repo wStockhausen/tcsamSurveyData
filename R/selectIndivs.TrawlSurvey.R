@@ -1,5 +1,7 @@
 #'
 #'@title Function to extract crab data on individuals w/ selected characteristics from NMFS trawl survey csv files.
+#'
+#'@description Function to extract crab data on individuals w/ selected characteristics from NMFS trawl survey csv files.
 #' 
 #'@param tbl_hauls : hauls table (dataframe) from call to selectHauls.TrawlSurvey(...) [required]
 #'@param tbl       : table (dataframe) of survey data (or csv filename or NULL)

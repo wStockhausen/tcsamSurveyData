@@ -37,6 +37,9 @@ selectIndivs.TrawlSurvey(tbl_hauls, tbl = NULL, col.Size = "WIDTH",
 \value{
 dataframe (see Details for coulmn names)
 }
+\description{
+Function to extract crab data on individuals w/ selected characteristics from NMFS trawl survey csv files.
+}
 \details{
 If neither tbl or in.csv is given, the user will be prompted for a csv file via a file dialog box.\cr
 Returned dataframe will have columns:

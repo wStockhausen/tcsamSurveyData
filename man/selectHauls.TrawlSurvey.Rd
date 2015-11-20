@@ -40,6 +40,9 @@ YEAR,STRATUM,GIS_STATION,HAULJOIN,HAUL_TYPE, \cr
 START_DATE,MID_LATITUDE,MID_LONGITUDE,BOTTOM_DEPTH, \cr
 GEAR_TEMPERATURE,AREA_SWEPT_VARIABLE
 }
+\description{
+Function to extract NMFS crab survey hauls data from Excel csv file format by year.
+}
 \details{
 If neither tbl or in.csv is given, the user will be prompted for a csv file via a file dialog box
 }

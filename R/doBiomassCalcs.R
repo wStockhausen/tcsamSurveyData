@@ -1,6 +1,8 @@
 #'
 #'@title Function to calculate cpue by survey haul from station, haul and individual crab info.
 #'
+#'@description Function to calculate cpue by survey haul from station, haul and individual crab info.
+#'
 #'@param tbl.hauls   : dataframe with hauls info (output from \code{\link{selectHauls.TrawlSurvey}})
 #'@param tbl.indivs  : dataframe with individual crab info (output from \code{\link{selectIndivs.TrawlSurvey}})
 #'@param tbl.strata  : dataframe with survey strata info (output from \code{\link{selectStrata.TrawlSurvey}})

@@ -1,6 +1,8 @@
 #'
 #' @title Function to extract chela height data on males w/ selected characteristics from NMFS trawl survey csv files.
 #' 
+#' @description Function to extract chela height data on males w/ selected characteristics from NMFS trawl survey csv files.
+#' 
 #' @param tbl_hauls - hauls table (dataframe) from call to selectHauls.TrawlSurvey(...) [required]
 #' @param tbl       - table (dataframe) of survey data (or filename of survey csv file, or NULL)
 #' @param shell_condition - one of 'NEW_SHELL','OLD_SHELL' or 'ALL' for narrowing selection of individuals

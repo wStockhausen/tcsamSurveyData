@@ -1,6 +1,8 @@
 #'
 #'@title Function to calculate cpue by survey station, averaging over cpue by haul. 
 #'
+#'@description Function to calculate cpue by survey station, averaging over cpue by haul. 
+#'
 #'@param tbl_strata: dataframe w/ station info
 #'@param  tbl_cpue : data frame w/ cpue by haul from call to calcCPUE.ByHaul(...), or name of csv file w/ cpue by haul, or NULL to choose file
 #'@param export  : boolean flag to write results to csv file

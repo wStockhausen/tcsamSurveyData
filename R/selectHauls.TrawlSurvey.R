@@ -1,6 +1,8 @@
 #'
 #'@title Function to extract NMFS crab survey hauls data from Excel csv file format by year.
 #'
+#'@description Function to extract NMFS crab survey hauls data from Excel csv file format by year.
+#'
 #'@param tbl_strata - dataframe from call to selectStrata.TrawlSurvey(...) [required]
 #'@param tbl        - trawl survey dataframe from previous call (or name of trawl survey csv datafile, or NULL)              (ignored if NULL)
 #'@param Years      - vector of survey years to include in output             (ignored if NULL)

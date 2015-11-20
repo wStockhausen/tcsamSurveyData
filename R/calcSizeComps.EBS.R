@@ -1,6 +1,8 @@
 #'
 #'@title Calculate EBS-level size comps (abundance and biomass) from a by-stratum data frame or csv file.
 #'
+#'@description This function calculates total abundance and biomass from a by-stratum data frame or csv file.
+#'
 #'@param tbl     : data frame with size comps by stratum info from call to \code{\link{calcSizeComps.ByStratum} or \link{calcSizeComps.EW166}}, or a csv file from such a call, or NULL
 #'@param export  : boolean flag to write results to csv file
 #'@param out.csv : output file name
@@ -21,8 +23,6 @@
 #'\item  totABUNDANCE = total abundance-by-size estimate
 #'\item  totBIOMASS = estimate of total biomass-by-size estimate
 #'}
-#'
-#'@description This function calculates total abundance and biomass from a by-stratum data frame or csv file.
 #'
 #'@details If \code{tbl} and \code{in.csv} are both NULL, the user is prompted to enter a csv file with biomass by stratum info. \cr
 #'\cr Notes: \cr

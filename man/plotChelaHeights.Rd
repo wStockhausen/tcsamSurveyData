@@ -26,4 +26,7 @@ ggplot2 plot object to print
 \description{
 Function to plot chela height data
 }
+\details{
+none.
+}
 

@@ -24,6 +24,9 @@ calcCPUE.ByStation(tbl_strata = NULL, tbl_cpue = NULL, export = FALSE,
 A dataframe of cpue (numbers and weight) by year, stratum, survey station 
 and other factors with the following columns. See Details.
 }
+\description{
+Function to calculate cpue by survey station, averaging over cpue by haul.
+}
 \details{
 Notes: \cr
 \itemize{

@@ -1,11 +1,13 @@
 #'
-#'@title Provides a list of dataframes suitable forconverting from survey codes to
+#'@title Provides a list of dataframes suitable for converting from survey codes to
 #'assessment codes and descriptions.
 #'
 #'@description This function provides a list of dataframes suitable for converting 
 #'from survey codes to assessment codes and descriptions.
 #'
-#'@return a list with the following elements: \cr
+#'@return a list 
+#'
+#'@details a list with the following elements: \cr
 #'\itemize{
 #'\item sex             : table to convert between survey and assessment sex codes
 #'\item shell_condition : table to convert between survey and assessment shell condition codes
@@ -55,7 +57,7 @@ Codes.TrawlSurvey<-function(){
                               ));
     lst[["strata.revd.BTC"]]<-strata.BTC;
     
-    #'New' strata for 2015 for Bairdi Tanner crab
+    #New strata for 2015 for Bairdi Tanner crab
     strata.BTC<-as.data.frame(list(
                               code    =c(        10,             14,        15,                17),
                               district=c("East 166","Pribilof MTCA","West 166","St. Matthew MTCA"),

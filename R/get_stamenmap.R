@@ -15,6 +15,10 @@
 #'
 #'@return ggmap object
 #'
+#'@details Requires internet connection.
+#'
+#'@return use with ggmap
+#'
 #'@importFrom plyr ldply
 #'
 #'@import ggmap 
