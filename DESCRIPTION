@@ -1,10 +1,22 @@
 Package: tcsamSurveyData
 Type: Package
-Title: Functions to process AFSC bottom trawl survey data for the Tanner crab assessment.
+Title: Functions to process AFSC bottom trawl survey data for the Tanner crab
+    assessment.
 Version: 1.1.5
 Date: 2015-11-15
 Author: William Stockhausen
 Maintainer: William Stockhausen <william.stockhausen@noaa.gov>
-Description: Provides a set of functions to calculate and plot abundance, biomass, size frequencies from nmfs EBS survey data.
+Description: Provides a set of functions to calculate and plot abundance,
+    biomass, size frequencies from nmfs EBS survey data.
 License: MIT
-Imports: ggmap, ggplot2, plyr, reshape2, rgdal, sqldf, tcsamFunctions, wtsGMT, wtsUtilities
+Imports:
+    ggmap,
+    ggplot2,
+    plyr,
+    reshape2,
+    rgdal,
+    sqldf,
+    tcsamFunctions,
+    wtsGMT,
+    wtsUtilities
+RoxygenNote: 5.0.1
