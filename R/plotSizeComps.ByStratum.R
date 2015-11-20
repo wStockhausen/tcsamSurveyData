@@ -5,7 +5,8 @@
 #'
 #'@param zcs - dataframe from call to one of the calcSizeComps... functions
 #'@param facs - factors to plot by 
-#'@param dropLevels - factor levels to drop from plots
+#'@param dropLevels - list by factor of factor levels to drop from plots
+#'@param multipliers - list by factor of multipliers for factor levels
 #'@param var - variable type to plot (abundance or biomass)
 #'@param rng - y-axis range (calculated internally if NULL)
 #'@param ggtheme - ggplot2 theme
@@ -19,6 +20,9 @@
 #'separately. Distinct levels of each factor can be dropped from the
 #'final plot by seting dropLevels to a list with names corresponding to 
 #'factor columns and values being vectors of factor levels to drop.
+#'
+#''multipliers' is a list of lists, with each sublist has two elements, 'factors' and 'value'.
+#''factors' should be a list of factor=level pairs. 'value' should be the value to multiply by. 
 #' 
 #'One plot is created for each distinct level of 'STRATUM'.
 #'
@@ -32,25 +36,26 @@
 plotSizeComps.ByStratum<-function(zcs,
                                  facs='',
                                  dropLevels=NULL,
+                                 multipliers=NULL,
                                  var=c('ABUNDANCE','BIOMASS'),
                                  rng=NULL,
                                  ggtheme=theme_grey(),
                                  ncol=2,
                                  nrow=5,
                                  showPlots=TRUE){
-    #determine data type to plot
+    ##determine data type to plot
     if (toupper(var[1])=='ABUNDANCE'){
         ylab<-'abundance';
     } else if (toupper(var[1])=='BIOMASS'){
         ylab<-'biomass';
     } else {
-        cat('Error in plotAggregateCatchData.\n');
+        cat('Error in plotSizeComps.ByStratum.\n');
         cat("unrecognized var = '",var[1],"'.\n");
         cat("Exiting function\n");
         return(NULL);
     }
     
-    #determine id and measure variables for melting
+    ##determine id and measure variables for melting
     nf<-length(facs)
     if (nf>0){
         id.vars<-c("STRATUM",facs,"YEAR","SIZE");
@@ -61,14 +66,31 @@ plotSizeComps.ByStratum<-function(zcs,
     }
     measure.vars<-paste("tot",toupper(var[1]),sep='');
     
-    #melt the input dataframe
+    ##melt the input dataframe
     mdfr<-reshape2::melt(zcs,id.vars,measure.vars,factorsAsStrings=TRUE,value.name='value');
     
-    #drop requested factor levels
+    ##drop requested factor levels
     if (is.list(dropLevels)){
         dfacs<-names(dropLevels);
         for (dfac in dfacs){
             mdfr<-mdfr[!(mdfr[[dfac]] %in% dropLevels[[dfac]]),];
+        }
+    }
+    
+    ##multiply by requested amounts
+    if (is.list(multipliers)){
+        mfacs<-names(multipliers);
+        for (mfac in mfacs){
+            mlt <- multipliers[[mfac]]$value;  #value to multiply by
+            lst <- multipliers[[mfac]]$factors;#list identifying factor combination
+            ##identify rows corresponding to factor combination
+            idx <- TRUE;
+            sfacs<-names(lst);
+            for (sfac in sfacs){
+                idx<-idx & (mdfr[[sfac]]==lst[[sfac]]);
+            }
+            ##apply multiplier to variables
+            for (vr in var) mdfr[[vr]][idx] <- mlt * mdfr[[vr]][idx];
         }
     }
     
