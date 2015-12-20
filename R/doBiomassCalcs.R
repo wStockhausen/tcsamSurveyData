@@ -12,7 +12,6 @@
 #'@param byShellCondition : FALSE
 #'@param byMaturity : FALSE
 #'@param bySize : FALSE
-#'@param binSizes : FALSE
 #'@param cutpts : seq(from=0,to=185,by=5)
 #'@param truncate.low : TRUE
 #'@param truncate.high : FALSE
@@ -57,7 +56,6 @@ doBiomassCalcs<-function(tbl.strata,
                          byShellCondition=FALSE,
                          byMaturity=FALSE,
                          bySize=FALSE,
-                         binSizes=FALSE,
                          cutpts=seq(from=0,to=185,by=5),
                          truncate.low=TRUE,
                          truncate.high=FALSE,
@@ -85,7 +83,6 @@ doBiomassCalcs<-function(tbl.strata,
                               byShellCondition=byShellCondition,
                               byMaturity=byMaturity,
                               bySize=bySize,
-                              binSizes=binSizes,
                               cutpts=cutpts,
                               truncate.low=truncate.low,
                               truncate.high=truncate.high,

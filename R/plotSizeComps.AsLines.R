@@ -1,3 +1,35 @@
+#'
+#'@title Plot time series of size comps as lines (not bars).
+#'
+#'@description Function to plot time series of size comps as lines (not bars).
+#'
+#'@param zcs - dataframe from call to one of the calcSizeComps... functions
+#'@param facs - factors to plot by 
+#'@param dropLevels - factor levels to drop from plots
+#'@param var - variable type to plot (abundance or biomass)
+#'@param rng - y-axis range (calculated internally if NULL)
+#'@param ggtheme - ggplot2 theme
+#'@param ncol - number of columns of plots per page
+#'@param nrow - number of rows of plots per page
+#'@param showPlots - flag to show plots immediately
+#'
+#'@return list of ggplot2 plot objects
+#'
+#'@details The time series for each factor level combination is plotted
+#'separately. Distinct levels of each factor can be dropped from the
+#'final plot by seting dropLevels to a list with names corresponding to 
+#'factor columns and values being vectors of factor levels to drop.
+#' 
+#'One plot is created for each distinct level of 'STRATUM'.
+#'
+#'@import ggplot2
+#'@importFrom plyr .
+#'@importFrom reshape2 dcast
+#'@importFrom reshape2 melt
+#'@importFrom scales squish
+#'
+#'@export
+#'
 plotSizeComps.asLines<-function(zcs,
                                 facs='',
                                 dropLevels=NULL,
@@ -26,7 +58,7 @@ plotSizeComps.asLines<-function(zcs,
     measure.vars<-var[1];
     
     #melt the input dataframe
-    mdfr<-reshape2::melt(zcs,id.vars,measure.vars,factorsAsStrings=TRUE,value.name='value');
+    mdfr<-melt(zcs,id.vars,measure.vars,factorsAsStrings=TRUE,value.name='value');
     
     #drop requested factor levels
     if (is.list(dropLevels)){
@@ -43,11 +75,11 @@ plotSizeComps.asLines<-function(zcs,
     } else {
         str<-gsub("&&facs",'',str);
     }
-    dfr<-reshape2::dcast(mdfr,
-                         str,
-                         fun.aggregate=sum,
-                         subset=plyr::`.`(variable==var),
-                         value.var="value")
+    dfr<-dcast(mdfr,
+                 str,
+                 fun.aggregate=sum,
+                 subset=.(variable==var),
+                 value.var="value")
     nms<-names(dfr);
     nms<-tolower(nms);
     nms[length(nms)]<-'value';
@@ -71,16 +103,16 @@ plotSizeComps.asLines<-function(zcs,
     ctr<-0;
     ps<-list();
     for (pg in 1:npg){ #loop over pages
-        dfrp<-dfr[(dfr$year %in% yrs[(pg-1)*mxp+1:mxp]),]
-        p <- ggplot(data=dfrp)
-        p <- p + geom_line(aes(x=size,y=value,colour=fax),size=1)
-        p <- p + scale_x_continuous(breaks=pretty(uz)) 
-        p <- p + scale_y_continuous(breaks=pretty(rng),limits=rng,expand=c(0.01,0),oob=scales::squish)
-        p <- p + geom_hline(yintercept=0,colour='black',size=0.5)
-        p <- p + labs(x="Size (mm)",y=ylab)
-        p <- p + facet_wrap(~year,ncol=ncol) 
-        p <- p + guides(fill=guide_legend(''),colour=guide_legend(''))
-        p <- p + ggtheme
+        dfrp<-dfr[(dfr$year %in% yrs[(pg-1)*mxp+1:mxp]),];
+        p <- ggplot(data=dfrp);
+        p <- p + geom_line(aes(x=size,y=value,colour=fax),size=1);
+        p <- p + scale_x_continuous(breaks=pretty(uz));
+        p <- p + scale_y_continuous(breaks=pretty(rng),limits=rng,expand=c(0.01,0),oob=squish);
+        p <- p + geom_hline(yintercept=0,colour='black',size=0.5);
+        p <- p + labs(x="Size (mm)",y=ylab);
+        p <- p + facet_wrap(~year,ncol=ncol);
+        p <- p + guides(fill=guide_legend(''),colour=guide_legend(''));
+        p <- p + ggtheme;
         if (showPlots) print(p);
         ctr<-ctr+1;
         ps[[ctr]]<-p

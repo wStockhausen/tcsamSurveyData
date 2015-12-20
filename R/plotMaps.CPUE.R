@@ -3,7 +3,7 @@
 #'
 #'@description Function to map cpue by survey haul or station and other factors (e.g., sex) from cpue info.
 #'
-#'@param tbl_cpue  : dataframe from call to \code{\link{calcCPUE.ByHaul} or \code{\link{calcCPUE.ByStation}}} (or crab cpue filename, or NULL)
+#'@param tbl_cpue  : dataframe from call to \code{\link{calcCPUE.ByHaul}} or \code{\link{calcCPUE.ByStation}} (or crab cpue filename, or NULL)
 #'@param years  : vector of survey years for which to produce maps
 #'@param ztype  : the data type (numCPUE, wgtCPUE to map)
 #'@param scaleBy : factor to scale the ztype by BEFORE sending to plotMap.CSV
@@ -28,6 +28,7 @@
 #'each combination of factors will be used as the z-axis scale for that set of maps.
 #'
 #' @import sqldf
+#' @importFrom wtsGMT createPDF.fromPS
 #' @importFrom wtsGMT plotMap.CSV
 #' @importFrom wtsUtilities selectFile
 #'      
@@ -107,7 +108,7 @@ plotMaps.CPUE<-function(tbl_cpue,
             print(tblp);
             if (nrow(tblp)>0){
                 psFile<-paste(base.ps,yrstr,sep='.');
-                zsclp<-wtsGMT::plotMap.CSV(dfr=tblp,
+                zsclp<-plotMap.CSV(dfr=tblp,
                                             lat='LATITUDE',
                                             lon='LONGITUDE',
                                             col=ztype,zunits=zunits,zlab=zlab,
@@ -127,7 +128,7 @@ plotMaps.CPUE<-function(tbl_cpue,
                 psFiles<-c(psFiles,paste(psFile,'.ps',sep=''));
             }
         }
-        wtsGMT::createPDF.fromPS(base.ps,psFiles=psFiles)
+        createPDF.fromPS(base.ps,psFiles=psFiles)
         if (cleanup){file.remove(psFiles);}
         return(max(zscls,na.rm=TRUE));
     } else {
@@ -178,7 +179,7 @@ plotMaps.CPUE<-function(tbl_cpue,
                         zsclv<-zscl;
                         if (is.list(zscl)){zsclv<-zscl[[facstr]];}
                         cat("Using zscl = ",'\n'); print(zsclv);
-                        zsclp<-wtsGMT::plotMap.CSV(dfr=tblp,
+                        zsclp<-plotMap.CSV(dfr=tblp,
                                                     lat='LATITUDE',
                                                     lon='LONGITUDE',
                                                     col='ZDATA',zunits=zunits,zlab=zlab,zscl=zsclv,
@@ -198,7 +199,7 @@ plotMaps.CPUE<-function(tbl_cpue,
                     } #nrow(tblp)>0
                 } #loop over years
                 if (length(psFiles)>0){
-                    wtsGMT::createPDF.fromPS(base.ps,psFiles=psFiles)
+                    createPDF.fromPS(base.ps,psFiles=psFiles)
                     if (cleanup){file.remove(psFiles);}
                     lst.zscls[[facstr]]<-max(zscls,na.rm=TRUE);
                 }

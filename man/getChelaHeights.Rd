@@ -14,11 +14,15 @@ getChelaHeights(tbl_hauls, tbl = NULL, col.Size = "WIDTH",
 
 \item{tbl}{- table (dataframe) of survey data (or filename of survey csv file, or NULL)}
 
+\item{col.Size}{: column name for size information}
+
 \item{shell_condition}{- one of 'NEW_SHELL','OLD_SHELL' or 'ALL' for narrowing selection of individuals}
 
 \item{minSize}{- minimum size (width) of individuals to select}
 
 \item{maxSize}{- maximum size (width) of individuals to select}
+
+\item{showPlot}{- flag to show plot of chela heights}
 
 \item{export}{- boolean flag to export results to csv file}
 
@@ -28,7 +32,7 @@ getChelaHeights(tbl_hauls, tbl = NULL, col.Size = "WIDTH",
 
 \item{verbosity}{- flags for intermediate output}
 
-\item{...:}{parameters passed to plotChelaHeights(...)}
+\item{...}{- parameters passed to plotChelaHeights(...)}
 }
 \value{
 dataframe

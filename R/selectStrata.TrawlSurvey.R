@@ -3,11 +3,13 @@
 #'
 #'@description Same as selectStations.TrawlSurvey(...)
 #'
-#'@param tbl       : table (dataframe) of survey station/strata data (or name of survey station/strata csv file, or NULL)
-#'@param species   : code ('BKC','BTC','RKC','OTC') indicating species
-#'@param strataType: type of strata ('orig','revd','2015')
-#'@param export    : boolean flag to export results to csv file
-#'@param verbosity : integer flag indicating level of printed output (0=off,1=minimal,2=full)
+#'@param tbl        : table (dataframe) of survey station/strata data (or name of survey station/strata csv file, or NULL)
+#'@param species    : code ('BKC','BTC','RKC','OTC') indicating species
+#'@param strataType : type of strata ('orig','revd','2015')
+#'@param export     : boolean flag to export results to csv file
+#'@param out.csv    : output file name
+#'@param out.dir    : output file directory 
+#'@param verbosity  : integer flag indicating level of printed output (0=off,1=minimal,2=full)
 #'
 #'@details If tbl is NULL, the user will be prompted for a csv file via a file dialog box.
 #'Returned dataframe has columns:
@@ -22,15 +24,11 @@
 #'
 #' @return a dataframe with strata/stations info.
 #' 
-#' @import sqldf
+#' @importFrom sqldf sqldf
 #' @importFrom wtsUtilities selectFile
 #' 
 #' @export
 #' 
-#library("sqldf");
-#library("tcltk")
-#source("Codes.TrawlSurvey.R",chdir=TRUE)
-#source("../Utilities/addFilter.R",chdir=TRUE)
 selectStrata.TrawlSurvey<-function(tbl=NULL,
                                    species='BTC',
                                    strataType='2015',
@@ -43,7 +41,7 @@ selectStrata.TrawlSurvey<-function(tbl=NULL,
     in.csv<-NULL;
     if (!is.data.frame(tbl)){
         if (!is.character(tbl)) {
-            in.csv<-wtsUtilities::selectFile(ext="csv",caption=paste("Select AFSC crab survey strata file for strata type",strataType));
+            in.csv<-selectFile(ext="csv",caption=paste("Select AFSC crab survey strata file for strata type",strataType));
             if (is.null(in.csv)|(in.csv=='')) return(NULL);
         } else {
             in.csv<-tbl;#tbl is a filename

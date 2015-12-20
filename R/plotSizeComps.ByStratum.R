@@ -67,7 +67,7 @@ plotSizeComps.ByStratum<-function(zcs,
     measure.vars<-paste("tot",toupper(var[1]),sep='');
     
     ##melt the input dataframe
-    mdfr<-reshape2::melt(zcs,id.vars,measure.vars,factorsAsStrings=TRUE,value.name='value');
+    mdfr<-melt(zcs,id.vars,measure.vars,factorsAsStrings=TRUE,value.name='value');
     
     ##drop requested factor levels
     if (is.list(dropLevels)){
@@ -107,11 +107,11 @@ plotSizeComps.ByStratum<-function(zcs,
     } else {
         str<-gsub("&&facs",'',str);
     }
-    dfr<-reshape2::dcast(mdfr,
-                         str,
-                         fun.aggregate=sum,
-                         subset=plyr::`.`(variable==paste("tot",toupper(var[1]),sep='')),
-                         value.var="value")
+    dfr<-dcast(mdfr,
+                 str,
+                 fun.aggregate=sum,
+                 subset=.(variable==paste("tot",toupper(var[1]),sep='')),
+                 value.var="value")
     nms<-names(dfr);
     nms<-tolower(nms);
     nms[length(nms)]<-'value';
@@ -149,7 +149,7 @@ plotSizeComps.ByStratum<-function(zcs,
             p <- ggplot(data=dfrp)
             p <- p + geom_line(aes(x=size,y=value,colour=fax),size=1)
             p <- p + scale_x_continuous(breaks=pretty(uz)) 
-            p <- p + scale_y_continuous(breaks=pretty(rng),limits=rng,expand=c(0.01,0),oob=scales::squish)
+            p <- p + scale_y_continuous(breaks=pretty(rng),limits=rng,expand=c(0.01,0),oob=squish)
             p <- p + geom_hline(yintercept=0,colour='black',size=0.5)
             p <- p + labs(x="Size (mm)",y=ylab,title=stratum)
             p <- p + facet_wrap(~year,ncol=ncol) 

@@ -29,10 +29,10 @@ gClip <- function(shp, bb){
     bp<-bb;
     if (class(bp)=="data.frame"){
         cat("bp is a data.frame\n")
-        b_poly <- as(raster::extent(as.vector((as.matrix(bp)))), "SpatialPolygons")
+        b_poly <- as(extent(as.vector((as.matrix(bp)))), "SpatialPolygons")
     } else if (class(bp) == "matrix") {
         cat("bp is a matrix\n")
-        b_poly <- as(raster::extent(as.vector(t(bp))), "SpatialPolygons")
+        b_poly <- as(extent(as.vector(t(bp))), "SpatialPolygons")
     } else {
         #bp expected in order xmin,xmax,ymin,ymax
         if ('left'==tolower(names(bp)[1])){
@@ -42,7 +42,7 @@ gClip <- function(shp, bb){
             names(bp)<-c('xmin','xmax','ymin','ymax')
             print(bp)
         }
-        b_poly <- as(raster::extent(bp), "SpatialPolygons")
+        b_poly <- as(extent(bp), "SpatialPolygons")
     }
     print(b_poly)
     proj4string(b_poly) <- proj4string(shp)

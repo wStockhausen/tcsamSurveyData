@@ -67,7 +67,7 @@ exportAggregatedCatchData<-function(acd,
     measure.vars<-vars;
     
     #melt the input dataframe
-    mdfr<-reshape2::melt(acd,id.vars,measure.vars,factorsAsStrings=TRUE,value.name='value');
+    mdfr<-melt(acd,id.vars,measure.vars,factorsAsStrings=TRUE,value.name='value');
     
     #drop requested factor levels
     if (is.list(dropLevels)){
@@ -84,11 +84,11 @@ exportAggregatedCatchData<-function(acd,
     } else {
         str<-gsub("&&facs",'',str);
     }
-    dfr<-reshape2::dcast(mdfr,
-                         str,
-                         fun.aggregate=sum,
-                         subset=plyr::`.`(variable==vars[1]),
-                         value.var="value")
+    dfr<-dcast(mdfr,
+               str,
+               fun.aggregate=sum,
+               subset=.(variable==vars[1]),
+               value.var="value")
     nms<-names(dfr);
     nms<-tolower(nms);
     nms[length(nms)]<-'value';
@@ -101,11 +101,11 @@ exportAggregatedCatchData<-function(acd,
     } else {
         str<-gsub("&&facs",'',str);
     }
-    vdfr<-reshape2::dcast(mdfr,
-                         str,
-                         fun.aggregate=sum,
-                         subset=plyr::`.`(variable==vars[2]),
-                         value.var="value")
+    vdfr<-dcast(mdfr,
+                str,
+                fun.aggregate=sum,
+                subset=.(variable==vars[2]),
+                value.var="value")
     nms<-names(vdfr);
     nms<-tolower(nms);
     nms[length(nms)]<-'var';

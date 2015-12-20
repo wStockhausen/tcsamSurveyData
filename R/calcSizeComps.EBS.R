@@ -4,6 +4,7 @@
 #'@description This function calculates total abundance and biomass from a by-stratum data frame or csv file.
 #'
 #'@param tbl     : data frame with size comps by stratum info from call to \code{\link{calcSizeComps.ByStratum} or \link{calcSizeComps.EW166}}, or a csv file from such a call, or NULL
+#'@param in.csv  : csv filename from which to read input dataframe
 #'@param export  : boolean flag to write results to csv file
 #'@param out.csv : output file name
 #'@param out.dir : output file directory 
@@ -33,8 +34,7 @@
 #'}
 #'
 #' @importFrom sqldf sqldf
-#' @importFrom tcltk tk_choose.files
-#' @importFrom wtsUtilities addFilter
+#' @importFrom wtsUtilities selectFile
 #'      
 #'@export
 #'
@@ -50,7 +50,7 @@ calcSizeComps.EBS<-function(tbl=NULL,
     in.csv<-NULL;
     if (!is.data.frame(tbl)){
         if (!is.character(tbl)) {
-            in.csv<-wtsUtilities::selectFile(ext="csv",caption="Select csv file with size comps-by-stratum info");
+            in.csv<-selectFile(ext="csv",caption="Select csv file with size comps-by-stratum info");
             if (is.null(in.csv)|(in.csv=='')) return(NULL);
         } else {
             in.csv<-tbl;#tbl is a filename
@@ -96,7 +96,7 @@ calcSizeComps.EBS<-function(tbl=NULL,
         qry<-gsub("&&cols",paste(',',cols,collapse=""),qry);
     }
     if (verbosity>1) cat("\nquery is:\n",qry,"\n");
-    tbl1<-sqldf::sqldf(qry);
+    tbl1<-sqldf(qry);
                                  
     if (export){
         if (!is.null(out.dir)){

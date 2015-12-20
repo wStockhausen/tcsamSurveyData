@@ -68,7 +68,7 @@ plotAggregatedCatchData.ByStratum<-function(acd,
     measure.vars<-vars;
     
     #melt the input dataframe
-    mdfr<-reshape2::melt(acd,id.vars,measure.vars,factorsAsStrings=TRUE,value.name='value');
+    mdfr<-melt(acd,id.vars,measure.vars,factorsAsStrings=TRUE,value.name='value');
     
     #drop requested factor levels
     if (is.list(dropLevels)){
@@ -85,11 +85,11 @@ plotAggregatedCatchData.ByStratum<-function(acd,
     } else {
         str<-gsub("&&facs",'',str);
     }
-    dfr<-reshape2::dcast(mdfr,
-                         str,
-                         fun.aggregate=sum,
-                         subset=plyr::`.`(variable==vars[1]),
-                         value.var="value")
+    dfr<-dcast(mdfr,
+                 str,
+                 fun.aggregate=sum,
+                 subset=.(variable==vars[1]),
+                 value.var="value")
     nms<-names(dfr);
     nms<-tolower(nms);
     nms[length(nms)]<-'value';
@@ -102,11 +102,11 @@ plotAggregatedCatchData.ByStratum<-function(acd,
     } else {
         str<-gsub("&&facs",'',str);
     }
-    vdfr<-reshape2::dcast(mdfr,
-                         str,
-                         fun.aggregate=sum,
-                         subset=plyr::`.`(variable==vars[2]),
-                         value.var="value")
+    vdfr<-dcast(mdfr,
+                 str,
+                 fun.aggregate=sum,
+                 subset=.(variable==vars[2]),
+                 value.var="value")
     nms<-names(vdfr);
     nms<-tolower(nms);
     nms[length(nms)]<-'var';
@@ -119,8 +119,8 @@ plotAggregatedCatchData.ByStratum<-function(acd,
     } else if (tolower(ci.type)=='lognormal'){
         cv<-dfr$stdv/dfr$value;
         sd<-sqrt(log(1+cv*cv));
-        dfr$lci<-qlnorm((1-ci)/2,mean=log(dfr$value),sd=sd);
-        dfr$uci<-qlnorm(1-(1-ci)/2,mean=log(dfr$value),sd=sd);
+        dfr$lci<-qlnorm((1-ci)/2,meanlog=log(dfr$value),sdlog=sd);
+        dfr$uci<-qlnorm(1-(1-ci)/2,meanlog=log(dfr$value),sdlog=sd);
     }
     
     mxp<-nrow*ncol;
@@ -150,7 +150,7 @@ plotAggregatedCatchData.ByStratum<-function(acd,
         p <- p + geom_errorbar(aes(x=yrp,y=value,ymin=lci,ymax=uci,colour=fax))
         p <- p + geom_point(aes(x=yrp,y=value,color=fax,shape=fax),size=2)
         p <- p + scale_x_continuous() 
-        p <- p + scale_y_continuous(breaks=pretty(rng),limits=rng,expand=c(0.01,0),oob=scales::squish)
+        p <- p + scale_y_continuous(breaks=pretty(rng),limits=rng,expand=c(0.01,0),oob=squish)
 #        p <- p + position_jitter()
         p <- p + geom_hline(yintercept=0,colour='black',size=0.5)
         p <- p + labs(x="Year",y=ylab)

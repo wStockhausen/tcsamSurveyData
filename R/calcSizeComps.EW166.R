@@ -49,7 +49,7 @@ calcSizeComps.EW166<-function(tbl=NULL,
     in.csv<-NULL;
     if (!is.data.frame(tbl)){
         if (!is.character(tbl)) {
-            in.csv<-wtsUtilities::selectFile(ext="csv",caption="Select csv file with size comps-by-stratum info");
+            in.csv<-selectFile(ext="csv",caption="Select csv file with size comps-by-stratum info");
             if (is.null(in.csv)|(in.csv=='')) return(NULL);
         } else {
             in.csv<-tbl;#tbl is a filename
@@ -97,7 +97,7 @@ calcSizeComps.EW166<-function(tbl=NULL,
         qry<-gsub("&&cols",paste(',t.',cols,collapse="",sep=''),qry);
     }
     if (verbosity>1) cat("\nquery is:\n",qry,"\n");
-    tbl2<-sqldf::sqldf(qry);
+    tbl2<-sqldf(qry);
     
     qry<-"select
             YEAR,
@@ -121,7 +121,7 @@ calcSizeComps.EW166<-function(tbl=NULL,
         qry<-gsub("&&cols",paste(',',cols,collapse="",sep=''),qry);
     }
     if (verbosity>1) cat("\nquery is:\n",qry,"\n");
-    tbl1<-sqldf::sqldf(qry);
+    tbl1<-sqldf(qry);
                                  
     if (export){
         if (!is.null(out.dir)){

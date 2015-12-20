@@ -26,12 +26,12 @@ get_stamenmap(bbox = c(left = -180, bottom = 54, right = -155, top = 63),
 
 \item{color}{- 'color' or 'bw'}
 
-\item{...}{}
+\item{...}{- other inputs to ggmap::get_stamenmap}
 }
 \value{
 ggmap object
 
-use with ggmap
+object to use with ggmap
 }
 \description{
 Function to retrieve a stamenmap (replaces ggmap::get_stamenmap)

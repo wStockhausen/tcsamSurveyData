@@ -24,14 +24,10 @@
 #'@details If neither tbl or in.csv is given, the user will be prompted for a csv file via a file dialog box
 #' 
 #' @importFrom sqldf sqldf
-#' @importFrom tcltk tk_choose.files
-#' @importFrom wtsUtilities addFilter
+#' @importFrom wtsUtilities selectFile
 #' 
 #' @export
 #' 
-#library("sqldf");
-#library("tcltk")
-#source("../Utilities/addFilter.R",chdir=TRUE)
 selectHauls.TrawlSurvey<-function(tbl_strata,
                                   tbl=NULL,
                                   Years=NULL,
@@ -57,7 +53,7 @@ selectHauls.TrawlSurvey<-function(tbl_strata,
     in.csv<-NULL;
     if (!is.data.frame(tbl)){
         if (!is.character(tbl)) {
-            in.csv<-wtsUtilities::selectFile(ext="csv",caption="Select AFSC crab trawl survey file");
+            in.csv<-selectFile(ext="csv",caption="Select AFSC crab trawl survey file");
             if (is.null(in.csv)|(in.csv=='')) return(NULL);
         } else {
             in.csv<-tbl;#tbl is a filename
@@ -107,7 +103,7 @@ selectHauls.TrawlSurvey<-function(tbl_strata,
     qry<-gsub("&&where",wc,qry);
     
     if (verbosity>1) cat("\nquery is:\n",qry,"\n");
-    tbl1<-sqldf::sqldf(qry);
+    tbl1<-sqldf(qry);
         
     if (export){
         if (!is.null(out.dir)){

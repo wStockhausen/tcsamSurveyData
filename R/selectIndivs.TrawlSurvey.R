@@ -5,11 +5,13 @@
 #' 
 #'@param tbl_hauls : hauls table (dataframe) from call to selectHauls.TrawlSurvey(...) [required]
 #'@param tbl       : table (dataframe) of survey data (or csv filename or NULL)
-#'@param sex            : one of 'MALE','FEMALE' or 'ALL' for narrowing selection of individuals
-#'@param shell_condition: one of 'NEW_SHELL','OLD_SHELL' or 'ALL' for narrowing selection of individuals
-#'@param maturity       : one of 'IMMATURE','MATURE' or 'ALL' for narrowing selection of individuals
-#'@param minWidth : minimum size (width) of individuals to select 
-#'@param maxWidth : maximum size (width) of individuals to select 
+#'@param col.Size  : column name for size information
+#'@param sex             : one of 'MALE','FEMALE' or 'ALL' for narrowing selection of individuals
+#'@param shell_condition : one of 'NEW_SHELL','OLD_SHELL' or 'ALL' for narrowing selection of individuals
+#'@param maturity        : one of 'IMMATURE','MATURE' or 'ALL' for narrowing selection of individuals
+#'@param calcMaleMaturity : flag (T/F) to calculate pr(mature|size) for males based on an ogive
+#'@param minSize : minimum size (width) of individuals to select 
+#'@param maxSize : maximum size (width) of individuals to select 
 #'@param export  - boolean flag to export results to csv file
 #'@param out.csv - name of output csv file                    (ignored if NULL)
 #'@param out.dir - base path for output csv file              (set to folder of input csv file or current working directory)
@@ -40,16 +42,10 @@
 #' 
 #' @import tcsamFunctions
 #' @importFrom sqldf sqldf
-#' @importFrom wtsUtilities addFilter
 #' @importFrom wtsUtilities selectFile
 #' 
 #' @export
 #' 
-#library("sqldf");
-#library("tcltk")
-#source("Codes.TrawlSurvey.R",chdir=TRUE)
-#source("../LifeHistory/calc.WatZ.R",chdir=TRUE)
-#source("../LifeHistory/calc.prMat.Males.R",chdir=TRUE)
 #-----------------------------------------------------------
 #Select individuals from crab trawl survey data file.
 #-----------------------------------------------------------
@@ -78,7 +74,7 @@ selectIndivs.TrawlSurvey<-function(tbl_hauls,
     in.csv<-NULL;
     if (!is.data.frame(tbl)){
         if (!is.character(tbl)) {
-            in.csv<-wtsUtilities::selectFile(ext="csv",caption="Select AFSC crab trawl survey file");
+            in.csv<-selectFile(ext="csv",caption="Select AFSC crab trawl survey file");
             if (is.null(in.csv)|(in.csv=='')) return(NULL);
         } else {
             in.csv<-tbl;#tbl is a filename
@@ -118,7 +114,7 @@ selectIndivs.TrawlSurvey<-function(tbl_hauls,
             t.HAULJOIN=h.HAULJOIN;";
     qry<-gsub("&&cols",paste("t.",cols,sep='',collapse=","),qry);    
     if (verbosity>1) cat("\nquery is:\n",qry,"\n");
-    tbl<-sqldf::sqldf(qry);
+    tbl<-sqldf(qry);
     
     #assign -1 to NA's in column CLUTCH_SIZE (i.e., males) to simplify SQL code
     idx<-is.na(tbl$CLUTCH_SIZE);
@@ -193,7 +189,7 @@ selectIndivs.TrawlSurvey<-function(tbl_hauls,
     qry<-gsub("&&sq.mat",sq.mat,qry)
     if (verbosity>1) cat("\nquery is:\n",qry,"\n");
     
-    tbl<-sqldf::sqldf(qry);
+    tbl<-sqldf(qry);
     
     #Change back to NA's from -1's in column CLUTCH_SIZE (i.e., males)
     idx<-tbl$CLUTCH_SIZE==-1;

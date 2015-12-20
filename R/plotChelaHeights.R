@@ -14,6 +14,8 @@
 #'
 #'@details none.
 #'
+#'@importFrom scales squish
+#'
 #'@import ggplot2
 #'
 #'@export
@@ -46,7 +48,7 @@ plotChelaHeights<-function(dfrp,
     p <- p + geom_abline(intercept=0,slope=ratio,color='red',linetype=2)
     p <- p + scale_colour_brewer(type='div',palette=2)
     p <- p + scale_x_continuous() 
-    p <- p + scale_y_continuous(breaks=pretty(rng),limits=rng,expand=c(0.01,0),oob=scales::squish)
+    p <- p + scale_y_continuous(breaks=pretty(rng),limits=rng,expand=c(0.01,0),oob=squish)
     p <- p + facet_wrap(~YEAR,ncol=ncol) 
     p <- p + guides(color=guide_legend(''))
     if (showPlot) print(p);

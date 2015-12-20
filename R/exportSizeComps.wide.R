@@ -60,7 +60,7 @@ exportSizeComps.wide<-function(dfr,
     measure.vars<-c("numIndivs",var[1]);
     
     #melt the input dataframe
-    mdfr<-reshape2::melt(dfr,id.vars,measure.vars,factorsAsStrings=TRUE);
+    mdfr<-melt(dfr,id.vars,measure.vars,factorsAsStrings=TRUE);
     
     #drop requested factor levels
     if (is.list(dropLevels)){
@@ -77,11 +77,11 @@ exportSizeComps.wide<-function(dfr,
     } else {
         str<-gsub("&&facs",'',str);
     }
-    zcs.ss.wide<-reshape2::dcast(mdfr,
-                                 str,
-                                 fun.aggregate=sum,
-                                 subset=plyr::`.`(variable=="numIndivs"),
-                                 value.var="value")
+    zcs.ss.wide<-dcast(mdfr,
+                         str,
+                         fun.aggregate=sum,
+                         subset=.(variable=="numIndivs"),
+                         value.var="value")
     ss<-zcs.ss.wide[["."]]
     
     #calculate the abundance or biomass, summing over aggregated factors
@@ -91,11 +91,11 @@ exportSizeComps.wide<-function(dfr,
     } else {
         str<-gsub("&&facs",'',str);
     }
-    zcs.wide<-reshape2::dcast(mdfr,
-                              str,
-                              fun.aggregate=sum,
-                              subset=plyr::`.`(variable==var[1]),
-                              value.var="value");
+    zcs.wide<-dcast(mdfr,
+                      str,
+                      fun.aggregate=sum,
+                      subset=.(variable==var[1]),
+                      value.var="value");
     
     #add in sample size column
     zcs.wide<-cbind(list(numIndivs=ss),zcs.wide)

@@ -42,7 +42,7 @@
 #'
 #'@return A dataframe of cpue (numbers and weight) by haul. See Details.
 #'
-#' @import sqldf
+#' @importFrom sqldf sqldf
 #' @importFrom wtsUtilities selectFile
 #'      
 #'@export
@@ -73,7 +73,7 @@ calcCPUE.ByHaul<-function(tbl_hauls,
     in.csv<-NULL;
     if (!is.data.frame(tbl_indivs)){
         if (!is.character(tbl_indivs)) {
-            in.csv<-wtsUtilities::selectFile(ext="csv",caption="Select AFSC crab trawl survey file");
+            in.csv<-selectFile(ext="csv",caption="Select AFSC crab trawl survey file");
             if (is.null(in.csv)|(in.csv=='')) return(NULL);
         } else {
             in.csv<-tbl_indivs;#tbl is a filename

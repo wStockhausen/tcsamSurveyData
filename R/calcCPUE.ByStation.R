@@ -3,12 +3,12 @@
 #'
 #'@description Function to calculate cpue by survey station, averaging over cpue by haul. 
 #'
-#'@param tbl_strata: dataframe w/ station info
-#'@param  tbl_cpue : data frame w/ cpue by haul from call to calcCPUE.ByHaul(...), or name of csv file w/ cpue by haul, or NULL to choose file
-#'@param export  : boolean flag to write results to csv file
-#'@param out.csv : output file name
-#'@param out.dir : output file directory 
-#'@param verbosity : integer flag indicating level of printed output (0=off,1=minimal,2=full)
+#'@param tbl_strata : dataframe w/ station info
+#'@param  tbl_cpue  : data frame w/ cpue by haul from call to calcCPUE.ByHaul(...), or name of csv file w/ cpue by haul, or NULL to choose file
+#'@param export     : boolean flag to write results to csv file
+#'@param out.csv    : output file name
+#'@param out.dir    : output file directory 
+#'@param verbosity  : integer flag indicating level of printed output (0=off,1=minimal,2=full)
 #'
 #'@return A dataframe of cpue (numbers and weight) by year, stratum, survey station 
 #'and other factors with the following columns. See Details.
@@ -35,7 +35,7 @@
 #'\item   wgtCPUE
 #'}
 #'
-#' @import sqldf
+#' @importFrom sqldf sqldf
 #' @importFrom wtsUtilities selectFile
 #'      
 #'@export
@@ -58,7 +58,7 @@ calcCPUE.ByStation<-function(tbl_strata=NULL,
     in.csv<-NULL;
     if (!is.data.frame(tbl_cpue)){
         if (!is.character(tbl_cpue)) {
-            in.csv<-wtsUtilities::selectFile(ext="csv",caption="Select csv file with CPUE-by-haul info");
+            in.csv<-selectFile(ext="csv",caption="Select csv file with CPUE-by-haul info");
             if (is.null(in.csv)|(in.csv=='')) return(NULL);
         } else {
             in.csv<-tbl_cpue;#tbl is a filename

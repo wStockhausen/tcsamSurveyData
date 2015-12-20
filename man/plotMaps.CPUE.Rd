@@ -17,7 +17,7 @@ plotMaps.CPUE(tbl_cpue, years = NULL, ztype = "numCPUE", scaleBy = 1,
   basename = "SurveyMaps", cleanup = TRUE, verbosity = 1)
 }
 \arguments{
-\item{tbl_cpue}{: dataframe from call to \code{\link{calcCPUE.ByHaul} or \code{\link{calcCPUE.ByStation}}} (or crab cpue filename, or NULL)}
+\item{tbl_cpue}{: dataframe from call to \code{\link{calcCPUE.ByHaul}} or \code{\link{calcCPUE.ByStation}} (or crab cpue filename, or NULL)}
 
 \item{years}{: vector of survey years for which to produce maps}
 

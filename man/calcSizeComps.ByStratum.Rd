@@ -59,6 +59,8 @@ calcSizeComps.ByStratum(tbl_strata, tbl_cpue = NULL, tbl_hauls = NULL,
 
 \item{maturity}{: one of 'IMMATURE','MATURE' or 'ALL' for narrowing selection of individuals}
 
+\item{calcMaleMaturity}{: flag (T/F) to calculate pr(mature|size) for males based on an ogive}
+
 \item{minSize}{: minimum size (width) of individuals to select}
 
 \item{maxSize}{: maximum size (width) of individuals to select}
@@ -70,8 +72,6 @@ calcSizeComps.ByStratum(tbl_strata, tbl_cpue = NULL, tbl_hauls = NULL,
 \item{out.dir}{: output file directory}
 
 \item{verbosity}{: integer flag indicating level of printed output (0=off,1=minimal,2=full)}
-
-\item{calcMaleMaturity:}{flag (T/F) to calculate pr(mature|size) for males based on an ogive}
 }
 \value{
 data frame with size comps by stratum. Columns are \cr

@@ -62,7 +62,7 @@ calcBiomass.ByStratum<-function(tbl_strata,
     in.csv<-NULL;
     if (!is.data.frame(tbl_cpue)){
         if (!is.character(tbl_cpue)) {
-            in.csv<-wtsUtilities::selectFile(ext="csv",caption="Select csv file with CPUE-by-haul or -by-station info");
+            in.csv<-selectFile(ext="csv",caption="Select csv file with CPUE-by-haul or -by-station info");
             if (is.null(in.csv)|(in.csv=='')) return(NULL);
         } else {
             in.csv<-tbl_cpue;#tbl is a filename
@@ -126,7 +126,7 @@ calcBiomass.ByStratum<-function(tbl_strata,
         qry<-gsub("&&facs",paste(paste("c.",facs,sep='',collapse=","),",",sep=''),qry);
     }
     if (verbosity>1) cat("\nquery is:\n",qry,"\n");
-    tbl1<-sqldf::sqldf(qry);
+    tbl1<-sqldf(qry);
     
     #calculate number of unique stations
     #calculate average cpues over strata
@@ -152,7 +152,7 @@ calcBiomass.ByStratum<-function(tbl_strata,
         qry<-gsub("&&facs",paste(',',facs,sep='',collapse=''),qry);
     }
     if (verbosity>1) cat("\nquery is:\n",qry,"\n");
-    tbl2<-sqldf::sqldf(qry);
+    tbl2<-sqldf(qry);
     
     #calculate variances
     qry<-"select
@@ -193,7 +193,7 @@ calcBiomass.ByStratum<-function(tbl_strata,
         qry<-gsub("&&bycols",str,qry);
     }
     if (verbosity>1) cat("\nquery is:\n",qry,"\n");
-    tbl3<-sqldf::sqldf(qry);
+    tbl3<-sqldf(qry);
     
     #compute std. errors of means from variances and scale to totals by stratum
     if (byHaul){n<-tbl3$numHauls;} else {n<-tbl3$numStations;}

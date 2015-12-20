@@ -16,9 +16,19 @@ selectIndivs.TrawlSurvey(tbl_hauls, tbl = NULL, col.Size = "WIDTH",
 
 \item{tbl}{: table (dataframe) of survey data (or csv filename or NULL)}
 
+\item{col.Size}{: column name for size information}
+
 \item{sex}{: one of 'MALE','FEMALE' or 'ALL' for narrowing selection of individuals}
 
+\item{shell_condition}{: one of 'NEW_SHELL','OLD_SHELL' or 'ALL' for narrowing selection of individuals}
+
 \item{maturity}{: one of 'IMMATURE','MATURE' or 'ALL' for narrowing selection of individuals}
+
+\item{calcMaleMaturity}{: flag (T/F) to calculate pr(mature|size) for males based on an ogive}
+
+\item{minSize}{: minimum size (width) of individuals to select}
+
+\item{maxSize}{: maximum size (width) of individuals to select}
 
 \item{export}{- boolean flag to export results to csv file}
 
@@ -27,12 +37,6 @@ selectIndivs.TrawlSurvey(tbl_hauls, tbl = NULL, col.Size = "WIDTH",
 \item{out.dir}{- base path for output csv file              (set to folder of input csv file or current working directory)}
 
 \item{verbosity}{: integer flag indicating level of printed output (0=off,1=minimal,2=full)}
-
-\item{shell_condition:}{one of 'NEW_SHELL','OLD_SHELL' or 'ALL' for narrowing selection of individuals}
-
-\item{minWidth}{: minimum size (width) of individuals to select}
-
-\item{maxWidth}{: maximum size (width) of individuals to select}
 }
 \value{
 dataframe (see Details for coulmn names)

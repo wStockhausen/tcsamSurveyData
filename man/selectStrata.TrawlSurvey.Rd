@@ -13,11 +13,15 @@ selectStrata.TrawlSurvey(tbl = NULL, species = "BTC", strataType = "2015",
 
 \item{species}{: code ('BKC','BTC','RKC','OTC') indicating species}
 
+\item{strataType}{: type of strata ('orig','revd','2015')}
+
 \item{export}{: boolean flag to export results to csv file}
 
-\item{verbosity}{: integer flag indicating level of printed output (0=off,1=minimal,2=full)}
+\item{out.csv}{: output file name}
 
-\item{strataType:}{type of strata ('orig','revd','2015')}
+\item{out.dir}{: output file directory}
+
+\item{verbosity}{: integer flag indicating level of printed output (0=off,1=minimal,2=full)}
 }
 \value{
 a dataframe with strata/stations info.

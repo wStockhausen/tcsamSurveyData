@@ -6,9 +6,9 @@
 \usage{
 doBiomassCalcs(tbl.strata, tbl.hauls, tbl.indivs, calcCPUE.byStation = TRUE,
   calcBiomass.byEW166 = TRUE, bySex = FALSE, byShellCondition = FALSE,
-  byMaturity = FALSE, bySize = FALSE, binSizes = FALSE,
-  cutpts = seq(from = 0, to = 185, by = 5), truncate.low = TRUE,
-  truncate.high = FALSE, export.cpue.byH = FALSE, export.cpue.byS = FALSE,
+  byMaturity = FALSE, bySize = FALSE, cutpts = seq(from = 0, to = 185, by
+  = 5), truncate.low = TRUE, truncate.high = FALSE,
+  export.cpue.byH = FALSE, export.cpue.byS = FALSE,
   export.bio.byStrata = FALSE, export.bio.EW166 = FALSE,
   export.totBio = FALSE, out.csv.cpue.byH = "cpue.byH.csv",
   out.csv.cpue.byS = "cpue.byS.csv",
@@ -34,8 +34,6 @@ doBiomassCalcs(tbl.strata, tbl.hauls, tbl.indivs, calcCPUE.byStation = TRUE,
 \item{byMaturity}{: FALSE}
 
 \item{bySize}{: FALSE}
-
-\item{binSizes}{: FALSE}
 
 \item{cutpts}{: seq(from=0,to=185,by=5)}
 

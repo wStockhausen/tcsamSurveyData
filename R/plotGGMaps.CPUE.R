@@ -78,7 +78,7 @@ plotGGMaps.CPUE<-function(cpue,
     measure.vars<-dType;
     
     #melt the input dataframe
-    mdfr<-reshape2::melt(cpue,id.vars,measure.vars,factorsAsStrings=TRUE,value.name='value');
+    mdfr<-melt(cpue,id.vars,measure.vars,factorsAsStrings=TRUE,value.name='value');
     mdfr$value<-mdfr$value/scale;#scale value
     
     #keep requested factor levels
@@ -108,7 +108,7 @@ plotGGMaps.CPUE<-function(cpue,
     } else {
         qry<-gsub('&&facs','',qry)
     }
-    ufacs<-sqldf::sqldf(qry);
+    ufacs<-sqldf(qry);
     
     #separate unique years, factor levels 
     uyrs<-unique(ufacs$YEAR);
@@ -117,7 +117,7 @@ plotGGMaps.CPUE<-function(cpue,
               from ufacs
               order by &&facs;";
         qry<-gsub("&&facs",paste(facs,collapse=','),qry);
-        ufacs<-sqldf::sqldf(qry);#ufacs no longer has YEAR
+        ufacs<-sqldf(qry);#ufacs no longer has YEAR
     }
     
     #cast the melted dataframe to aggregate over ignored potential factors
@@ -127,10 +127,10 @@ plotGGMaps.CPUE<-function(cpue,
     } else {
         str<-gsub("&&facs",'',str);
     }
-    dfr<-reshape2::dcast(mdfr,
-                         str,
-                         fun.aggregate=sum,
-                         value.var="value")
+    dfr<-dcast(mdfr,
+               str,
+               fun.aggregate=sum,
+               value.var="value")
     nms<-names(dfr);
     nms[length(nms)]<-'value';
     names(dfr)<-nms;
@@ -184,7 +184,7 @@ plotGGMaps.CPUE<-function(cpue,
                              data=dfrp,shape='.',color='black',alpha=1);
             pP <- geom_point(mapping=aes(x=LONGITUDE,y=LATITUDE,size=`.`,fill=`.`,color=`.`),
                              data=dfrp,alpha=0.8,shape=21);
-            pS <- scale_size_area(oob=scales::squish,limits=c(0,mxp))
+            pS <- scale_size_area(oob=squish,limits=c(0,mxp))
             pF <- scale_fill_gradient(low='blue',high='red')
             pC <- scale_color_gradient(low='blue',high='red')
             p <- pBase + pL + pP + pS + pF + pC + facet_wrap(~YEAR,ncol=ncol) + ggtheme

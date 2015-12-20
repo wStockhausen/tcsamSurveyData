@@ -8,6 +8,8 @@ calcCPUE.ByStation(tbl_strata = NULL, tbl_cpue = NULL, export = FALSE,
   out.csv = "cpue.ByStation.csv", out.dir = NULL, verbosity = 1)
 }
 \arguments{
+\item{tbl_strata}{: dataframe w/ station info}
+
 \item{tbl_cpue}{: data frame w/ cpue by haul from call to calcCPUE.ByHaul(...), or name of csv file w/ cpue by haul, or NULL to choose file}
 
 \item{export}{: boolean flag to write results to csv file}
@@ -17,8 +19,6 @@ calcCPUE.ByStation(tbl_strata = NULL, tbl_cpue = NULL, export = FALSE,
 \item{out.dir}{: output file directory}
 
 \item{verbosity}{: integer flag indicating level of printed output (0=off,1=minimal,2=full)}
-
-\item{tbl_strata:}{dataframe w/ station info}
 }
 \value{
 A dataframe of cpue (numbers and weight) by year, stratum, survey station 

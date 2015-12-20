@@ -2,6 +2,7 @@
 #'@title Calculate total abundance and biomass from a by-stratum data frame or csv file.
 #'
 #'@param tbl     : data frame with abundance/biomass by stratum info from call to \code{\link{calcBiomass.ByStratum} or \link{calcBiomass.EW166}}, or a csv file from such a call, or NULL
+#'@param in.csv  : csv filename from which to read input dataframe
 #'@param export  : boolean flag to write results to csv file
 #'@param out.csv : output file name
 #'@param out.dir : output file directory 
@@ -36,8 +37,7 @@
 #'}
 #'
 #' @importFrom sqldf sqldf
-#' @importFrom tcltk tk_choose.files
-#' @importFrom wtsUtilities addFilter
+#' @importFrom wtsUtilities selectFile
 #'      
 #'@export
 #'
@@ -53,7 +53,7 @@ calcBiomass.EBS<-function(tbl=NULL,
     in.csv<-NULL;
     if (!is.data.frame(tbl)){
         if (!is.character(tbl)) {
-            in.csv<-wtsUtilities::selectFile(ext="csv",caption="Select csv file with biomas-by-stratum info");
+            in.csv<-selectFile(ext="csv",caption="Select csv file with biomas-by-stratum info");
             if (is.null(in.csv)|(in.csv=='')) return(NULL);
         } else {
             in.csv<-tbl;#tbl is a filename
@@ -103,7 +103,7 @@ calcBiomass.EBS<-function(tbl=NULL,
         qry<-gsub("&&facs",paste(',',facs,collapse=""),qry);
     }
     if (verbosity>1) cat("\nquery is:\n",qry,"\n");
-    tbl1<-sqldf::sqldf(qry);
+    tbl1<-sqldf(qry);
     #convert columns to final values
     tbl1$stdABUNDANCE<-sqrt(tbl1$stdABUNDANCE);#convert from var to stdv
     tbl1$cvABUNDANCE <-tbl1$stdABUNDANCE/tbl1$totABUNDANCE;

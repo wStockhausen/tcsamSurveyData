@@ -10,6 +10,8 @@ calcSizeComps.EBS(tbl = NULL, in.csv = NULL, export = TRUE,
 \arguments{
 \item{tbl}{: data frame with size comps by stratum info from call to \code{\link{calcSizeComps.ByStratum} or \link{calcSizeComps.EW166}}, or a csv file from such a call, or NULL}
 
+\item{in.csv}{: csv filename from which to read input dataframe}
+
 \item{export}{: boolean flag to write results to csv file}
 
 \item{out.csv}{: output file name}

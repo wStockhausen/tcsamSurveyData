@@ -11,14 +11,15 @@
 #'@param urlonly - return only the url
 #'@param filename - temporary file name
 #'@param color - 'color' or 'bw'
-#'@param ...
+#'@param ... - other inputs to ggmap::get_stamenmap
 #'
 #'@return ggmap object
 #'
 #'@details Requires internet connection.
 #'
-#'@return use with ggmap
+#'@return object to use with ggmap
 #'
+#'@importFrom jpeg readJPEG
 #'@importFrom plyr ldply
 #'
 #'@import ggmap 
@@ -103,7 +104,7 @@ get_stamenmap<-function (bbox = c(left=-180,bottom=54,right=-155,top=63),
     for (k in seq_along(urls)) {
         download.file(urls[[k]], destfile = destfile, quiet = !messaging, 
             mode = "wb")
-        tile <- jpeg::readJPEG(destfile)
+        tile <- readJPEG(destfile)
         if (color == "color") {
             tile <- apply(tile, 2, rgb)
         }
@@ -123,7 +124,7 @@ get_stamenmap<-function (bbox = c(left=-180,bottom=54,right=-155,top=63),
         data.frame(left = lonlat_upperleft$lon, bottom = lonlat_lowerright$lat, 
             right = lonlat_lowerright$lon, top = lonlat_upperleft$lat)
     }
-    tileBboxes <- plyr::ldply(split(tilesNeeded, 1:nrow(tilesNeeded)), 
+    tileBboxes <- ldply(split(tilesNeeded, 1:nrow(tilesNeeded)), 
         function(df) bboxOfTile(as.numeric(df)))
     mbbox <- c(left = min(tileBboxes$left), bottom = min(tileBboxes$bottom), 
         right = max(tileBboxes$right), top = max(tileBboxes$top))

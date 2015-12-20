@@ -28,11 +28,11 @@ testTrawlSurveyCalcs<-function(out.dir=NULL,
     strata.new<-selectStrata.TrawlSurvey(tbl=NULL,species='BTC',strataType='new2015',verbosity=verbosity)
     
     #read in trawl survey individual crab info and strata info
-    info.Indivs<-wtsUtilities::selectFile("csv",caption="Select AFSC trawl survey data file")
+    info.Indivs<-selectFile("csv",caption="Select AFSC trawl survey data file")
     if (is.null(out.dir)) out.dir<-dirname(info.Indivs);
     info.Indivs<-read.csv(info.Indivs,stringsAsFactors=FALSE);
     
-    info.Strata<-wtsUtilities::selectFile("csv",caption="Select AFSC trawl survey strata file")
+    info.Strata<-selectFile("csv",caption="Select AFSC trawl survey strata file")
     info.Strata<-read.csv(info.Strata,stringsAsFactors=FALSE);
     
     #select hauls
@@ -61,7 +61,6 @@ testTrawlSurveyCalcs<-function(out.dir=NULL,
 #                                  byShellCondition=FALSE,
 #                                  byMaturity=FALSE,
 #                                  bySize    =FALSE,
-#                                  binSizes  =FALSE,
 #                                  cutpts=seq(from=0,to=185,by=5),
 #                                  truncate.low =TRUE,
 #                                  truncate.high=FALSE,
@@ -86,7 +85,6 @@ testTrawlSurveyCalcs<-function(out.dir=NULL,
                                  byShellCondition=FALSE,
                                  byMaturity=FALSE,
                                  bySize    =FALSE,
-                                 binSizes  =FALSE,
                                  cutpts=seq(from=0,to=185,by=5),
                                  truncate.low =TRUE,
                                  truncate.high=FALSE,
@@ -111,7 +109,6 @@ testTrawlSurveyCalcs<-function(out.dir=NULL,
 #                              byShellCondition=FALSE,
 #                              byMaturity=FALSE,
 #                              bySize    =FALSE,
-#                              binSizes  =FALSE,
 #                              cutpts=seq(from=0,to=185,by=5),
 #                              truncate.low =TRUE,
 #                              truncate.high=FALSE,
@@ -136,7 +133,6 @@ testTrawlSurveyCalcs<-function(out.dir=NULL,
                              byShellCondition=FALSE,
                              byMaturity=FALSE,
                              bySize    =FALSE,
-                             binSizes  =FALSE,
                              cutpts=seq(from=0,to=185,by=5),
                              truncate.low =TRUE,
                              truncate.high=FALSE,
@@ -159,7 +155,7 @@ testTrawlSurveyCalcs<-function(out.dir=NULL,
     cpue.byH<-calcCPUE.ByHaul(tbl.hauls,
                               tbl.indivs,
                               verbosity=verbosity);
-    #cpue.byH<-calcCPUE.ByHaul(tbl.hauls,tbl.indivs,bySex=TRUE,bySize=TRUE,binSizes=TRUE)
+    #cpue.byH<-calcCPUE.ByHaul(tbl.hauls,tbl.indivs,bySex=TRUE,bySize=TRUE)
     
 #    source("calcCPUE.ByStation.R")
     #calc cpue by station for all individuals

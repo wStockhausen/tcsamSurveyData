@@ -18,13 +18,13 @@
 #'@param DepthRange - vector of min, max haul depths to include in hauls     (ignored if NULL)
 #'@param LatRange   - vector of min, max haul latitudes to include in hauls  (ignored if NULL)
 #'@param LonRange   - vector of min, max haul longitudes to include in hauls (ignored if NULL)
-#'@param col.Size        : name of tbl_indivs column containing size (CL or CW) information
-#'@param sex             : one of 'MALE','FEMALE' or 'ALL' for narrowing selection of individuals
-#'@param shell_condition : one of 'NEW_SHELL','OLD_SHELL' or 'ALL' for narrowing selection of individuals
-#'@param maturity        : one of 'IMMATURE','MATURE' or 'ALL' for narrowing selection of individuals
-#'@param calcMaleMaturity: flag (T/F) to calculate pr(mature|size) for males based on an ogive
-#'@param minSize         : minimum size (width) of individuals to select 
-#'@param maxSize         : maximum size (width) of individuals to select 
+#'@param col.Size         : name of tbl_indivs column containing size (CL or CW) information
+#'@param sex              : one of 'MALE','FEMALE' or 'ALL' for narrowing selection of individuals
+#'@param shell_condition  : one of 'NEW_SHELL','OLD_SHELL' or 'ALL' for narrowing selection of individuals
+#'@param maturity         : one of 'IMMATURE','MATURE' or 'ALL' for narrowing selection of individuals
+#'@param calcMaleMaturity : flag (T/F) to calculate pr(mature|size) for males based on an ogive
+#'@param minSize          : minimum size (width) of individuals to select 
+#'@param maxSize          : maximum size (width) of individuals to select 
 #'@param export  : boolean flag to write results to csv file
 #'@param out.csv : output file name
 #'@param out.dir : output file directory 
@@ -116,7 +116,7 @@ calcSizeComps.ByStratum<-function(tbl_strata,
             if (!is.data.frame(tbl_hauls)){
                 cat("tbl_hauls is not a dataframe\n")
                 if (!is.character(tbl_hauls)) {
-                    in.csv<-wtsUtilities::selectFile(ext="csv",caption="Select csv file with haul info");
+                    in.csv<-selectFile(ext="csv",caption="Select csv file with haul info");
                     if (is.null(in.csv)|(in.csv=='')) return(NULL);
                 } else {
                     in.csv<-tbl_hauls;#tbl_hauls is a filename
@@ -140,7 +140,7 @@ calcSizeComps.ByStratum<-function(tbl_strata,
             if (!is.data.frame(tbl_indivs)){
                 cat("tbl_indivs is not a dataframe\n")
                 if (!is.character(tbl_indivs)) {
-                    in.csv<-wtsUtilities::selectFile(ext="csv",caption="Select csv file with indivs info");
+                    in.csv<-selectFile(ext="csv",caption="Select csv file with indivs info");
                     if (is.null(in.csv)|(in.csv=='')) return(NULL);
                 } else {
                     in.csv<-tbl_indivs;#tbl_indivs is a filename
@@ -193,11 +193,11 @@ calcSizeComps.ByStratum<-function(tbl_strata,
             -1 as numNonZeroHauls
           from tbl_ufacs;";
     qry<-gsub("&&ucols",paste(ucols[1:(length(ucols)-1)],collapse=","),qry)
-    tbl_ufacs<-sqldf::sqldf(qry);
+    tbl_ufacs<-sqldf(qry);
     
     tbl_zs<-as.data.frame(list(SIZE=cutpts[1:(length(cutpts)-1)]))
     qry<-"select * from tbl_ufacs, tbl_zs;";
-    tbl_uzfacs<-sqldf::sqldf(qry);
+    tbl_uzfacs<-sqldf(qry);
     
     #rearrange column names to get SIZE at end of other factors (if any)
     nms<-names(tbl_uzfacs);
@@ -222,7 +222,7 @@ calcSizeComps.ByStratum<-function(tbl_strata,
     qry<-gsub("&&ucols",ucolstr,qry);
     qry<-gsub("&&joinConds",joinConds,qry);
     cat(qry,'\n')
-    tbl_zcs1<-sqldf::sqldf(qry);
+    tbl_zcs1<-sqldf(qry);
     
     #change NAs to 0s in formerly missing cells
     idx<-is.na(tbl_zcs1$numIndivs);
