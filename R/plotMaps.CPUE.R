@@ -27,7 +27,7 @@
 #'z-axis scale for all maps produced. If a named list, the element corresponding to 
 #'each combination of factors will be used as the z-axis scale for that set of maps.
 #'
-#' @import sqldf
+#' @importFrom sqldf sqldf
 #' @importFrom wtsGMT createPDF.fromPS
 #' @importFrom wtsGMT plotMap.CSV
 #' @importFrom wtsUtilities selectFile

@@ -27,6 +27,7 @@
 #'@importFrom reshape2 melt 
 #'@importFrom scales squish
 #'@importFrom sqldf sqldf
+#'
 #'@import ggmap
 #'@import ggplot2
 #'@import rgdal

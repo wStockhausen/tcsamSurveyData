@@ -3,7 +3,7 @@
 #'
 #'@description Function to export aggregated catch data to stock assessment format.
 #'
-#'@param acd - dataframe from call to one of the calcBiomass... functions
+#'@param tbl - dataframe from call to one of the calcBiomass... functions
 #'@param facs - factors to include in output 
 #'@param dropLevels - factor levels to drop 
 #'@param var - variable type to export (abundance or biomass)
@@ -29,21 +29,21 @@
 #'
 #'@export
 #'
-exportAggregatedCatchData<-function(acd,
-                                    facs='',
-                                    dropLevels=NULL,
-                                    var=c('ABUNDANCE','BIOMASS'),
-                                    export=FALSE,
-                                    out.csv=paste('SurveyACD',var[1],'csv',sep='.'),
-                                    out.dir=NULL,
-                                    verbosity=1){
+aggregateCatchData<-function(tbl,
+                             facs='',
+                             dropLevels=NULL,
+                             var=c('ABUNDANCE','BIOMASS'),
+                             export=FALSE,
+                             out.csv=paste('SurveyACD',var[1],'csv',sep='.'),
+                             out.dir=NULL,
+                             verbosity=0){
     #determine data type to plot
     if (toupper(var[1])=='ABUNDANCE'){
         ylab<-'abundance';
-        acd$var<-acd$stdABUNDANCE*acd$stdABUNDANCE;
+        tbl$var<-tbl$stdABUNDANCE*tbl$stdABUNDANCE;
     } else if (toupper(var[1])=='BIOMASS'){
         ylab<-'biomass';
-        acd$var<-acd$stdBIOMASS*acd$stdBIOMASS;
+        tbl$var<-tbl$stdBIOMASS*tbl$stdBIOMASS;
     } else {
         cat('Error in plotAggregatedCatchData.\n');
         cat("unrecognized var = '",var[1],"'.\n");
@@ -56,8 +56,8 @@ exportAggregatedCatchData<-function(acd,
     nf<-length(facs)
     if (nf>0){
         for (fac in facs){
-            if (!(fac %in% names(acd))){
-                acd[[fac]]<-"ALL";
+            if (!(fac %in% names(tbl))){
+                tbl[[fac]]<-"ALL";
             }
         }
         id.vars<-c("STRATUM",facs,"YEAR");
@@ -67,7 +67,7 @@ exportAggregatedCatchData<-function(acd,
     measure.vars<-vars;
     
     #melt the input dataframe
-    mdfr<-melt(acd,id.vars,measure.vars,factorsAsStrings=TRUE,value.name='value');
+    mdfr<-melt(tbl,id.vars,measure.vars,factorsAsStrings=TRUE,value.name='value');
     
     #drop requested factor levels
     if (is.list(dropLevels)){

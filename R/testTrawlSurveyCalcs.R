@@ -159,7 +159,7 @@ testTrawlSurveyCalcs<-function(out.dir=NULL,
     
 #    source("calcCPUE.ByStation.R")
     #calc cpue by station for all individuals
-    cpue.byS<-calcCPUE.ByStation(cpue.byH,
+    cpue.byS<-calcCPUE.ByStation(strata.org,cpue.byH,
                                  verbosity=verbosity)
     
 #    source("calcBiomass.ByStratum.R")
