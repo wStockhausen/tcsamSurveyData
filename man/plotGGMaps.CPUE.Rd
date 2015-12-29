@@ -9,11 +9,11 @@ plotGGMaps.CPUE(cpue, type = c("abundance", "biomass"), facs = c("SEX",
   MATURITY = c("IMMATURE", "MATURE"), SHELL_CONDITION = c("NEW_SHELL",
   "OLD_SHELL")), dropLevels = list(SEX = c("HERMAPHRODITE", "MISSING"),
   MATURITY = c("MISSING"), SHELL_CONDITION = c("MISSING")), max = NULL,
-  bbox = c(left = -180, bottom = 54, right = -155, top = 63),
+  scale = 1, bbox = c(left = -180, bottom = 54, right = -155, top = 63),
   bathymetry = list(dsn = path.expand("~/MapData/Bathymetry"), layer =
   "ShelfBathymetry"), land = list(dsn = path.expand("~/MapData/Land"), layer =
   "Alaska"), layers = NULL, ggtheme = theme_grey(), ncol = 1, nrow = 4,
-  showPlots = FALSE)
+  showPlot = FALSE, verbosity = 2)
 }
 \arguments{
 \item{cpue}{- dataframe of cpue from call to calcCPUE.ByHaul or calcCPUE.ByStation}
@@ -27,6 +27,8 @@ plotGGMaps.CPUE(cpue, type = c("abundance", "biomass"), facs = c("SEX",
 \item{dropLevels}{- list (by elements of facs) of factor levels to drop before plotting}
 
 \item{max}{- max for ALL factor combinations (NULL -> scale by max w/in each factor level combination)}
+
+\item{scale}{- value to scale cpue by before plotting}
 
 \item{bbox}{- coordinates of bounding box for map (left, bottom, right, top)}
 
@@ -42,7 +44,9 @@ plotGGMaps.CPUE(cpue, type = c("abundance", "biomass"), facs = c("SEX",
 
 \item{nrow}{- number of rows of plots per page}
 
-\item{showPlots}{- flag to show plots immediately}
+\item{showPlot}{- flag to show plots immediately}
+
+\item{verbosity}{- integer flag (>0) to print intermediate info}
 }
 \value{
 list of ggplot2 plot objects to print

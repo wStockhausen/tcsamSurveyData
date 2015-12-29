@@ -147,6 +147,7 @@ get_stamenmap<-function (bbox = c(left=-180,bottom=54,right=-155,top=63),
     class(croppedmap) <- c("ggmap", "raster")
     attr(croppedmap, "bb") <- data.frame(ll.lat = bbox["bottom"], 
         ll.lon = bbox["left"], ur.lat = bbox["top"], ur.lon = bbox["right"])
-    croppedmap
+    
+    return(croppedmap);
 }
 #assignInNamespace("get_stamenmap",get_stamenmap,ns="ggmap")

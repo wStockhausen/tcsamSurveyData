@@ -56,6 +56,13 @@ output: word_document
                                             export=FALSE,verbosity=verbosity);
 ```
     
+```{r plotMaps,dependson="calcCPUE.TrawlSurvey"}
+    plots<-plotGGMaps.CPUE(dfr.CPUE.ForAll.ByS[dfr.CPUE.ForAll.ByS$YEAR %in% 2014:2015,],
+                           type='abundance',
+                           facs='SEX',nrow=2,ncol=1,
+                           showPlot=TRUE,verbosity=2);
+```
+
 ```{r calcBiomass.TrawlSurvey,cache=TRUE,dependson="calcCPUE.TrawlSurvey"}
     ##calculate biomass/abundance by stratum for all indivs
     dfr.BIO.ForAll.ByS<-calcBiomass.ByStratum(tbl_strata=dfr.SD,
