@@ -14,7 +14,7 @@
 #'@param ncol - number of columns of plots per page
 #'@param nrow - number of rows of plots per page
 #'@param showPlots - flag to show plots immediately
-#'@param verbosity - flag (>0) to print diagnostic output
+#'@param verbosity - integer flag (>0) to print diagnostic output
 #'
 #'@return list of ggplot2 plot objects
 #'
@@ -94,7 +94,7 @@ plotAZC<-function(zcs,
             zlims<-max(abs(mn),abs(mx))*c(-1,1);
         }
     }
-    if (verbosity>0) cat("zlims = ",zlims,'\n')
+    if (verbosity>0) {cat("zlims = ",zlims,'\n');}
     
     fax<-'black';
     if (byStratum){
@@ -119,7 +119,7 @@ plotAZC<-function(zcs,
     if (length(yrs)<nyp){
         ##add some blank years to fill out pages
         newyrs<-max(yrs)+1:(nyp-length(yrs));
-        if (verbosity>1) cat('newyrs=',newyrs,'\n');
+        if (verbosity>1) {cat('newyrs=',newyrs,'\n');}
         dfrnewp<-dfr[1:2,];
         dfrnew<-NULL;
         for (newyr in newyrs){
@@ -128,8 +128,13 @@ plotAZC<-function(zcs,
         }
         dfrnew$value<-0;
         yrs<-c(yrs,newyrs);
-        if (verbosity>1) View(dfrnew);
-        if (verbosity>1) print(yrs);
+        if (verbosity>1) {
+            cat("verbosity = ",verbosity,'\n');
+            View(dfrnew);
+            print(yrs);
+        }
+    } else {
+        dfrnew<-NULL;
     }
     
     ctr<-0;
@@ -145,18 +150,18 @@ plotAZC<-function(zcs,
             dfrp<-dfrpp[(dfrpp$year %in% yrs[(pg-1)*mxp+1:mxp]),];
             p <- ggplot(data=dfrp);
             ##p <- p + geom_line(aes(x=size,y=value,colour=fax),size=1)
-            p <- p + geom_step(aes(x=size,y=value,colour=fax),size=1,direction='hv')
-            p <- p + scale_x_continuous(breaks=pretty(uz)) 
-            p <- p + scale_y_continuous(breaks=pretty(zlims),limits=zlims,expand=c(0.01,0),oob=squish)
-            p <- p + geom_hline(yintercept=0,colour='black',size=0.5)
-            p <- p + labs(x="Size (mm)",y=zlab,title=stratum)
-            p <- p + facet_wrap(~year,ncol=ncol) 
-            p <- p + guides(fill=guide_legend(''),colour=guide_legend(''))
-            p <- p + ggtheme
+            p <- p + geom_step(aes(x=size,y=value,colour=fax),size=1,direction='hv');
+            p <- p + scale_x_continuous(breaks=pretty(uz));
+            p <- p + scale_y_continuous(breaks=pretty(zlims),limits=zlims,expand=c(0.01,0),oob=squish);
+            p <- p + geom_hline(yintercept=0,colour='black',size=0.5);
+            p <- p + labs(x="Size (mm)",y=zlab,title=stratum);
+            p <- p + facet_wrap(~year,ncol=ncol);
+            p <- p + guides(fill=guide_legend(''),colour=guide_legend(''));
+            p <- p + ggtheme;
             if (showPlots) print(p);
             ctr<-ctr+1;
-            ps[[ctr]]<-p
+            ps[[ctr]]<-p;
         }#pg loop
     }#stratum loop
-    return(ps)
+    return(ps);
 }

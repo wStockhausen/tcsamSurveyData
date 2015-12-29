@@ -32,7 +32,7 @@ plotAZC(zcs, byStratum = TRUE, multipliers = NULL,
 
 \item{showPlots}{- flag to show plots immediately}
 
-\item{verbosity}{- flag (>0) to print diagnostic output}
+\item{verbosity}{- integer flag (>0) to print diagnostic output}
 }
 \value{
 list of ggplot2 plot objects

@@ -139,23 +139,21 @@ output: word_document
     ##
     azc.ABD.ForAll.EBS.ByX<-aggregateSizeComps(dfr.ZCs.ForAll.EBS,
                                                var='ABUNDANCE',
-                                               facs='SEX',
-                                               dropLevels=list(SEX=c('MISSING',"HERMAPHRODITIC")));
-    plots<-plotAZC(azc.ABD.ForAll.EBS.ByX, byStratum=TRUE,
+                                               facs='SEX');
+    plots<-plotAZC(azc.ABD.ForAll.EBS.ByX, byStratum=TRUE,ncol=1,nrow=5,
                    zlab="Abundance (millions)",showPlots=TRUE);
-    plots<-plotAZC(azc.ABD.ForAll.EBS.ByX, byStratum=TRUE, 
-                   multipliers=list(list(factors=list(sex='FEMALE'),value=-1)),
-                   ylims=c(2005,maxYr),zlab="Abundance (millions)",showPlots=TRUE);
+    plots<-plotAZC(azc.ABD.ForAll.EBS.ByX, byStratum=TRUE,ncol=1,nrow=5, 
+                   ylims=c(2001,maxYr),zlab="Abundance (millions)",showPlots=TRUE);
     ##
     azc.ABD.ForAll.EW166.ByX<-aggregateSizeComps(dfr.ZCs.ForAll.EW166,
                                                  var='ABUNDANCE',
-                                                 facs='SEX',
-                                                 dropLevels=list(SEX=c('MISSING',"HERMAPHRODITIC")));
-    plots<-plotAZC(azc.ABD.ForAll.EW166.ByX,  byStratum=TRUE,
-                   zlab="Abundance (millions)",showPlots=TRUE);
-    plots<-plotAZC(azc.ABD.ForAll.EW166.ByX, byStratum=FALSE, 
+                                                 facs='SEX');
+    plots<-plotAZC(azc.ABD.ForAll.EW166.ByX,  byStratum=FALSE,ncol=1,nrow=5,
                    multipliers=list(list(factors=list(stratum='West 166'),value=-1)),
-                   ylims=c(2006,maxYr),zlab="Abundance (millions)",showPlots=TRUE);
+                   zlab="Abundance (millions)",showPlots=TRUE);
+    plots<-plotAZC(azc.ABD.ForAll.EW166.ByX, byStratum=FALSE,ncol=1,nrow=5, 
+                   multipliers=list(list(factors=list(stratum='West 166'),value=-1)),
+                   ylims=c(2001,maxYr),zlab="Abundance (millions)",showPlots=TRUE);
     ##
     azc.ABD.ForAll.EW166.ByXM<-aggregateSizeComps(dfr.ZCs.ForAll.EW166,
                                                  var='ABUNDANCE',
