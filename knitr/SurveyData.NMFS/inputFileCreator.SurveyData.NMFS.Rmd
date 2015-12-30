@@ -203,6 +203,170 @@ output: word_document
     }
     rm(x,idx,dfrp,stYr);
 ```
+##############################################
+##############################################
+```{r calcCPUE.ForSAM,cache=TRUE,dependson="getData.TrawlSurvey"}
+    ##calculate CPUE by haul for stock assessment model
+    dfr.CPUE.ForSAM.ByH<-calcCPUE.ByHaul(dfr.HD,dfr.ID,
+                                         bySex=TRUE,
+                                         byShellCondition=TRUE,
+                                         byMaturity=TRUE,
+                                         bySize=TRUE,
+                                         cutpts=seq(from=25,to=180,by=5),
+                                         truncate.low=TRUE,
+                                         truncate.high=FALSE,
+                                         export=FALSE,verbosity=verbosity);
+    ##calculate CPUE by station for all individuals
+    dfr.CPUE.ForSAM.ByS<-calcCPUE.ByStation(dfr.SD,dfr.CPUE.ForSAM.ByH,
+                                            export=FALSE,verbosity=verbosity);
+```
+    
+```{r calcBiomass.ForSAM,cache=TRUE,dependson="calcCPUE.ForSAM"}
+    ##calculate biomass/abundance by stratum for stock assessment model (SAM)
+    dfr.BIO.ForSAM.ByS<-calcBiomass.ByStratum(tbl_strata=dfr.SD,
+                                              tbl_cpue=dfr.CPUE.ForSAM.ByS,
+                                              export=FALSE,verbosity=verbosity);
+    ##calculate biomass/abundance by EW166 for stock assessment model (SAM)
+    dfr.BIO.ForSAM.EW166<-calcBiomass.EW166(dfr.BIO.ForSAM.ByS,
+                                            codes.TS[["strata.EW166"]],
+                                            export=FALSE,verbosity=verbosity);
+    ##calculate biomass/abundance by stratum for stock assessment model (SAM)
+    dfr.BIO.ForSAM.EBS<-calcBiomass.EBS(dfr.BIO.ForSAM.ByS,
+                                        export=FALSE,verbosity=verbosity);
+```
+
+```{r plotACD.ForSAM.EBS,fig.width=8,fig.height=5,cache=TRUE,dependson="calcBiomass.ForSAM"}
+    jitter<-FALSE;
+    ##Abundance by sex
+    acd.ABD.ForSAM.EBS.ByX<-aggregateCatchData(dfr.BIO.ForSAM.EBS,
+                                               var='ABUNDANCE',
+                                               facs='SEX');
+    plots<-plotACD(acd.ABD.ForSAM.EBS.ByX, jitter=jitter, ylab="Abundance (millions)",showPlots=TRUE);
+    plots<-plotACD(acd.ABD.ForSAM.EBS.ByX, jitter=jitter, xlims=c(2001,maxYr),ylab="Abundance (millions)",showPlots=TRUE);
+    ##Biomass by sex
+    acd.BIO.ForSAM.EBS.ByX<-aggregateCatchData(dfr.BIO.ForSAM.EBS,
+                                               var='BIOMASS',
+                                               facs='SEX');
+    plots<-plotACD(acd.BIO.ForSAM.EBS.ByX, ylab="Biomass (1000's t)",showPlots=TRUE);
+    plots<-plotACD(acd.BIO.ForSAM.EBS.ByX, xlims=c(2001,maxYr), ylab="Biomass (1000's t)",showPlots=TRUE);
+```
+
+```{r plotACD.ForSAM.EW166,fig.width=8,fig.height=12,cache=TRUE,dependson="calcBiomass.ForSAM"}
+    jitter<-FALSE;
+    ##Abundance by sex
+    acd.ABD.ForSAM.EW166.ByX<-aggregateCatchData(dfr.BIO.ForSAM.EW166,
+                                                 var='ABUNDANCE',
+                                                 facs='SEX',
+                                                 dropLevels=list(SEX=c('MISSING',"HERMAPHRODITIC")));
+    plots<-plotACD(acd.ABD.ForSAM.EW166.ByX, jitter=jitter, ylab="Abundance (millions)",ncol=1,showPlots=TRUE);
+    plots<-plotACD(acd.ABD.ForSAM.EW166.ByX, jitter=jitter, xlims=c(2001,maxYr), ylab="Abundance (millions)",ncol=1,showPlots=TRUE);
+    ##Biomass by sex
+    acd.BIO.ForSAM.EW166.ByX<-aggregateCatchData(dfr.BIO.ForSAM.EW166,
+                                                 var='BIOMASS',
+                                                 facs='SEX',
+                                                 dropLevels=list(SEX=c('MISSING',"HERMAPHRODITIC")));
+    plots<-plotACD(acd.BIO.ForSAM.EW166.ByX, ylab="Biomass (1000's t)",ncol=1,showPlots=TRUE);
+    plots<-plotACD(acd.BIO.ForSAM.EW166.ByX, xlims=c(2001,maxYr), ylab="Biomass (1000's t)",ncol=1,showPlots=TRUE);
+    ##Abundance by sex, maturity
+    acd.ABD.ForSAM.EW166.ByXM<-aggregateCatchData(dfr.BIO.ForSAM.EW166,
+                                                 var='ABUNDANCE',
+                                                 facs=c('SEX','MATURITY'),
+                                                 dropLevels=list(SEX=c('MISSING',"HERMAPHRODITIC")));
+    plots<-plotACD(acd.ABD.ForSAM.EW166.ByXM, jitter=jitter, ylab="Abundance (millions)",ncol=1,showPlots=TRUE);
+    plots<-plotACD(acd.ABD.ForSAM.EW166.ByXM, jitter=jitter, xlims=c(2001,maxYr), ylab="Abundance (millions)",ncol=1,showPlots=TRUE);
+    ##Biomass by sex, maturity
+    acd.BIO.ForSAM.EW166.ByXM<-aggregateCatchData(dfr.BIO.ForSAM.EW166,
+                                                 var='BIOMASS',
+                                                 facs=c('SEX','MATURITY'),
+                                                 dropLevels=list(SEX=c('MISSING',"HERMAPHRODITIC")));
+    plots<-plotACD(acd.BIO.ForSAM.EW166.ByXM, ylab="Biomass (1000's t)",ncol=1,showPlots=TRUE);
+    plots<-plotACD(acd.BIO.ForSAM.EW166.ByXM, xlims=c(2001,maxYr), ylab="Biomass (1000's t)",ncol=1,showPlots=TRUE);
+```
+
+```{r calcZCs.ForSAM,cache=TRUE,dependson="getData.TrawlSurvey"}
+    ##calculate size comps by stratum for all individuals
+    dfr.ZCs.ForSAM.ByS<-calcSizeComps.ByStratum(dfr.SD,
+                                                tbl_hauls=dfr.HD,
+                                                tbl_indivs=dfr.ID,
+                                                avgHaulsByStation=TRUE,
+                                                bySex=TRUE,
+                                                byShellCondition=TRUE,
+                                                byMaturity=TRUE,
+                                                cutpts=seq(from=25,to=180,by=5),
+                                                truncate.low=TRUE,
+                                                truncate.high=FALSE,
+                                                export=FALSE,verbosity=verbosity);
+    dfr.ZCs.ForSAM.EW166<-calcSizeComps.EW166(dfr.ZCs.ForSAM.ByS,
+                                              export=FALSE,verbosity=verbosity);
+    dfr.ZCs.ForSAM.EBS  <-calcSizeComps.EBS(dfr.ZCs.ForSAM.EW166,
+                                              export=FALSE,verbosity=verbosity);
+```
+
+```{r plotZCs.ForSAM.EBS,fig.height=12,fig.width=8,dependson="calcZCs.ForSAM"}
+    byYrs<-5;
+    ##EBS by sex
+    azc.ABD.ForSAM.EBS.ByX<-aggregateSizeComps(dfr.ZCs.ForSAM.EBS,
+                                               var='ABUNDANCE',facs='SEX');
+    for (stYr in seq(from=minYr,to=maxYr,by=byYrs)){
+        plots<-plotAZC(azc.ABD.ForSAM.EBS.ByX, byStratum=TRUE,ncol=1,nrow=5,
+                       ylims=c(stYr,stYr+byYrs-1),zlab="Abundance (millions)",showPlots=TRUE);
+    }
+    rm(stYr);
+    
+    ##EBS by sex, shell condition
+    azc.ABD.ForSAM.EBS.ByXS<-aggregateSizeComps(dfr.ZCs.ForSAM.EBS,
+                                                  var='ABUNDANCE',facs=c('SEX','SHELL_CONDITION'),
+                                                  dropLevels=list(SEX=c('MISSING',"HERMAPHRODITIC")));
+    for (stYr in seq(from=minYr,to=maxYr,by=byYrs)){
+        plots<-plotAZC(azc.ABD.ForSAM.EBS.ByXS,byStratum=TRUE,ncol=1,nrow=5,
+                       multipliers=list(list(factors=list(sex='FEMALE'),value=-1)),
+                       ylims=c(stYr,stYr+byYrs-1),zlab="Abundance (millions)",showPlots=TRUE);
+    }
+    for (x in c("MALE","FEMALE")){
+        idx <- azc.ABD.ForSAM.EBS.ByXS$sex==x;
+        dfrp <- azc.ABD.ForSAM.EBS.ByXS[idx,];
+        dfrp <- wtsUtilities::deleteCol(dfrp,'sex');
+        dfrp$stratum <- x; 
+        for (stYr in seq(from=minYr,to=maxYr,by=byYrs)){
+            plots<-plotAZC(dfrp,  byStratum=TRUE,ncol=1,nrow=5,
+                           multipliers=list(list(factors=list(shell_condition='OLD_SHELL'),value=-1)),
+                           ylims=c(stYr,stYr+byYrs-1),zlab="Abundance (millions)",showPlots=TRUE);
+        }
+    }
+    rm(x,idx,dfrp,stYr);
+```
+
+```{r plotZCs.ForSAM.EW166,fig.height=12,fig.width=8,dependson="calcZCs.ForSAM"}
+    
+    ##EW166 by sex
+    azc.ABD.ForSAM.EW166.ByX<-aggregateSizeComps(dfr.ZCs.ForSAM.EW166,
+                                                 var='ABUNDANCE',facs='SEX',
+                                                 dropLevels=list(SEX=c('MISSING',"HERMAPHRODITIC")));
+    for (stYr in seq(from=minYr,to=maxYr,by=byYrs)){
+        plots<-plotAZC(azc.ABD.ForSAM.EW166.ByX,  byStratum=FALSE,ncol=1,nrow=5,
+                       multipliers=list(list(factors=list(stratum='West 166'),value=-1)),
+                       ylims=c(stYr,stYr+byYrs-1),zlab="Abundance (millions)",showPlots=TRUE);
+    }
+    rm(stYr);
+    
+    ##EW166 by sex, shell condition
+    azc.ABD.ForSAM.EW166.ByXS<-aggregateSizeComps(dfr.ZCs.ForSAM.EW166,
+                                                  var='ABUNDANCE',facs=c('SEX','SHELL_CONDITION'),
+                                                  dropLevels=list(SEX=c('MISSING',"HERMAPHRODITIC")));
+    for (x in c("MALE","FEMALE")){
+        idx <- azc.ABD.ForSAM.EW166.ByXS$sex==x;
+        dfrp <- azc.ABD.ForSAM.EW166.ByXS[idx,];
+        dfrp$sex     <- dfrp$stratum;
+        dfrp$stratum <- x; 
+        for (stYr in seq(from=minYr,to=maxYr,by=byYrs)){
+            plots<-plotAZC(dfrp,  byStratum=TRUE,ncol=1,nrow=5,
+                           multipliers=list(list(factors=list(sex='West 166'),value=-1)),
+                           ylims=c(stYr,stYr+byYrs-1),zlab="Abundance (millions)",showPlots=TRUE);
+        }
+    }
+    rm(x,idx,dfrp,stYr);
+```
+
 
 ```{r saveAll}
     save.image(file="SurveyData.NMFS.RData");

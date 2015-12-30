@@ -123,7 +123,7 @@ calcBiomass.EW166<-function(tbl=NULL,
             YEAR,newSTRATUM&&facs
           order by 
             YEAR,newSTRATUM&&facs;"
-    if (nc==17) {
+    if (nc==nc0f) {
         qry<-gsub("&&facs",'',qry);
     } else {
         qry<-gsub("&&facs",paste(',',facs,collapse="",sep=''),qry);
