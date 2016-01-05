@@ -13,7 +13,7 @@
 #' at zoom = 7. The bounding box is left=-180, bottom=54, right=-155, top=63.
 #'
 #'@format A ggmap raster object.
-"ggmap.EBS.stamen.toner.z06"
+"ggmap.EBS.stamen.toner.z07"
 
 
 #' A fortified (spatial) data frame reflecting EBS shelf bathymetry contours (lines).

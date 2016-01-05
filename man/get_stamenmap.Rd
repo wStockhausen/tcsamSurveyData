@@ -5,9 +5,11 @@
 \title{Retrieve a stamenmap (replaces ggmap::get_stamenmap)}
 \usage{
 get_stamenmap(bbox = c(left = -180, bottom = 54, right = -155, top = 63),
-  zoom = 6, maptype = c("terrain", "watercolor", "toner"), land = "black",
-  water = "white", crop = TRUE, messaging = FALSE, urlonly = FALSE,
-  filename = "ggmapTemp", color = c("color", "bw"), ...)
+  zoom = 6, maptype = c("terrain", "terrain-background", "terrain-labels",
+  "terrain-lines", "toner", "toner-2010", "toner-2011", "toner-background",
+  "toner-hybrid", "toner-labels", "toner-lines", "toner-lite", "watercolor"),
+  land = "black", water = "white", crop = TRUE, messaging = FALSE,
+  urlonly = FALSE, filename = "ggmapTemp", color = c("color", "bw"), ...)
 }
 \arguments{
 \item{bbox}{- bounding box coordinates (left, bottom, right, top) (default is for EBS)}

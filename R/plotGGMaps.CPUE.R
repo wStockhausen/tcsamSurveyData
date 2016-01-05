@@ -10,9 +10,11 @@
 #'@param dropLevels - list (by elements of facs) of factor levels to drop before plotting
 #'@param max - max for ALL factor combinations (NULL -> scale by max w/in each factor level combination)
 #'@param scale - value to scale cpue by before plotting
+#'@param map - ggmap raster object for map background
 #'@param bbox - coordinates of bounding box for map (left, bottom, right, top)
-#'@param bathymetry - list(dsn=,layer=) specifying bathymetry shapefile to include on map
-#'@param land - list(dsn=,layer=) specifying land shapefile to include on map
+#'@param mapcolors - list of colors (land, water) for map background
+#'@param bathymetry - fortified spatial dataframe or list(dsn=,layer=) specifying bathymetry shapefile to include on map
+#'@param land - fortified spatial dataframe or list(dsn=,layer=) specifying land shapefile to include on map
 #'@param layers - list of lists(dsn=,layer=) specifying other shapefiles to include on map
 #'@param ggtheme - ggplot2 theme
 #'@param ncol - number of columns of plots per page
@@ -47,9 +49,11 @@ plotGGMaps.CPUE<-function(cpue,
                                              SHELL_CONDITION=c("MISSING")),
                           max=NULL,
                           scale=1,
+                          map=getMapData("ggmap","EBS.stamen.toner.z06"),
                           bbox=c(left=-180,bottom=54,right=-155,top=63),
-                          bathymetry=list(dsn=path.expand('~/MapData/Bathymetry'),layer='ShelfBathymetry'),
-                          land=list(dsn=path.expand('~/MapData/Land'),layer='Alaska'),
+                          mapcolors=list(land='darkgreen',water='lightblue'),
+                          bathymetry=getMapData("shp","EBS.lines.bathy"),
+                          land=getMapData("shp","EBS.polys.land"),
                           layers=NULL,
                           ggtheme=theme_grey(),
                           ncol=1,
@@ -141,23 +145,38 @@ plotGGMaps.CPUE<-function(cpue,
     if (verbosity>1) View(dfr);
     
     
-    #get map
-    map<-get_stamenmap(bbox=bbox,maptype="toner",zoom=6,messaging=TRUE,color='color');
+    #get background map
+    if (class(map)==c('ggmap','raster')){
+        #do nothing: map in correct format
+    } else {
+        #TODO: need to do something here
+        map<-ggmap::get_stamenmap(bbox=bbox,maptype="toner-background",zoom=map,messaging=TRUE);
+    }
+    map<-stamen.RecolorTonerMap(map,mapcolors$land,mapcolors$water);
     pMap <- ggmap(map,extent='panel',maprange=FALSE);
     if (verbosity>1) print(pMap);
     
-    #set up bathymetry layer
-    depth<-readOGR(dsn=bathymetry$dsn,layer=bathymetry$layer);
-    depth.WGS84<-spTransform(depth, CRS("+init=epsg:4326"));
-    depth.f<-fortify(depth.WGS84);
-    pDepth <- geom_path(mapping=aes(x=long,y=lat,group=group),data=depth.f,color='grey50');
+    #get or set up bathymetry layer
+    if (is.data.frame(bathymetry)){
+        #do nothing: bathymetry is in correct format (a fortified spatial dataframe)
+    } else if (is.list(bathymetry)){
+        depth<-readOGR(dsn=bathymetry$dsn,layer=bathymetry$layer);
+        depth.WGS84<-spTransform(depth, CRS("+init=epsg:4326"));
+        bathymetry<-fortify(depth.WGS84);
+        rm(depth,depth.WGS84);
+    }
+    pDepth <- geom_path(mapping=aes(x=long,y=lat,group=group),data=bathymetry,color='grey50');
     
-    #set up land layer
-    land<-readOGR(dsn=land$dsn,layer=land$layer);
-    land.WGS84<-spTransform(land, CRS("+init=epsg:4326"));
-    land.clip<-gClip(land.WGS84,bbox);
-    land.clip.f<-fortify(land.clip);
-    pLand <- geom_polygon(mapping=aes(x=long,y=lat,group=group),data=land.clip.f,alpha=0.25,size=0);
+    #get or set up land mask layer
+    if (is.data.frame(land)){
+        #do nothing: land is in correct format (a fortified spatial dataframe)
+    } else if (is.list(land)){
+        land<-readOGR(dsn=land$dsn,layer=land$layer);
+        land.WGS84<-spTransform(land, CRS("+init=epsg:4326"));
+        land.clip<-gClip(land.WGS84,bbox);
+        land<-fortify(land.clip);
+    }
+    pLand <- geom_polygon(mapping=aes(x=long,y=lat,group=group),data=land,alpha=0.25,size=0);
     
     #set up other layers
     #TODO

@@ -9,11 +9,13 @@ plotGGMaps.CPUE(cpue, type = c("abundance", "biomass"), facs = c("SEX",
   MATURITY = c("IMMATURE", "MATURE"), SHELL_CONDITION = c("NEW_SHELL",
   "OLD_SHELL")), dropLevels = list(SEX = c("HERMAPHRODITE", "MISSING"),
   MATURITY = c("MISSING"), SHELL_CONDITION = c("MISSING")), max = NULL,
-  scale = 1, bbox = c(left = -180, bottom = 54, right = -155, top = 63),
-  bathymetry = list(dsn = path.expand("~/MapData/Bathymetry"), layer =
-  "ShelfBathymetry"), land = list(dsn = path.expand("~/MapData/Land"), layer =
-  "Alaska"), layers = NULL, ggtheme = theme_grey(), ncol = 1, nrow = 4,
-  showPlot = FALSE, verbosity = 0)
+  scale = 1, map = getMapData("ggmap", "EBS.stamen.toner.z06"),
+  bbox = c(left = -180, bottom = 54, right = -155, top = 63),
+  mapcolors = list(land = "darkgreen", water = "lightblue"),
+  bathymetry = getMapData("shp", "EBS.lines.bathy"),
+  land = getMapData("shp", "EBS.polys.land"), layers = NULL,
+  ggtheme = theme_grey(), ncol = 1, nrow = 4, showPlot = FALSE,
+  verbosity = 0)
 }
 \arguments{
 \item{cpue}{- dataframe of cpue from call to calcCPUE.ByHaul or calcCPUE.ByStation}
@@ -30,11 +32,15 @@ plotGGMaps.CPUE(cpue, type = c("abundance", "biomass"), facs = c("SEX",
 
 \item{scale}{- value to scale cpue by before plotting}
 
+\item{map}{- ggmap raster object for map background}
+
 \item{bbox}{- coordinates of bounding box for map (left, bottom, right, top)}
 
-\item{bathymetry}{- list(dsn=,layer=) specifying bathymetry shapefile to include on map}
+\item{mapcolors}{- list of colors (land, water) for map background}
 
-\item{land}{- list(dsn=,layer=) specifying land shapefile to include on map}
+\item{bathymetry}{- fortified spatial dataframe or list(dsn=,layer=) specifying bathymetry shapefile to include on map}
+
+\item{land}{- fortified spatial dataframe or list(dsn=,layer=) specifying land shapefile to include on map}
 
 \item{layers}{- list of lists(dsn=,layer=) specifying other shapefiles to include on map}
 
