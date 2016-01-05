@@ -5,6 +5,7 @@
 #'
 #'@param shp - set of polygons (from call to readOGR)
 #'@param bb  - bounding box (see details)
+#'@param verbosity - integer flag (>0) to print intermediate info
 #'
 #'@return - spatial dataframe of clipped polygons
 #'
@@ -22,29 +23,30 @@
 #' 
 #' @export
 #' 
-gClip <- function(shp, bb){
+gClip <- function(shp, bb,verbosity=0){
 #    require('raster')
 #    require('rgeos')
-    print(bb);
+    if (verbosity>0) print(bb);
     bp<-bb;
     if (class(bp)=="data.frame"){
-        cat("bp is a data.frame\n")
+        if (verbosity>1) cat("bp is a data.frame\n")
         b_poly <- as(extent(as.vector((as.matrix(bp)))), "SpatialPolygons")
     } else if (class(bp) == "matrix") {
-        cat("bp is a matrix\n")
+        if (verbosity>1) cat("bp is a matrix\n")
         b_poly <- as(extent(as.vector(t(bp))), "SpatialPolygons")
     } else {
         #bp expected in order xmin,xmax,ymin,ymax
         if ('left'==tolower(names(bp)[1])){
-            cat("bp is a vector w/ order: left, bottom, right, top\n")
+            if (verbosity>1) cat("bp is a vector w/ order: left, bottom, right, top\n")
             #order is left, bottom, right, top (xmin, ymin, xmax, ymax)
-            bp<-c(bb[1],bb[3],bb[2],bb[4])
-            names(bp)<-c('xmin','xmax','ymin','ymax')
-            print(bp)
+            bp<-c(bb[1],bb[3],bb[2],bb[4]);
+            names(bp)<-c('xmin','xmax','ymin','ymax');
+            if (verbosity>1) print(bp);
         }
         b_poly <- as(extent(bp), "SpatialPolygons")
     }
-    print(b_poly)
+    if (verbosity>0) print(b_poly);
+    
     proj4string(b_poly) <- proj4string(shp)
     gIntersection(shp, b_poly, byid = T)
 }

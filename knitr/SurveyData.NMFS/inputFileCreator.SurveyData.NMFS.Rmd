@@ -5,10 +5,11 @@ date: "December 22, 2015"
 output: word_document
 ---
 
+
 ##Inputs 
-```{r inputs}
-    dir.top<-"Y:";                         ##Windows
-    ##dir.top<-"/Users/WilliamStockhausen";##Mac
+```{r inputs,cache=TRUE}
+    ##dir.top<-"Y:";                         ##Windows
+    dir.top<-"/Users/WilliamStockhausen";##Mac
     dir.TS<-file.path(dir.top,"StockAssessments-Crab/Data/Survey.NMFS.EBS/2015/FromBob.2015.08.14/TannerCrab");
     fn.SD<-file.path(dir.TS,"STRATA_BAIRDI_NEWTIMESERIES.csv");
     fn.HD<-file.path(dir.TS,"CRABHAUL1975TO2015_BAIRDI_TimeSeries.csv");

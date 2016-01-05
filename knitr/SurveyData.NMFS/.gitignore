@@ -1,1 +1,4 @@
-test.RData
+*.RData
+*.docx
+*.md
+inputFileCreator.SurveyData.NMFS_cache

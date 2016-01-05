@@ -13,7 +13,7 @@ plotGGMaps.CPUE(cpue, type = c("abundance", "biomass"), facs = c("SEX",
   bathymetry = list(dsn = path.expand("~/MapData/Bathymetry"), layer =
   "ShelfBathymetry"), land = list(dsn = path.expand("~/MapData/Land"), layer =
   "Alaska"), layers = NULL, ggtheme = theme_grey(), ncol = 1, nrow = 4,
-  showPlot = FALSE, verbosity = 2)
+  showPlot = FALSE, verbosity = 0)
 }
 \arguments{
 \item{cpue}{- dataframe of cpue from call to calcCPUE.ByHaul or calcCPUE.ByStation}

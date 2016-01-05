@@ -4,12 +4,14 @@
 \alias{gClip}
 \title{Clip a set of polygons using a bounding box}
 \usage{
-gClip(shp, bb)
+gClip(shp, bb, verbosity = 0)
 }
 \arguments{
 \item{shp}{- set of polygons (from call to readOGR)}
 
 \item{bb}{- bounding box (see details)}
+
+\item{verbosity}{- integer flag (>0) to print intermediate info}
 }
 \value{
 - spatial dataframe of clipped polygons

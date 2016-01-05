@@ -55,7 +55,7 @@ plotGGMaps.CPUE<-function(cpue,
                           ncol=1,
                           nrow=4,
                           showPlot=FALSE,
-                          verbosity=2){
+                          verbosity=0){
 #     require('ggmap');
 #     require('ggplot2');
 #     require('plyr');
@@ -142,7 +142,7 @@ plotGGMaps.CPUE<-function(cpue,
     
     
     #get map
-    map<-get_stamenmap(bbox=bbox,maptype="terrain",zoom=6,messaging=TRUE,color='color');
+    map<-get_stamenmap(bbox=bbox,maptype="toner",zoom=6,messaging=TRUE,color='color');
     pMap <- ggmap(map,extent='panel',maprange=FALSE);
     if (verbosity>1) print(pMap);
     
@@ -202,7 +202,9 @@ plotGGMaps.CPUE<-function(cpue,
                 pF <- scale_fill_gradient(low='blue',high='red');
                 pC <- scale_color_gradient(low='blue',high='red');
                 p <- pBase + pL + pP + pS + pF + pC + facet_wrap(~YEAR,ncol=ncol) + ggtheme;
-                p <- p + guides(size=guide_legend(''),fill=guide_colorbar(type),color=FALSE);
+                p <- p + guides(fill=guide_colorbar(type,order=1),
+                                size=guide_legend('',order=2),
+                                color=FALSE);
                 p <- p + labs(list(x='Longitude',y='Latitude'));
                 p <- p + ggtitle(paste(tolower(as.vector(ufacs[rw,])),sep='',collapse=' ,'));
                 if (showPlot) print(p);
