@@ -5,17 +5,18 @@
 #'
 #'@param cpue - dataframe of cpue from call to calcCPUE.ByHaul or calcCPUE.ByStation
 #'@param type - type of cpue to plot ('abundance' or 'biomass')
-#'@param facs - factors to plot (e.g., 'SEX', 'MATURITY')
+#'@param facs - vector of factor column names to plot by (e.g., c('SEX', 'MATURITY')) or c() to ignore.
 #'@param keepLevels - list (by elements of facs) of factor levels to keep before plotting
 #'@param dropLevels - list (by elements of facs) of factor levels to drop before plotting
 #'@param max - max for ALL factor combinations (NULL -> scale by max w/in each factor level combination)
 #'@param scale - value to scale cpue by before plotting
-#'@param map - ggmap raster object for map background
+#'@param map - ggmap raster object for base map background
 #'@param bbox - coordinates of bounding box for map (left, bottom, right, top)
-#'@param mapcolors - list of colors (land, water) for map background
-#'@param bathymetry - fortified spatial dataframe or list(dsn=,layer=) specifying bathymetry shapefile to include on map
-#'@param land - fortified spatial dataframe or list(dsn=,layer=) specifying land shapefile to include on map
-#'@param layers - list of lists(dsn=,layer=) specifying other shapefiles to include on map
+#'@param mapcolors - list of colors (land, water) for base map background
+#'@param bathymetry - fortified spatial dataframe or list(dsn=,layer=) specifying bathymetry shapefile to include on base map
+#'@param land - fortified spatial dataframe or list(dsn=,layer=) specifying land shapefile to include on base map
+#'@param layers - list of ggplot layers to include in base map
+#'@param label - page title, if 'facs' is empty (length 0)
 #'@param ggtheme - ggplot2 theme
 #'@param ncol - number of columns of plots per page
 #'@param nrow - number of rows of plots per page
@@ -52,9 +53,10 @@ plotGGMaps.CPUE<-function(cpue,
                           map=getMapData("ggmap","EBS.stamen.toner.z06"),
                           bbox=c(left=-180,bottom=54,right=-155,top=63),
                           mapcolors=list(land='darkgreen',water='lightblue'),
-                          bathymetry=getMapData("shp","EBS.lines.bathy"),
-                          land=getMapData("shp","EBS.polys.land"),
+                          bathymetry=getMapData("shape","EBS.lines.bathy"),
+                          land=getMapData("shape","EBS.polys.land"),
                           layers=NULL,
+                          label="",
                           ggtheme=theme_grey(),
                           ncol=1,
                           nrow=4,
@@ -146,44 +148,70 @@ plotGGMaps.CPUE<-function(cpue,
     
     
     #get background map
-    if (class(map)==c('ggmap','raster')){
-        #do nothing: map in correct format
+    if (!is.null(map)){
+        if (verbosity>1) {cat("including raster on background map\n");}
+        if (class(map)[1]==c('ggmap')){
+            #do nothing: map in correct format
+        } else {
+            #TODO: need to do something here
+            map<-ggmap::get_stamenmap(bbox=bbox,maptype="toner-background",zoom=map,messaging=TRUE);
+        }
+        map<-stamen.RecolorTonerMap(map,mapcolors$land,mapcolors$water);
+        pMap <- ggmap(map,extent='panel',maprange=FALSE);
+        if (verbosity>1) {
+            cat('printing pMap\n')
+            print(pMap);
+        }
     } else {
-        #TODO: need to do something here
-        map<-ggmap::get_stamenmap(bbox=bbox,maptype="toner-background",zoom=map,messaging=TRUE);
+        if (verbosity>1) {cat("excluding raster from background map\n");}
+        pMap <- NULL;
     }
-    map<-stamen.RecolorTonerMap(map,mapcolors$land,mapcolors$water);
-    pMap <- ggmap(map,extent='panel',maprange=FALSE);
-    if (verbosity>1) print(pMap);
     
     #get or set up bathymetry layer
-    if (is.data.frame(bathymetry)){
-        #do nothing: bathymetry is in correct format (a fortified spatial dataframe)
-    } else if (is.list(bathymetry)){
-        depth<-readOGR(dsn=bathymetry$dsn,layer=bathymetry$layer);
-        depth.WGS84<-spTransform(depth, CRS("+init=epsg:4326"));
-        bathymetry<-fortify(depth.WGS84);
-        rm(depth,depth.WGS84);
+    if (!is.null(bathymetry)){
+        if (verbosity>1) {cat("including bathymetry on background map\n");}
+        if (is.data.frame(bathymetry)){
+            #do nothing: bathymetry is in correct format (a fortified spatial dataframe)
+            if (verbosity>1) {cat("bathymetry is a spatial dataframe\n");}
+        } else if (is.list(bathymetry)){
+            if (verbosity>1) {cat("reading bathymetry file\n");}
+            depth<-readOGR(dsn=bathymetry$dsn,layer=bathymetry$layer);
+            depth.WGS84<-spTransform(depth, CRS("+init=epsg:4326"));
+            bathymetry<-fortify(depth.WGS84);
+            rm(depth,depth.WGS84);
+        }
+        pDepth <- geom_path(mapping=aes(x=long,y=lat,group=group),data=bathymetry,color='grey50');
+    } else {
+        if (verbosity>1) {cat("excluding bathymetry from background map\n");}
+        pDepth <- NULL;
     }
-    pDepth <- geom_path(mapping=aes(x=long,y=lat,group=group),data=bathymetry,color='grey50');
     
     #get or set up land mask layer
-    if (is.data.frame(land)){
-        #do nothing: land is in correct format (a fortified spatial dataframe)
-    } else if (is.list(land)){
-        land<-readOGR(dsn=land$dsn,layer=land$layer);
-        land.WGS84<-spTransform(land, CRS("+init=epsg:4326"));
-        land.clip<-gClip(land.WGS84,bbox);
-        land<-fortify(land.clip);
+    if (!is.null(land)){
+        if (verbosity>1) {cat("including land on background map\n");}
+        if (is.data.frame(land)){
+            #do nothing: land is in correct format (a fortified spatial dataframe)
+            if (verbosity>1) {cat("land is a spatial dataframe\n");}
+        } else if (is.list(land)){
+            if (verbosity>1) {cat("reading land file\n");}
+            land<-readOGR(dsn=land$dsn,layer=land$layer);
+            land.WGS84<-spTransform(land, CRS("+init=epsg:4326"));
+            land.clip<-gClip(land.WGS84,bbox);
+            land<-fortify(land.clip);
+        }
+        pLand <- geom_polygon(mapping=aes(x=long,y=lat,group=group),data=land,alpha=0.25,size=0);
+    } else {
+        if (verbosity>1) {cat("excluding land on background map\n");}
+        pLand <- NULL;
     }
-    pLand <- geom_polygon(mapping=aes(x=long,y=lat,group=group),data=land,alpha=0.25,size=0);
-    
-    #set up other layers
-    #TODO
     
     #base map for all plots
-    pBase <- pMap + pDepth + pLand; #TODO: add in pLayers
-    if (verbosity>1) print(pBase);
+    pBase <- pMap + pDepth + pLand; 
+    #add in other map layers
+    if (!is.null(layers)){
+        for (lyr in layers) pBase <- pBase + lyr;
+    }
+    if (!is.null(pBase)&&(verbosity>1)) print(pBase);
     
     #loop over factors, years to make plots
     mxp<-nrow*ncol;
@@ -202,6 +230,7 @@ plotGGMaps.CPUE<-function(cpue,
             for (fac in names(ufacs)){
                 idx<-idx & (dfr[[fac]]==ufacs[rw,fac]);
             }
+            label<-paste(tolower(as.vector(ufacs[rw,])),sep='',collapse=', ');
         }
         if (sum(idx)>0){
             maxp<-max;
@@ -225,7 +254,7 @@ plotGGMaps.CPUE<-function(cpue,
                                 size=guide_legend('',order=2),
                                 color=FALSE);
                 p <- p + labs(list(x='Longitude',y='Latitude'));
-                p <- p + ggtitle(paste(tolower(as.vector(ufacs[rw,])),sep='',collapse=' ,'));
+                p <- p + ggtitle(label);
                 if (showPlot) print(p);
                 ctr<-ctr+1;
                 ps[[ctr]]<-p;

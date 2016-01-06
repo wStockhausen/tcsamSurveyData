@@ -12,8 +12,8 @@ plotGGMaps.CPUE(cpue, type = c("abundance", "biomass"), facs = c("SEX",
   scale = 1, map = getMapData("ggmap", "EBS.stamen.toner.z06"),
   bbox = c(left = -180, bottom = 54, right = -155, top = 63),
   mapcolors = list(land = "darkgreen", water = "lightblue"),
-  bathymetry = getMapData("shp", "EBS.lines.bathy"),
-  land = getMapData("shp", "EBS.polys.land"), layers = NULL,
+  bathymetry = getMapData("shape", "EBS.lines.bathy"),
+  land = getMapData("shape", "EBS.polys.land"), layers = NULL, label = "",
   ggtheme = theme_grey(), ncol = 1, nrow = 4, showPlot = FALSE,
   verbosity = 0)
 }
@@ -22,7 +22,7 @@ plotGGMaps.CPUE(cpue, type = c("abundance", "biomass"), facs = c("SEX",
 
 \item{type}{- type of cpue to plot ('abundance' or 'biomass')}
 
-\item{facs}{- factors to plot (e.g., 'SEX', 'MATURITY')}
+\item{facs}{- vector of factor column names to plot by (e.g., c('SEX', 'MATURITY')) or c() to ignore.}
 
 \item{keepLevels}{- list (by elements of facs) of factor levels to keep before plotting}
 
@@ -32,17 +32,19 @@ plotGGMaps.CPUE(cpue, type = c("abundance", "biomass"), facs = c("SEX",
 
 \item{scale}{- value to scale cpue by before plotting}
 
-\item{map}{- ggmap raster object for map background}
+\item{map}{- ggmap raster object for base map background}
 
 \item{bbox}{- coordinates of bounding box for map (left, bottom, right, top)}
 
-\item{mapcolors}{- list of colors (land, water) for map background}
+\item{mapcolors}{- list of colors (land, water) for base map background}
 
-\item{bathymetry}{- fortified spatial dataframe or list(dsn=,layer=) specifying bathymetry shapefile to include on map}
+\item{bathymetry}{- fortified spatial dataframe or list(dsn=,layer=) specifying bathymetry shapefile to include on base map}
 
-\item{land}{- fortified spatial dataframe or list(dsn=,layer=) specifying land shapefile to include on map}
+\item{land}{- fortified spatial dataframe or list(dsn=,layer=) specifying land shapefile to include on base map}
 
-\item{layers}{- list of lists(dsn=,layer=) specifying other shapefiles to include on map}
+\item{layers}{- list of ggplot layers to include in base map}
+
+\item{label}{- page title, if 'facs' is empty (length 0)}
 
 \item{ggtheme}{- ggplot2 theme}
 

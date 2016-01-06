@@ -45,6 +45,7 @@ output: word_document
                                      export=FALSE,verbosity=verbosity);
 ```
 
+##Calculate annual station-specific CPUE by sex, maturity, shell condition for all indivs
 ```{r calcCPUE.TrawlSurvey,cache=TRUE,dependson="getData.TrawlSurvey"}
     ##calculate CPUE by haul for all individuals
     dfr.CPUE.ForAll.ByH<-calcCPUE.ByHaul(dfr.HD,dfr.ID,
@@ -55,13 +56,55 @@ output: word_document
     ##calculate CPUE by station for all individuals
     dfr.CPUE.ForAll.ByS<-calcCPUE.ByStation(dfr.SD,dfr.CPUE.ForAll.ByH,
                                             export=FALSE,verbosity=verbosity);
+    drop(dfr.CPUE.ForAll.ByH);
 ```
     
-```{r plotMaps,dependson="calcCPUE.TrawlSurvey"}
-    plots<-plotGGMaps.CPUE(dfr.CPUE.ForAll.ByS[dfr.CPUE.ForAll.ByS$YEAR %in% 2014:2015,],
-                           type='abundance',
-                           facs='SEX',nrow=2,ncol=1,
-                           showPlot=TRUE,verbosity=2);
+##Maps of annual survey CPUE by sex, maturity state
+```{r plotMapsByXM,cache=TRUE,dependson="calcCPUE.TrawlSurvey",fig.width=6,fig.height=8}
+    idx.y<-dfr.CPUE.ForAll.ByS$YEAR %in% 2010:2015;
+    ##plot by sex/maturity
+    dfrp<-dfr.CPUE.ForAll.ByS[idx.y,];
+    plots<-plotGGMaps.CPUE(dfrp, type='abundance',
+                           facs=c('SEX','MATURITY'),
+                           dropLevels = list(SEX = c("HERMAPHRODITE", "MISSING"),
+                                             MATURITY = c("MISSING")),
+                           nrow=3,ncol=2,
+                           showPlot=FALSE,verbosity=0);
+    plots.CPUE.XM<-plots;
+    for (plt in plots.CPUE.XM) print(plt);
+    rm(idx.y,dfrp,plots);
+```
+    
+##Calculate annual station-specific CPUE for preferred males (i.e., > 120 mm CW)
+```{r calcCPUE.TrawlSurvey.PMs,cache=TRUE,dependson="getData.TrawlSurvey"}
+    ##select preferred males
+    dfr.ID.PMs<-selectIndivs.TrawlSurvey(dfr.HD,tbl=fn.ID,
+                                         sex='MALE',shell_condition='ALL',
+                                         maturity='ALL',calcMaleMaturity=FALSE,
+                                         minSize=120,maxSize=Inf,
+                                         export=FALSE,verbosity=verbosity);
+    ##calculate CPUE by haul for preferred males
+    dfr.CPUE.PMs.ByH<-calcCPUE.ByHaul(dfr.HD,dfr.ID.PMs,
+                                      byShellCondition=TRUE,
+                                      export=FALSE,verbosity=verbosity);
+    ##calculate CPUE by station for all individuals
+    dfr.CPUE.PMs.ByS<-calcCPUE.ByStation(dfr.SD,dfr.CPUE.PMs.ByH,
+                                         export=FALSE,verbosity=verbosity);
+    rm(dfr.ID.PMs, dfr.CPUE.PMs.ByH);
+```
+    
+##Maps of annual survey CPUE for preferred males (>= 120 mm CW)
+```{r plotMaps.PreferredMales,cache=TRUE,dependson="calcCPUE.TrawlSurvey.PMs",fig.width=6,fig.height=8,fig.caption="Preferred males (>= 120 mm CW)"}
+    idx.y<-dfr.CPUE.PMs.ByS$YEAR %in% 2010:2015;
+    ##plot preferred males
+    plots<-plotGGMaps.CPUE(dfr.CPUE.PMs.ByS[idx.y,], type='abundance',
+                           facs=c(),
+                           label="Preferred Males (>= 120 mm CW)",
+                           nrow=3,ncol=2,
+                           showPlot=FALSE,verbosity=0);
+    plots.CPUE.PMs<-plots;
+    for (plt in plots.CPUE.PMs) print(plt);
+    rm(idx.y,plots);
 ```
 
 ```{r calcBiomass.TrawlSurvey,cache=TRUE,dependson="calcCPUE.TrawlSurvey"}
