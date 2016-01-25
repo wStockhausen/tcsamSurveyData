@@ -9,7 +9,7 @@
 #'@param keepLevels - list (by elements of facs) of factor levels to keep before plotting
 #'@param dropLevels - list (by elements of facs) of factor levels to drop before plotting
 #'@param max - max for ALL factor combinations (NULL -> scale by max w/in each factor level combination)
-#'@param scale - value to scale cpue by before plotting
+#'@param scale - value to scale cpue by before plotting (max should be expressed in scale units)
 #'@param map - ggmap raster object for base map background
 #'@param bbox - coordinates of bounding box for map (left, bottom, right, top)
 #'@param mapcolors - list of colors (land, water) for base map background
@@ -221,6 +221,16 @@ plotGGMaps.CPUE<-function(cpue,
     if (nf>0) nr<-nrow(ufacs);
     if (verbosity>1) cat("number of factor comb.s is ",nr,"\n");
     
+    if (scale!=1) {
+        if (type=='abundance'){
+            fillTitle<-paste0('Abundance\n',paste0("(",scale,"'s)"));
+        } else {
+            fillTitle<-paste0('Biomass\n',paste0("(",scale,"'s t)"));
+        }
+    } else {
+        fillTitle<-ifelse(type=='abundance','Abundance','Biomass (t)');
+    }
+    
     ctr<-0;
     ps<-list();
     for (rw in 1:nr){
@@ -250,7 +260,7 @@ plotGGMaps.CPUE<-function(cpue,
                 pF <- scale_fill_gradient(low='blue',high='red');
                 pC <- scale_color_gradient(low='blue',high='red');
                 p <- pBase + pL + pP + pS + pF + pC + facet_wrap(~YEAR,ncol=ncol) + ggtheme;
-                p <- p + guides(fill=guide_colorbar(type,order=1),
+                p <- p + guides(fill=guide_colorbar(fillTitle,order=1),
                                 size=guide_legend('',order=2),
                                 color=FALSE);
                 p <- p + labs(list(x='Longitude',y='Latitude'));

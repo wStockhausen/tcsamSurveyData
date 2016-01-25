@@ -30,7 +30,7 @@ plotGGMaps.CPUE(cpue, type = c("abundance", "biomass"), facs = c("SEX",
 
 \item{max}{- max for ALL factor combinations (NULL -> scale by max w/in each factor level combination)}
 
-\item{scale}{- value to scale cpue by before plotting}
+\item{scale}{- value to scale cpue by before plotting (max should be expressed in scale units)}
 
 \item{map}{- ggmap raster object for base map background}
 
