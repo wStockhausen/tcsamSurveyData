@@ -73,6 +73,14 @@ Codes.TrawlSurvey<-function(){
                               ));
     lst[["strata.orig.BKC"]]<-strata.BKC;
     
+    #New strata for 2015 for blue king crab
+    strata.BKC<-as.data.frame(list(
+                              code    =c(                90,             14,               13,                16,                  15),
+                              district=c("BKC Unstratified","Pribilof MTCA","Pribilof Single","St. Matthew MTCA","St. Matthew Single"),
+                              stratum =c("BKC Unstratified","Pribilof MTCA","Pribilof Single","St. Matthew MTCA","St. Matthew Single")
+                              ));
+    lst[["strata.2015.BKC"]]<-strata.BTC;
+    
     #strata conversions to EW166
     strata.EW166<-list(orig=c("East 166","East 166 Single","East 166 Multiple","East 166 Hot Spot","West 166","Pribilof MTCA","St. Matthew MTCA","Pribilof MTCA Hot Spot","West 166 Single","West 166 Multiple"),
                        revd=c("East 166",       "East 166",         "East 166",         "East 166","West 166",     "West 166",        "West 166",              "West 166",       "West 166",         "West 166")
