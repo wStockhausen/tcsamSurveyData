@@ -1,5 +1,5 @@
 #'
-#'@title Plot time series of aggregated catch data.
+#'@title Plot time series of aggregated catch data
 #'
 #'@description Function to plot time series of aggregated catch data.
 #'
@@ -19,9 +19,8 @@
 #'@return list of ggplot2 plot objects
 #'
 #'@details The time series for each factor level combination is plotted
-#'separately. Distinct levels of each factor can be dropped from the
-#'final plot by seting dropLevels to a list with names corresponding to 
-#'factor columns and values being vectors of factor levels to drop.
+#'separately. \code{aggregateCatchData()} should be used to be drop 
+#'undesired factor levels prior to plotting.
 #' 
 #'One plot is created for each distinct level of 'STRATUM'.
 #'

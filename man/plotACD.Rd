@@ -2,7 +2,7 @@
 % Please edit documentation in R/plotACD.R
 \name{plotACD}
 \alias{plotACD}
-\title{Plot time series of aggregated catch data.}
+\title{Plot time series of aggregated catch data}
 \usage{
 plotACD(acd, ylab = "", ci = 0.8, ci.type = "normal", xlims = NULL,
   ylims = NULL, ggtheme = theme_grey(), jitter = TRUE, ncol = 2,
@@ -41,9 +41,8 @@ Function to plot time series of aggregated catch data.
 }
 \details{
 The time series for each factor level combination is plotted
-separately. Distinct levels of each factor can be dropped from the
-final plot by seting dropLevels to a list with names corresponding to 
-factor columns and values being vectors of factor levels to drop.
+separately. \code{aggregateCatchData()} should be used to be drop 
+undesired factor levels prior to plotting.
 
 One plot is created for each distinct level of 'STRATUM'.
 }

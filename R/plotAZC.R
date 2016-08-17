@@ -1,5 +1,5 @@
 #'
-#'@title Plot aggregated size comps from survey data as bars.
+#'@title Plot aggregated size comps from survey data as bars
 #'
 #'@description Function to plot aggregated size comps from survey data as bars.
 #'
@@ -18,16 +18,9 @@
 #'
 #'@return list of ggplot2 plot objects
 #'
-#'@details The time series for each factor level combination is plotted
-#'separately. Distinct levels of each factor can be dropped from the
-#'final plot by seting dropLevels to a list with names corresponding to 
-#'factor columns and values being vectors of factor levels to drop.
-#'
-#''multipliers' is a list of lists, with each sublist has two elements, 'factors' and 'value'.
+#'@details 'multipliers' is a list of lists, with each sublist has two elements, 'factors' and 'value'.
 #''factors' should be a list of factor=level pairs. 'value' should be the value to multiply by. 
 #' 
-#'One plot is created for each distinct level of 'STRATUM'.
-#'
 #'@import ggplot2
 #'@importFrom plyr .
 #'@importFrom reshape2 dcast

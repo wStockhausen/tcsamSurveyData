@@ -15,6 +15,8 @@
 #'\item strata.orig.BTC : original strata for Bairdi Tanner crab
 #'\item strata.revd.BTC : revised strata for Bairdi Tanner crab
 #'\item strata.2015.BTC : 2015 strata for Bairdi Tanner crab
+#'\item strata.orig.BKC : original strata for blue king crab
+#'\item strata.2015.BKC : 2015 strata for blue king crab
 #'\item strata.EW166    : E/W 166W strata
 #'}
 #'
@@ -79,7 +81,7 @@ Codes.TrawlSurvey<-function(){
                               district=c("BKC Unstratified","Pribilof MTCA","Pribilof Single","St. Matthew MTCA","St. Matthew Single"),
                               stratum =c("BKC Unstratified","Pribilof MTCA","Pribilof Single","St. Matthew MTCA","St. Matthew Single")
                               ));
-    lst[["strata.2015.BKC"]]<-strata.BTC;
+    lst[["strata.2015.BKC"]]<-strata.BKC;
     
     #strata conversions to EW166
     strata.EW166<-list(orig=c("East 166","East 166 Single","East 166 Multiple","East 166 Hot Spot","West 166","Pribilof MTCA","St. Matthew MTCA","Pribilof MTCA Hot Spot","West 166 Single","West 166 Multiple"),

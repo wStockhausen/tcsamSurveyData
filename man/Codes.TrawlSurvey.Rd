@@ -23,6 +23,8 @@ a list with the following elements: \cr
 \item strata.orig.BTC : original strata for Bairdi Tanner crab
 \item strata.revd.BTC : revised strata for Bairdi Tanner crab
 \item strata.2015.BTC : 2015 strata for Bairdi Tanner crab
+\item strata.orig.BKC : original strata for blue king crab
+\item strata.2015.BKC : 2015 strata for blue king crab
 \item strata.EW166    : E/W 166W strata
 }
 }
