@@ -4,12 +4,13 @@
 \alias{plotACD}
 \title{Plot time series of aggregated catch data}
 \usage{
-plotACD(acd, ylab = "", ci = 0.8, ci.type = "normal", xlims = NULL,
-  ylims = NULL, ggtheme = theme_grey(), jitter = TRUE, ncol = 2,
-  nrow = 5, showPlots = TRUE, verbosity = 0)
+plotACD(acd, type = c("abundance", "biomass"), ylab = NULL, ci = 0.8,
+  ci.type = "normal", xlims = NULL, ylims = NULL,
+  ggtheme = theme_grey(), jitter = TRUE, ncol = 2, nrow = 5,
+  showPlots = TRUE, verbosity = 0)
 }
 \arguments{
-\item{acd}{- dataframe from call to aggregateCatchData(...)}
+\item{acd}{- dataframe with aggregated catch data (e.g., abundance or biomass)}
 
 \item{ylab}{- y-axis label}
 

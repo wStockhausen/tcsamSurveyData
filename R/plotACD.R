@@ -3,7 +3,10 @@
 #'
 #'@description Function to plot time series of aggregated catch data.
 #'
-#'@param acd - dataframe from call to aggregateCatchData(...)
+#'@param acd - dataframe with aggregated catch data (e.g., abundance or biomass)
+#'@param type - "abundance" or "biomass"
+#'@params factors - column names to use as factors for plots
+#'@param faceting - faceting formula
 #'@param ylab - y-axis label
 #'@param ci - confidence interval for error bars (e.g., 0.95)
 #'@param ci.type - confidence interval type ('normal', 'lognormal')
@@ -25,15 +28,15 @@
 #'One plot is created for each distinct level of 'STRATUM'.
 #'
 #'@import ggplot2
-#'@importFrom plyr .
-#'@importFrom reshape2 dcast
-#'@importFrom reshape2 melt
 #'@importFrom scales squish
 #'
 #'@export
 #'
 plotACD<-function(acd,
-                  ylab="",
+                  type=c("abundance","biomass"),
+									factors=NULL,
+									faceting="stratum",
+                  ylab=NULL,
                   ci=0.8,
                   ci.type='normal',
                   xlims=NULL,
@@ -45,9 +48,17 @@ plotACD<-function(acd,
                   showPlots=TRUE,
                   verbosity=0){
 
-    nf<-ncol(acd)-4;
-    
+    nf<-0
+    if (!is.null(factors)) nf<-length(factors); ##number of "factors", e.g. sex, maturity, shell_condition
+
     dfr<-acd;
+    names(dfr)<-tolower(names(acd));
+    dfr$value<-dfr[[paste0("tot",tolower(type[1]))]];
+    dfr$cv   <-dfr[[paste0("cv",tolower(type[1]))]];
+    if (is.null(ylab)){
+        if (tolower(type[1])=='abundance') ylab<-"Abundance (millions)";
+        if (tolower(type[1])=='biomass')   ylab<-"Biomass (1000's t)";
+    }
     if (tolower(ci.type)=='normal'){
         stdv<-dfr$cv*dfr$value;
         dfr$lci<-qnorm((1-ci)/2,mean=dfr$value,sd=stdv);
@@ -75,7 +86,7 @@ plotACD<-function(acd,
     fax<-'black';
     dfr$yrp <- dfr$year;
     if (nf>0) {
-        facs<-names(acd)[1+(1:nf)];
+        facs<-factors;
         fax<-do.call(paste,c(dfr[tolower(facs)],sep=', '))
         dfr$fax<-fax;
         ulevs<-unique(fax);
@@ -87,11 +98,7 @@ plotACD<-function(acd,
         }
     }
     
-    ctr<-0;
-    ps<-list();
-    for (pg in 1:npg){ #loop over pages
-        dfrp<-dfr[(dfr$stratum %in% strata[(pg-1)*mxp+1:mxp]),];
-        p <- ggplot(data=dfrp);
+        p <- ggplot(data=dfr);
         p <- p + geom_line(aes(x=yrp,y=value,colour=fax),size=1);
         p <- p + geom_errorbar(aes(x=yrp,y=value,ymin=lci,ymax=uci,colour=fax));
         p <- p + geom_point(aes(x=yrp,y=value,color=fax,shape=fax),size=2);
@@ -100,12 +107,9 @@ plotACD<-function(acd,
 #        p <- p + position_jitter()
         p <- p + geom_hline(yintercept=0,colour='black',size=0.5);
         p <- p + labs(x="Year",y=ylab)
-        p <- p + facet_wrap(~stratum,ncol=ncol);
+        if (!is.null(faceting)) p <- p + facet_grid(faceting);
         p <- p + guides(fill=guide_legend(''),colour=guide_legend(''),shape=guide_legend(''));
         p <- p + ggtheme;
         if (showPlots) print(p);
-        ctr<-ctr+1;
-        ps[[ctr]]<-p;
-    }#pg loop
-    return(ps)
+    return(p)
 }
