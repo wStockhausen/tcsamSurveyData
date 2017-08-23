@@ -54,4 +54,3 @@ map will be used to scale that map. If a numeric value, then it is used as the
 z-axis scale for all maps produced. If a named list, the element corresponding to 
 each combination of factors will be used as the z-axis scale for that set of maps.
 }
-

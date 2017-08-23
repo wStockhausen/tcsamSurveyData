@@ -9,8 +9,7 @@
 ggmap.EBS.stamen.toner.z07
 }
 \description{
-A ggmap raster object reflecting a Stamen background toner map of EBS 
+A ggmap raster object reflecting a Stamen background toner map of EBS
 at zoom = 7. The bounding box is left=-180, bottom=54, right=-155, top=63.
 }
 \keyword{datasets}
-

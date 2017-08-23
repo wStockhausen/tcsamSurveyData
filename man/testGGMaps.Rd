@@ -12,4 +12,3 @@ function to test ggmap plotting
 \details{
 test
 }
-

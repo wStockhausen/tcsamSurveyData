@@ -4,13 +4,17 @@
 \alias{plotChelaHeights}
 \title{Plot chela height data}
 \usage{
-plotChelaHeights(dfrp, ratio = 0.18, aggYears = 5, rng = NULL, ncol = 2,
-  showPlot = FALSE)
+plotChelaHeights(dfrp, ratio = 0.18, discrim = NULL, useLnScales = FALSE,
+  aggYears = 5, rng = NULL, ncol = 2, showPlot = FALSE)
 }
 \arguments{
 \item{dfrp}{- dataframe of chela height data from call to getChelaHeights(...)}
 
-\item{ratio}{- default ratio for mature/immature determination}
+\item{ratio}{- default ratio}
+
+\item{discrim}{- optional function taking a vector of sizes (CW) and returning the associated chela height cutline values yielding a "mature" classification}
+
+\item{useLnScales}{- flag (T/F) to plot data on ln-scales}
 
 \item{aggYears}{- number of years over which to aggregate}
 
@@ -29,4 +33,3 @@ Function to plot chela height data
 \details{
 none.
 }
-

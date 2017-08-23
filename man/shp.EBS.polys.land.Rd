@@ -13,4 +13,3 @@ A fortified (spatial) data frame reflecting an Alaska land mask (polygons). Deri
 from the shape file 'data-raw/MapData/Land/Alaska.shp'.
 }
 \keyword{datasets}
-

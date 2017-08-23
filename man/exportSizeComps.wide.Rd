@@ -38,4 +38,3 @@ a potential factor.
 
 Output column order will be STRATUM, facs, YEAR, numStations, numIndivs, size bins
 }
-

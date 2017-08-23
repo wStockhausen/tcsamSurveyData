@@ -65,4 +65,3 @@ Function to plot maps of survey cpue by year and other factors using ggmap and g
 \details{
 none.
 }
-

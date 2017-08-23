@@ -44,4 +44,3 @@ Function to extract chela height data on males w/ selected characteristics from 
 If tbl is NULL, the user will be prompted for a survey csv file via a file dialog box.\cr
 \itemize{\item Weights are in grams.}
 }
-

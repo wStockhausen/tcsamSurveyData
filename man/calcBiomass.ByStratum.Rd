@@ -53,4 +53,3 @@ If tbl_cpue is NULL, the user is prompted to enter a csv file with cpue info. \c
   \item Biomass   is in 10^3 mt
 }
 }
-

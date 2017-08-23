@@ -41,4 +41,3 @@ factor columns and values being vectors of factor levels to drop.
 
 Output column order will be STRATUM, facs, YEAR, value, cv
 }
-

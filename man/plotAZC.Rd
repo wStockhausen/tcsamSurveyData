@@ -42,6 +42,6 @@ Function to plot aggregated size comps from survey data as bars.
 }
 \details{
 'multipliers' is a list of lists, with each sublist has two elements, 'factors' and 'value'.
-'factors' should be a list of factor=level pairs. 'value' should be the value to multiply by.
+'factors' should be a list of factor=level pairs. 'value' should be the value to multiply by. Requires
+\code{scales::squish}.
 }
-

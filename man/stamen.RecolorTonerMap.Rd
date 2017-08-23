@@ -24,4 +24,3 @@ Changes land ("#999999) and water ("#000000) pixels in a ggmap object
 derived from a Stamen toner map to the specified colors. Attributes of the original
 object are copied to the new object.
 }
-

@@ -43,4 +43,3 @@ factor columns and values being vectors of factor levels to drop.
 
 One plot is created for each distinct level of 'STRATUM'.
 }
-

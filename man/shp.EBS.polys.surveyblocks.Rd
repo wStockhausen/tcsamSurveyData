@@ -13,4 +13,3 @@ A fortified (spatial) data frame reflecting EBS survey blocks (polygons). Derive
 from the shape file 'data-raw/MapData/Surveys/NMFS_EBSGroundfishSurveyBlocks.shp'.
 }
 \keyword{datasets}
-

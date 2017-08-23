@@ -50,4 +50,3 @@ The returned dataframe has the following columns: \cr
 \item   wgtCPUE
 }
 }
-

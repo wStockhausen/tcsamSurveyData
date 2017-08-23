@@ -28,4 +28,3 @@ a list with the following elements: \cr
 \item strata.EW166    : E/W 166W strata
 }
 }
-

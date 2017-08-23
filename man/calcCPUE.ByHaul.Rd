@@ -66,4 +66,3 @@ The returned dataframe has the following columns: \cr
 \item   CPUE in weight  is in mt/(sq. nm.)
 } \cr
 }
-

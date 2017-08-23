@@ -29,4 +29,3 @@ Function to return map data objects associated with this package.
  \item "EBS.lines.bathy"
 }
 }
-

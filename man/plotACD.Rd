@@ -4,13 +4,19 @@
 \alias{plotACD}
 \title{Plot time series of aggregated catch data}
 \usage{
-plotACD(acd, type = c("abundance", "biomass"), ylab = NULL, ci = 0.8,
-  ci.type = "normal", xlims = NULL, ylims = NULL,
-  ggtheme = theme_grey(), jitter = TRUE, ncol = 2, nrow = 5,
-  showPlots = TRUE, verbosity = 0)
+plotACD(acd, type = c("abundance", "biomass"), factors = NULL,
+  faceting = "stratum", ylab = NULL, ci = 0.8, ci.type = "normal",
+  xlims = NULL, ylims = NULL, ggtheme = theme_grey(), jitter = TRUE,
+  ncol = 2, nrow = 5, showPlots = TRUE, verbosity = 0)
 }
 \arguments{
 \item{acd}{- dataframe with aggregated catch data (e.g., abundance or biomass)}
+
+\item{type}{- "abundance" or "biomass"}
+
+\item{factors}{- column names to use as factors for plots}
+
+\item{faceting}{- faceting formula}
 
 \item{ylab}{- y-axis label}
 
@@ -42,9 +48,8 @@ Function to plot time series of aggregated catch data.
 }
 \details{
 The time series for each factor level combination is plotted
-separately. \code{aggregateCatchData()} should be used to be drop 
+separately. \code{aggregateCatchData()} should be used to be drop
 undesired factor levels prior to plotting.
 
 One plot is created for each distinct level of 'STRATUM'.
 }
-

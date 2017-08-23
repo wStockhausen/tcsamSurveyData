@@ -28,4 +28,3 @@ The bounding box can be one of the following (see extent{raster}):\cr
 \cr
 Also, the bounding box must be in the same coordinate system as th set of polygons.
 }
-

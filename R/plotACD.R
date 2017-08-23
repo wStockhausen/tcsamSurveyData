@@ -5,7 +5,7 @@
 #'
 #'@param acd - dataframe with aggregated catch data (e.g., abundance or biomass)
 #'@param type - "abundance" or "biomass"
-#'@params factors - column names to use as factors for plots
+#'@param factors - column names to use as factors for plots
 #'@param faceting - faceting formula
 #'@param ylab - y-axis label
 #'@param ci - confidence interval for error bars (e.g., 0.95)
@@ -22,9 +22,9 @@
 #'@return list of ggplot2 plot objects
 #'
 #'@details The time series for each factor level combination is plotted
-#'separately. \code{aggregateCatchData()} should be used to be drop 
+#'separately. \code{aggregateCatchData()} should be used to be drop
 #'undesired factor levels prior to plotting.
-#' 
+#'
 #'One plot is created for each distinct level of 'STRATUM'.
 #'
 #'@import ggplot2
@@ -34,8 +34,8 @@
 #'
 plotACD<-function(acd,
                   type=c("abundance","biomass"),
-									factors=NULL,
-									faceting="stratum",
+				  factors=NULL,
+				  faceting="stratum",
                   ylab=NULL,
                   ci=0.8,
                   ci.type='normal',
@@ -69,20 +69,20 @@ plotACD<-function(acd,
         dfr$lci<-qlnorm((1-ci)/2,meanlog=log(dfr$value),sdlog=sd);
         dfr$uci<-qlnorm(1-(1-ci)/2,meanlog=log(dfr$value),sdlog=sd);
     }
-    
+
     if (!is.null(xlims)){
         idx <- (xlims[1]<=dfr$year)&(dfr$year<=xlims[2]);
         dfr <- dfr[idx,];
     }
-    
+
     mxp<-nrow*ncol;
-    strata<-unique(dfr$stratum);    
+    strata<-unique(dfr$stratum);
     npg<-ceiling(length(strata)/mxp);
-    
+
     if (is.null(ylims)) ylims<-c(min(0,min(dfr$uci,na.rm=TRUE)),max(dfr$uci,na.rm=TRUE));
     if (verbosity>0) cat("ylims = ",ylims,'\n')
     ##cat("jitter =",jitter,"\n")
-    
+
     fax<-'black';
     dfr$yrp <- dfr$year;
     if (nf>0) {
@@ -97,7 +97,7 @@ plotACD<-function(acd,
             dfr$yrp <- dfr$year + jit[dfr$fax];
         }
     }
-    
+
         p <- ggplot(data=dfr);
         p <- p + geom_line(aes(x=yrp,y=value,colour=fax),size=1);
         p <- p + geom_errorbar(aes(x=yrp,y=value,ymin=lci,ymax=uci,colour=fax));

@@ -24,4 +24,3 @@ to csv files in the directory specified by \code{out.dir}.\cr
 \cr Note: if \code{out.dir=NULL}, the directory associated with the 
 trawl survey data file will be used as \code{out.dir}
 }
-

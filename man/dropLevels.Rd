@@ -24,4 +24,3 @@ Distinct levels of each factor can be dropped from the
 exported dataframe by seting dropLevels to a list with names corresponding to 
 factor columns and values being vectors of factor levels to drop.
 }
-

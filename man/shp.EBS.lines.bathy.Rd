@@ -13,4 +13,3 @@ A fortified (spatial) data frame reflecting EBS shelf bathymetry contours (lines
 from the shape file 'data-raw/MapData/Bathymetry/ShelfBathymetry.shp'.
 }
 \keyword{datasets}
-

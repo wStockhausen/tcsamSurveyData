@@ -66,4 +66,3 @@ Returned dataframe will have columns:
 Notes:
 \itemize{\item Weights are in grams.}
 }
-

@@ -6,11 +6,10 @@
 \title{A Stamen toner map for the EBS at zoom = 6}
 \format{A ggmap raster object.}
 \usage{
-ggmap.EBS.stamen.toner.z06
+data(ggmap.EBS.stamen.toner.z06)
 }
 \description{
-A ggmap raster object reflecting a Stamen background toner map of EBS 
+A ggmap raster object reflecting a Stamen background toner map of EBS
 at zoom = 6. The bounding box is left=-180, bottom=54, right=-155, top=63.
 }
 \keyword{datasets}
-

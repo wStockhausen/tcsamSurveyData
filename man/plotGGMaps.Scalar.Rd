@@ -61,4 +61,3 @@ Function to plot maps of survey temperature (or other scalar) by year using ggma
 \details{
 none.
 }
-

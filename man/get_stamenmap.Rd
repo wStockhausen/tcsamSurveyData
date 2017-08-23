@@ -45,4 +45,3 @@ Function to retrieve a stamenmap (replaces ggmap::get_stamenmap)
 \details{
 Requires internet connection.
 }
-

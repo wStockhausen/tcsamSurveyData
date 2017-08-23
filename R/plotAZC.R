@@ -19,12 +19,14 @@
 #'@return list of ggplot2 plot objects
 #'
 #'@details 'multipliers' is a list of lists, with each sublist has two elements, 'factors' and 'value'.
-#''factors' should be a list of factor=level pairs. 'value' should be the value to multiply by. 
-#' 
+#''factors' should be a list of factor=level pairs. 'value' should be the value to multiply by. Requires
+#'\code{scales::squish}.
+#'
 #'@import ggplot2
 #'@importFrom plyr .
 #'@importFrom reshape2 dcast
 #'@importFrom reshape2 melt
+#
 #'
 #'@export
 #'
@@ -42,7 +44,7 @@ plotAZC<-function(zcs,
                   verbosity=0){
     ##make copy of input dataframe
     dfr<-zcs;
-    
+
     ##place limits on size and year to plot
     if (!is.null(xlims)){
         idx<-(xlims[1]<=dfr$size)&(dfr$size<=xlims[2]);
@@ -77,7 +79,7 @@ plotAZC<-function(zcs,
 
     yrs<-unique(dfr$year);
     uz<-unique(dfr$size);
-    
+
     if (is.null(zlims)) {
         mn<-min(dfr$value,na.rm=TRUE);
         mx<-max(dfr$value,na.rm=TRUE);
@@ -88,7 +90,7 @@ plotAZC<-function(zcs,
         }
     }
     if (verbosity>0) {cat("zlims = ",zlims,'\n');}
-    
+
     fax<-'black';
     if (byStratum){
         strata<-unique(dfr$stratum);
@@ -105,7 +107,7 @@ plotAZC<-function(zcs,
         fax<-do.call(paste,c(dfr[tolower(facs)],sep=', '))
         dfr$fax<-fax;
     }
-    
+
     mxp<-nrow*ncol;
     npg<-ceiling(length(yrs)/mxp);
     nyp<-mxp*npg;
@@ -129,7 +131,7 @@ plotAZC<-function(zcs,
     } else {
         dfrnew<-NULL;
     }
-    
+
     ctr<-0;
     ps<-list();
     for (stratum in strata){
@@ -145,7 +147,7 @@ plotAZC<-function(zcs,
             ##p <- p + geom_line(aes(x=size,y=value,colour=fax),size=1)
             p <- p + geom_step(aes(x=size,y=value,colour=fax),size=1,direction='hv');
             p <- p + scale_x_continuous(breaks=pretty(uz));
-            p <- p + scale_y_continuous(breaks=pretty(zlims),limits=zlims,expand=c(0.01,0),oob=squish);
+            p <- p + scale_y_continuous(breaks=pretty(zlims),limits=zlims,expand=c(0.01,0),oob=scales::squish);
             p <- p + geom_hline(yintercept=0,colour='black',size=0.5);
             p <- p + labs(x="Size (mm)",y=zlab,title=stratum);
             p <- p + facet_wrap(~year,ncol=ncol);

@@ -52,4 +52,3 @@ Notes: \cr
 \item   Biomass   is in 10^3 mt
 }
 }
-

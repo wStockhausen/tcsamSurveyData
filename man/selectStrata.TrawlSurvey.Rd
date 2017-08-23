@@ -41,4 +41,3 @@ Returned dataframe has columns:
         \item {STATION_LATITUDE}
         }
 }
-
