@@ -2,8 +2,8 @@ Package: tcsamSurveyData
 Type: Package
 Title: Functions to process AFSC bottom trawl survey data for the Tanner crab
     assessment.
-Version: 2017.08.21
-Date: 2017-08-21
+Version: 2017.08.31
+Date: 2017-08-31
 Author: William Stockhausen
 Maintainer: William Stockhausen <william.stockhausen@noaa.gov>
 Description: Provides a set of functions to calculate and plot abundance,

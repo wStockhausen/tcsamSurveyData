@@ -5,9 +5,10 @@
 \title{Plot time series of aggregated catch data}
 \usage{
 plotACD(acd, type = c("abundance", "biomass"), factors = NULL,
-  faceting = "stratum", ylab = NULL, ci = 0.8, ci.type = "normal",
+  faceting = NULL, facetsScale = "fixed", facetsDrop = FALSE,
+  xlab = "year", ylab = NULL, ci = 0.8, ci.type = "normal",
   xlims = NULL, ylims = NULL, ggtheme = theme_grey(), jitter = TRUE,
-  ncol = 2, nrow = 5, showPlots = TRUE, verbosity = 0)
+  showPlots = TRUE, verbosity = 0)
 }
 \arguments{
 \item{acd}{- dataframe with aggregated catch data (e.g., abundance or biomass)}
@@ -17,6 +18,12 @@ plotACD(acd, type = c("abundance", "biomass"), factors = NULL,
 \item{factors}{- column names to use as factors for plots}
 
 \item{faceting}{- faceting formula}
+
+\item{facetsScale}{- value for \code{scale} parameter passed to \code{facet_grid()} ("fixed","free_x","free_y","free")}
+
+\item{facetsDrop}{- value for \code{drop} parameter passed to \code{facet_grid()} (drop missing facet levels)}
+
+\item{xlab}{- x-axis label ("year")}
 
 \item{ylab}{- y-axis label}
 
@@ -31,10 +38,6 @@ plotACD(acd, type = c("abundance", "biomass"), factors = NULL,
 \item{ggtheme}{- ggplot2 theme}
 
 \item{jitter}{- flag to jitter points}
-
-\item{ncol}{- number of columns of plots per page}
-
-\item{nrow}{- number of rows of plots per page}
 
 \item{showPlots}{- flag to show plots immediately}
 
