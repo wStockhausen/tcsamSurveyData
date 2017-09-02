@@ -6,7 +6,7 @@
 \usage{
 calcSizeComps.EW166(tbl = NULL,
   strata_toEW166 = Codes.TrawlSurvey()[["strata.EW166"]], export = TRUE,
-  out.csv = "SurveySizeComps.EW166.csv", out.dir = NULL, verbosity = 1)
+  out.csv = "SurveySizeComps.EW166.csv", out.dir = NULL, verbosity = 0)
 }
 \arguments{
 \item{tbl}{: data frame with size comps by stratum info from call to \code{\link{calcSizeComps.ByStratum}} or csv file with size comps by stratum info, or NULL}

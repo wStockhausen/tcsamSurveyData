@@ -7,7 +7,7 @@
 getChelaHeights(tbl_hauls, tbl = NULL, col.Size = "WIDTH",
   shell_condition = c("NEW_SHELL", "OLD_SHELL", "ALL"), minSize = -Inf,
   maxSize = Inf, showPlot = TRUE, export = FALSE,
-  out.csv = "ChelaHeights.csv", out.dir = NULL, verbosity = 1, ...)
+  out.csv = "ChelaHeights.csv", out.dir = NULL, verbosity = 0, ...)
 }
 \arguments{
 \item{tbl_hauls}{- hauls table (dataframe) from call to selectHauls.TrawlSurvey(...) [required]}

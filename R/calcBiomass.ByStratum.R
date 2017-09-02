@@ -5,7 +5,7 @@
 #'@param   tbl_cpue   : data frame w/ cpue by year, station, other factor levels (or csv filename or NULL)
 #'@param   export  : boolean flag to write results to csv file
 #'@param   out.csv : output file name
-#'@param   out.dir : output file directory 
+#'@param   out.dir : output file directory
 #'@param verbosity : integer flag indicating level of printed output (0=off,1=minimal,2=full)
 #'
 #'@description This function calculates average cpue, numbers and biomass by stratum from cpue (by survey station or by haul).
@@ -15,8 +15,8 @@
 #'\itemize{
 #'   \item Area is in square nautical miles
 #'   \item CPUE in numbers is in no/(sq. nm.)
-#'   \item CPUE in weight  is in mt/(sq. nm.) 
-#'   \item Abundance is in 10^6 indivs 
+#'   \item CPUE in weight  is in mt/(sq. nm.)
+#'   \item Abundance is in 10^6 indivs
 #'   \item Biomass   is in 10^3 mt
 #'}
 #'
@@ -49,16 +49,16 @@ calcBiomass.ByStratum<-function(tbl_strata,
                                 export=FALSE,
                                 out.csv='SurveyBiomass.ByStratum.csv',
                                 out.dir=NULL,
-                                verbosity=1){
+                                verbosity=0){
     if (verbosity>1) cat("starting calcBiomass.ByStratum\n");
-    
+
     if (!is.data.frame(tbl_strata)) {
         cat("Error in calcBiomass.ByStratum:",
             "tbl_strata is NULL. Must supply tbl_strata.",
             "Aborting...",sep='\n');
         return(NULL);
     }
-    
+
     in.csv<-NULL;
     if (!is.data.frame(tbl_cpue)){
         if (!is.character(tbl_cpue)) {
@@ -71,15 +71,15 @@ calcBiomass.ByStratum<-function(tbl_strata,
         tbl<-read.csv(in.csv,stringsAsFactors=FALSE);
         if (verbosity>1) cat("Done reading input csv file.\n")
     }
-    
+
     if (is.null(out.dir)) {
         out.dir<-dirname(file.path('.'));
         if (!is.null(in.csv)) {out.dir<-dirname(file.path(in.csv));}
     }
     if (verbosity>0) cat("Output directory for calcCPUE.ByStratum will be '",out.dir,"'\n",sep='');
-    
+
     #determine columns of cpue table
-    cols<-names(tbl_cpue); 
+    cols<-names(tbl_cpue);
     nc<-length(cols);
     byHaul<-any(cols=="HAULJOIN");
     if (byHaul){
@@ -99,7 +99,7 @@ calcBiomass.ByStratum<-function(tbl_strata,
         byHaulSub<-"";
         numHaulSub<-"c.numHauls,c.numNonZeroHauls,";#number of hauls/station
     }
-    
+
     #assign (possibly) new strata to cpue table
     qry<-"select
             c.YEAR,
@@ -127,7 +127,7 @@ calcBiomass.ByStratum<-function(tbl_strata,
     }
     if (verbosity>1) cat("\nquery is:\n",qry,"\n");
     tbl1<-sqldf(qry);
-    
+
     #calculate number of unique stations
     #calculate average cpues over strata
     qry<-"select
@@ -153,7 +153,7 @@ calcBiomass.ByStratum<-function(tbl_strata,
     }
     if (verbosity>1) cat("\nquery is:\n",qry,"\n");
     tbl2<-sqldf(qry);
-    
+
     #calculate variances
     qry<-"select
             a.YEAR as YEAR,
@@ -194,25 +194,25 @@ calcBiomass.ByStratum<-function(tbl_strata,
     }
     if (verbosity>1) cat("\nquery is:\n",qry,"\n");
     tbl3<-sqldf(qry);
-    
+
     #compute std. errors of means from variances and scale to totals by stratum
     if (byHaul){n<-tbl3$numHauls;} else {n<-tbl3$numStations;}
     tbl3$seNUMCPUE<-sqrt(((n/(n-1))*tbl3$seNUMCPUE)/n);
     tbl3$totABUNDANCE<-tbl3$STRATUM_AREA*tbl3$avgNUMCPUE/1.0E6;#scale abundance to millions
-    tbl3$stdABUNDANCE<-tbl3$STRATUM_AREA*tbl3$seNUMCPUE /1.0E6;#scale abundance to millions    
+    tbl3$stdABUNDANCE<-tbl3$STRATUM_AREA*tbl3$seNUMCPUE /1.0E6;#scale abundance to millions
     tbl3$cvABUNDANCE <-tbl3$stdABUNDANCE/tbl3$totABUNDANCE;
     idx<-is.nan(tbl3$cvABUNDANCE);
-    tbl3$cvABUNDANCE[idx]<-0; 
-    
+    tbl3$cvABUNDANCE[idx]<-0;
+
     tbl3$seWGTCPUE<-sqrt(((n/(n-1))*tbl3$seWGTCPUE)/n);
     tbl3$totBIOMASS  <-tbl3$STRATUM_AREA*tbl3$avgWGTCPUE/1.0E3;#biomass in 1000's t
     tbl3$stdBIOMASS  <-tbl3$STRATUM_AREA*tbl3$seWGTCPUE/1.0E3; #biomass in 1000's t
     tbl3$cvBIOMASS   <-tbl3$stdBIOMASS/tbl3$totBIOMASS;
     idx<-is.nan(tbl3$cvBIOMASS);
-    tbl3$cvBIOMASS[idx]<-0; 
-    
+    tbl3$cvBIOMASS[idx]<-0;
+
     tbl3<-subset(tbl3,select=-c(avgNUMCPUE,seNUMCPUE,avgWGTCPUE,seWGTCPUE));
-    
+
     if (export){
         if (!is.null(out.dir)){
             if (verbosity>1) cat("\nTesting existence of folder '",out.dir,"'\n",sep='')
@@ -226,7 +226,7 @@ calcBiomass.ByStratum<-function(tbl_strata,
         }
         write.csv(tbl3,out.csv,na='',row.names=FALSE);
     }
-    
+
     if (verbosity>1) cat("finished calcBiomass.ByStratum\n");
     return(tbl3);
 }

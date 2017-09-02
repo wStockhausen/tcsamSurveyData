@@ -9,7 +9,7 @@ selectIndivs.TrawlSurvey(tbl_hauls, tbl = NULL, col.Size = "WIDTH",
   "OLD_SHELL", "ALL"), maturity = c("IMMATURE", "MATURE", "ALL"),
   calcMaleMaturity = FALSE, minSize = -Inf, maxSize = Inf,
   export = FALSE, out.csv = "SelectedIndivs.csv", out.dir = NULL,
-  verbosity = 1)
+  verbosity = 0)
 }
 \arguments{
 \item{tbl_hauls}{: hauls table (dataframe) from call to selectHauls.TrawlSurvey(...) [required]}

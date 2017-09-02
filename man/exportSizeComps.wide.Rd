@@ -6,7 +6,7 @@
 \usage{
 exportSizeComps.wide(dfr, facs = "", var = c("ABUNDANCE", "BIOMASS"),
   dropLevels = NULL, export = FALSE, out.csv = paste("SurveySizeComps",
-  var[1], "wide.csv", sep = "."), out.dir = NULL, verbosity = 1)
+  var[1], "wide.csv", sep = "."), out.dir = NULL, verbosity = 0)
 }
 \arguments{
 \item{dfr}{- dataframe with survey size comps from call to \code{\link{calcSizeComps.ByStratum}} or  \code{\link{calcSizeComps.EW166}} or  \code{\link{calcSizeComps.EBS}}}
@@ -33,7 +33,7 @@ Function to reshape a survey size comps dataframe in wide format for the stock a
 }
 \details{
 Factors (e.g., 'SEX', 'MATURITY', 'SHELL_CONDITION') in the input dataframe that are
-missing from the 'facs' vector will be aggregated over by summing. STRATUM is \bold{not} regarded as 
+missing from the 'facs' vector will be aggregated over by summing. STRATUM is \bold{not} regarded as
 a potential factor.
 
 Output column order will be STRATUM, facs, YEAR, numStations, numIndivs, size bins

@@ -6,7 +6,7 @@
 \usage{
 calcBiomass.EW166(tbl = NULL,
   strata_toEW166 = Codes.TrawlSurvey()[["strata.EW166"]], export = TRUE,
-  out.csv = "SurveyBiomass.EW166.csv", out.dir = NULL, verbosity = 1)
+  out.csv = "SurveyBiomass.EW166.csv", out.dir = NULL, verbosity = 0)
 }
 \arguments{
 \item{tbl}{: data frame with biomass by stratum info from call to \code{\link{calcBiomass.ByStratum}} or csv file with biomass by stratum info, or NULL}
@@ -36,7 +36,7 @@ Dataframe w/ estimates of abundance, biomass by year, strata as east/west of 166
 \item  stdABUNDANCE    = std deviation of estimated abundance
 \item  cvABUNDANCE     = cv of estiamted abundance
 \item  totBIOMASS      = estimated biomass
-\item  stdBIOMASS      = std deviation of estimated biomass 
+\item  stdBIOMASS      = std deviation of estimated biomass
 \item  cvBIOMASS       = cv of estimated biomass
 }
 }

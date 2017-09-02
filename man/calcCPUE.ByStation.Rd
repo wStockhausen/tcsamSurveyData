@@ -5,7 +5,7 @@
 \title{Function to calculate cpue by survey station, averaging over cpue by haul.}
 \usage{
 calcCPUE.ByStation(tbl_strata = NULL, tbl_cpue = NULL, export = FALSE,
-  out.csv = "cpue.ByStation.csv", out.dir = NULL, verbosity = 1)
+  out.csv = "cpue.ByStation.csv", out.dir = NULL, verbosity = 0)
 }
 \arguments{
 \item{tbl_strata}{: dataframe w/ station info}
@@ -21,7 +21,7 @@ calcCPUE.ByStation(tbl_strata = NULL, tbl_cpue = NULL, export = FALSE,
 \item{verbosity}{: integer flag indicating level of printed output (0=off,1=minimal,2=full)}
 }
 \value{
-A dataframe of cpue (numbers and weight) by year, stratum, survey station 
+A dataframe of cpue (numbers and weight) by year, stratum, survey station
 and other factors with the following columns. See Details.
 }
 \description{

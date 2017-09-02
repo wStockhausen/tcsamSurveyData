@@ -7,7 +7,7 @@
 selectHauls.TrawlSurvey(tbl_strata, tbl = NULL, Years = NULL,
   HaulTypes = NULL, YearRange = NULL, DepthRange = NULL,
   LatRange = NULL, LonRange = NULL, export = FALSE,
-  out.csv = "SelectedSurveyHauls.csv", out.dir = NULL, verbosity = 1)
+  out.csv = "SelectedSurveyHauls.csv", out.dir = NULL, verbosity = 0)
 }
 \arguments{
 \item{tbl_strata}{- dataframe from call to selectStrata.TrawlSurvey(...) [required]}

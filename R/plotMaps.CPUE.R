@@ -14,24 +14,24 @@
 #'@param verbosity : integer flag indicating level of printed output (0=off,1=minimal,2=full)
 #'
 #'@return the max zscale, or a named list (names corresponding to individual factor combinations)
-#'of max zscales that were used for plots. This value can be used to scale all maps 
+#'of max zscales that were used for plots. This value can be used to scale all maps
 #'(if a single numeric value) or maps corresponding to a given factor combination (if
 #'a named list) when running the function on the same cpue values a second time.
 #'
 #'@details Needs to filled in. \cr
 #'Note: Multiple values at the same location will be summed prior to being mapped.
 #'\cr
-#'Note: zscl can be NULL, a numeric value, or a named list with numeric values as 
+#'Note: zscl can be NULL, a numeric value, or a named list with numeric values as
 #'list elements. If NULL, then the max z value for the data plotted on an individual
-#'map will be used to scale that map. If a numeric value, then it is used as the 
-#'z-axis scale for all maps produced. If a named list, the element corresponding to 
+#'map will be used to scale that map. If a numeric value, then it is used as the
+#'z-axis scale for all maps produced. If a named list, the element corresponding to
 #'each combination of factors will be used as the z-axis scale for that set of maps.
 #'
 #' @importFrom sqldf sqldf
 #' @importFrom wtsGMT createPDF.fromPS
 #' @importFrom wtsGMT plotMap.CSV
 #' @importFrom wtsUtilities selectFile
-#'      
+#'
 #'@export
 #'
 plotMaps.CPUE<-function(tbl_cpue,
@@ -61,7 +61,7 @@ plotMaps.CPUE<-function(tbl_cpue,
                         bathymetryFile='/Users/WilliamStockhausen/Programming/R/GitPackages/wtsGMT/data/depthcontour_200500.prn',
                         basename='SurveyMaps',
                         cleanup=TRUE,
-                        verbosity=1){
+                        verbosity=0){
 
     #figure out whether tbl_cpue is by haul or by station
     cols<-names(tbl_cpue); #column names
@@ -75,14 +75,14 @@ plotMaps.CPUE<-function(tbl_cpue,
         nd<-3; #number of data columns
     }
     nf<-nc-(ns+nd);#number of factor columns for cpue by station
-    
+
     #determine years, if necessary
     if (is.null(years)){
         qry<-"select distinct YEAR from tbl_cpue order by YEAR;"
         tbl_years<-sqldf(qry);
         years<-tbl_years$YEARS;
     }
-    
+
     #determine factor levels
     if (nf>0){
         facs<-cols[(ns+1):(nc-nd)];
@@ -93,7 +93,7 @@ plotMaps.CPUE<-function(tbl_cpue,
         cat("Unique factor level combinations that could be plotted:\n")
         print(tbl_ufacs);
     }
-    
+
     #plot the maps
     if (nf==0){
         #no factor levels to plot by
@@ -146,9 +146,9 @@ plotMaps.CPUE<-function(tbl_cpue,
             facstr<-paste(facs[1],'=',ufac[[facs[1]]],sep='');
             if (nf>1) {for (i in 2:nf) {facstr<-paste(facstr,paste(facs[i],'=',ufac[[facs[i]]],sep=''),sep=',');}}
             cat("\t",facstr,"\n")
-            qry<-"select 
+            qry<-"select
                     &&cols
-                  from 
+                  from
                     tbl_cpue c, ufac u
                   where
                     &&whr;"
@@ -167,7 +167,7 @@ plotMaps.CPUE<-function(tbl_cpue,
                     if ((nrow(tblp)>0)&&sum(abs(tblp[[ztype]])>0)){
                         cat("Plotting map for ",yrstr,'\n')
                         #sum ztype data at each location, in case of multiple values
-                        qry<-"select 
+                        qry<-"select
                                 LONGITUDE,LATITUDE,
                                 sum(&&ztype) as ZDATA
                               from tblp

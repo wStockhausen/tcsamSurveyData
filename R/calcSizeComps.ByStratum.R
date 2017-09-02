@@ -23,24 +23,24 @@
 #'@param shell_condition  : one of 'NEW_SHELL','OLD_SHELL' or 'ALL' for narrowing selection of individuals
 #'@param maturity         : one of 'IMMATURE','MATURE' or 'ALL' for narrowing selection of individuals
 #'@param calcMaleMaturity : flag (T/F) to calculate pr(mature|size) for males based on an ogive
-#'@param minSize          : minimum size (width) of individuals to select 
-#'@param maxSize          : maximum size (width) of individuals to select 
+#'@param minSize          : minimum size (width) of individuals to select
+#'@param maxSize          : maximum size (width) of individuals to select
 #'@param export  : boolean flag to write results to csv file
 #'@param out.csv : output file name
-#'@param out.dir : output file directory 
+#'@param out.dir : output file directory
 #'@param verbosity : integer flag indicating level of printed output (0=off,1=minimal,2=full)
 #'
 #'@description This function calculates size compositions by stratum from cpue (by survey station or by haul).
 #'
 #'@details If tbl_cpue is not a dataframe, it can be a cpue csv file or NULL. If it is NULL,
 #'then tbl_hauls (tbl_indivs) must either be: 1) a dataframe of hauls (indivs); 2) a filename
-#'for a hauls (indivs), or 3) NULL (in which case the user may select the csv file using 
+#'for a hauls (indivs), or 3) NULL (in which case the user may select the csv file using
 #'a dialog box). \cr
-#'\cr 
+#'\cr
 #'Other notes: \cr
 #'\itemize{
 #'   \item{Area is in square nautical miles}
-#'   \item{Abundance is in 10^6 indivs} 
+#'   \item{Abundance is in 10^6 indivs}
 #'   \item{Biomass   is in 10^3 mt}
 #'}
 #'
@@ -92,29 +92,29 @@ calcSizeComps.ByStratum<-function(tbl_strata,
                                   export=FALSE,
                                   out.csv='SurveySizeComps.ByStratum.csv',
                                   out.dir=NULL,
-                                  verbosity=1){
-    if (verbosity>1) cat("starting calcSizeComps.ByStratum\n");
-    
+                                  verbosity=0){
+    if (verbosity>0) cat("starting calcSizeComps.ByStratum\n");
+
     if (!is.data.frame(tbl_strata)) {
         cat("Error in calcSizeComps.ByStratum:",
             "tbl_strata is NULL. Must supply tbl_strata.",
             "Aborting...",sep='\n');
         return(NULL);
     }
-    
+
     in.csv<-NULL;
     if (!is.data.frame(tbl_cpue)){
-        cat("tbl_cpue is not a dataframe\n")
+        if (verbosity>1) cat("tbl_cpue is not a dataframe\n")
         if (is.character(tbl_cpue)){
-            cat("reading cpue file\n")
+            if (verbosity>1) cat("reading cpue file\n")
             if (is.null(out.dir)) out.dir<-dirname(tbl_cpue);
             if (verbosity>1) cat("Reading cpue file.\n",sep='')
             tbl<-read.csv(in.csv,stringsAsFactors=FALSE);
             if (verbosity>1) cat("Done reading input csv file.\n")
         } else {
-            cat("creating tbl_cpue from hauls and indivs info\n")
+            if (verbosity>1) cat("creating tbl_cpue from hauls and indivs info\n")
             if (!is.data.frame(tbl_hauls)){
-                cat("tbl_hauls is not a dataframe\n")
+                if (verbosity>1) cat("tbl_hauls is not a dataframe\n")
                 if (!is.character(tbl_hauls)) {
                     in.csv<-selectFile(ext="csv",caption="Select csv file with haul info");
                     if (is.null(in.csv)|(in.csv=='')) return(NULL);
@@ -138,7 +138,7 @@ calcSizeComps.ByStratum<-function(tbl_strata,
                 }
             }#creating tbl_hauls
             if (!is.data.frame(tbl_indivs)){
-                cat("tbl_indivs is not a dataframe\n")
+                if (verbosity>1) cat("tbl_indivs is not a dataframe\n")
                 if (!is.character(tbl_indivs)) {
                     in.csv<-selectFile(ext="csv",caption="Select csv file with indivs info");
                     if (is.null(in.csv)|(in.csv=='')) return(NULL);
@@ -174,17 +174,17 @@ calcSizeComps.ByStratum<-function(tbl_strata,
                                       truncate.high=truncate.high,
                                       verbosity=verbosity);
             if (avgHaulsByStation) {
-                cat("averaging cpue by station\n")
+                if (verbosity>1) cat("averaging cpue by station\n")
                 tbl_cpue<-calcCPUE.ByStation(tbl_strata,tbl_cpue);
             }
         }#creating tbl_cpue
     }#read in or created tbl_cpue
-    
+
     #Now calculate size comps
     tbl_zcs<-calcBiomass.ByStratum(tbl_strata,tbl_cpue=tbl_cpue,export=FALSE,verbosity=0);
     #Drop lots of columns
     tbl_zcs<-subset(tbl_zcs,select=-c(stdABUNDANCE,cvABUNDANCE,stdBIOMASS,cvBIOMASS))
-    
+
     #now expand to all sizes
     tbl_ufacs<-subset(tbl_zcs,select=-c(SIZE,numIndivs,totABUNDANCE,totBIOMASS));
     ucols<-names(tbl_ufacs);
@@ -194,22 +194,22 @@ calcSizeComps.ByStratum<-function(tbl_strata,
           from tbl_ufacs;";
     qry<-gsub("&&ucols",paste(ucols[1:(length(ucols)-1)],collapse=","),qry)
     tbl_ufacs<-sqldf(qry);
-    
+
     tbl_zs<-as.data.frame(list(SIZE=cutpts[1:(length(cutpts)-1)]))
     qry<-"select * from tbl_ufacs, tbl_zs;";
     tbl_uzfacs<-sqldf(qry);
-    
+
     #rearrange column names to get SIZE at end of other factors (if any)
     nms<-names(tbl_uzfacs);
     nc<-length(nms);
     nmsp<-c(nms[1:(nc-4)],nms[nc],nms[(nc-3):(nc-1)]);
-    
+
     ucols<-paste("u",nmsp,sep='.');
     zcols<-paste("z",nmsp,sep='.');
     ucolstr<-paste(ucols,collapse=",")
     ncols<-length(ucols);
     joinConds<-paste(ucols[1:(ncols-3)],zcols[1:(ncols-3)],sep='=',collapse=' and ');
-    
+
     qry<-"select
             &&ucols,z.numIndivs,z.totABUNDANCE,z.totBIOMASS
           from
@@ -221,15 +221,15 @@ calcSizeComps.ByStratum<-function(tbl_strata,
             &&ucols;"
     qry<-gsub("&&ucols",ucolstr,qry);
     qry<-gsub("&&joinConds",joinConds,qry);
-    cat(qry,'\n')
+    if (verbosity>0) cat(qry,'\n')
     tbl_zcs1<-sqldf(qry);
-    
+
     #change NAs to 0s in formerly missing cells
     idx<-is.na(tbl_zcs1$numIndivs);
     tbl_zcs1$numIndivs[idx]<-0;
     tbl_zcs1$totABUNDANCE[idx]<-0;
     tbl_zcs1$totBIOMASS[idx]<-0;
-            
+
     if (export){
         if (!is.null(out.dir)){
             if (verbosity>1) cat("\nTesting existence of folder '",out.dir,"'\n",sep='')
@@ -243,7 +243,7 @@ calcSizeComps.ByStratum<-function(tbl_strata,
         }
         write.csv(tbl_zcs1,out.csv,na='',row.names=FALSE);
     }
-    
+
     if (verbosity>1) cat("finished calcSizeComps.ByStratum\n");
     return(tbl_zcs1);
 }

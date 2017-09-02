@@ -7,7 +7,7 @@
 #'@param strata_toEW166 : data frame w/ conversion from original strata to EW166 strata
 #'@param export      : boolean flag to write results to csv file
 #'@param out.csv     : output file name
-#'@param out.dir     : output file directory 
+#'@param out.dir     : output file directory
 #'@param verbosity   : integer flag indicating level of printed output (0=off,1=minimal,2=full)
 #'
 #'@return  Dataframe w/ estimates of abundance, biomass by year, strata as east/west of 166W, and other factors. Columns are \cr
@@ -24,7 +24,7 @@
 #'\item  stdABUNDANCE    = std deviation of estimated abundance
 #'\item  cvABUNDANCE     = cv of estiamted abundance
 #'\item  totBIOMASS      = estimated biomass
-#'\item  stdBIOMASS      = std deviation of estimated biomass 
+#'\item  stdBIOMASS      = std deviation of estimated biomass
 #'\item  cvBIOMASS       = cv of estimated biomass
 #'}
 #'
@@ -38,7 +38,7 @@
 #'
 #' @importFrom sqldf sqldf
 #' @importFrom wtsUtilities selectFile
-#'      
+#'
 #'@export
 #'
 calcBiomass.EW166<-function(tbl=NULL,
@@ -46,9 +46,9 @@ calcBiomass.EW166<-function(tbl=NULL,
                           export=TRUE,
                           out.csv='SurveyBiomass.EW166.csv',
                           out.dir=NULL,
-                          verbosity=1){
+                          verbosity=0){
     if (verbosity>1) cat("starting calcBiomass.EW166\n");
-    
+
     in.csv<-NULL;
     if (!is.data.frame(tbl)){
         if (!is.character(tbl)) {
@@ -61,20 +61,20 @@ calcBiomass.EW166<-function(tbl=NULL,
         tbl<-read.csv(in.csv,stringsAsFactors=FALSE);
         if (verbosity>1) cat("Done reading input csv file.\n")
     }
-    
+
     if (is.null(out.dir)) {
         out.dir<-dirname(file.path('.'));
         if (!is.null(in.csv)) {out.dir<-dirname(file.path(in.csv));}
     }
     if (verbosity>0) cat("Output directory for calcBiomass.EW166 will be '",out.dir,"'\n",sep='');
-    
+
     #determine columns of biomass by stratum table
-    cols<-names(tbl); 
+    cols<-names(tbl);
     nc<-length(cols);
     nc0f<-13;
-    if (nc==nc0f){facs<-'';} else 
+    if (nc==nc0f){facs<-'';} else
     {facs<-cols[4:(3+nc-nc0f)];}#extract factor columns
-                                 
+
     qry<-"select
             t.YEAR,
             s.revd as newSTRATUM,
@@ -93,7 +93,7 @@ calcBiomass.EW166<-function(tbl=NULL,
             strata_toEW166 as s
           where
             t.STRATUM=s.orig
-          order by 
+          order by
             t.YEAR,s.revd,t.STRATUM&&facs;"
     if (nc==13) {
         qry<-gsub("&&facs",'',qry);
@@ -102,7 +102,7 @@ calcBiomass.EW166<-function(tbl=NULL,
     }
     if (verbosity>1) cat("\nquery is:\n",qry,"\n");
     tbl2<-sqldf(qry);
-    
+
     qry<-"select
             YEAR,
             newSTRATUM as STRATUM,
@@ -119,9 +119,9 @@ calcBiomass.EW166<-function(tbl=NULL,
             1.1 as cvBIOMASS
           from
             tbl2
-          group by 
+          group by
             YEAR,newSTRATUM&&facs
-          order by 
+          order by
             YEAR,newSTRATUM&&facs;"
     if (nc==nc0f) {
         qry<-gsub("&&facs",'',qry);
@@ -130,18 +130,18 @@ calcBiomass.EW166<-function(tbl=NULL,
     }
     if (verbosity>1) cat("\nquery is:\n",qry,"\n");
     tbl1<-sqldf(qry);
-    
+
     #convert columns to final values
     tbl1$stdABUNDANCE<-sqrt(tbl1$stdABUNDANCE);#convert from var to stdv
     tbl1$cvABUNDANCE <-tbl1$stdABUNDANCE/tbl1$totABUNDANCE;
     idx<-is.nan(tbl1$cvABUNDANCE);
-    tbl1$cvABUNDANCE[idx]<-0; 
-    
+    tbl1$cvABUNDANCE[idx]<-0;
+
     tbl1$stdBIOMASS  <-sqrt(tbl1$stdBIOMASS);  #convert from var to stdv
     tbl1$cvBIOMASS  <-tbl1$stdBIOMASS/tbl1$totBIOMASS;
     idx<-is.nan(tbl1$cvBIOMASS);
-    tbl1$cvBIOMASS[idx]<-0; 
-                                 
+    tbl1$cvBIOMASS[idx]<-0;
+
     if (export){
         if (!is.null(out.dir)){
             if (verbosity>1) cat("\nTesting existence of folder '",out.dir,"'\n",sep='')
@@ -155,7 +155,7 @@ calcBiomass.EW166<-function(tbl=NULL,
         }
         write.csv(tbl1,out.csv,na='',row.names=FALSE);
     }
-    
+
     if (verbosity>1) cat("finished calcBiomass.EW166\n");
     return(tbl1)
 }

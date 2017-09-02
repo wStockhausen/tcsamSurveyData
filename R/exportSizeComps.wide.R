@@ -6,16 +6,16 @@
 #'@param dfr  - dataframe with survey size comps from call to \code{\link{calcSizeComps.ByStratum}} or  \code{\link{calcSizeComps.EW166}} or  \code{\link{calcSizeComps.EBS}}
 #'@param facs - vector of 'factor' column names (e.g., 'SEX', 'MATURITY') for output
 #'@param var  - variable type to extract ("ABUNDANCE" or "BIOMASS")
-#'@param dropLevels - factor levels to drop 
+#'@param dropLevels - factor levels to drop
 #'@param export  - boolean flag to write results to csv file
 #'@param out.csv - output file name
-#'@param out.dir - output file directory 
+#'@param out.dir - output file directory
 #'@param verbosity - integer flag indicating level of printed output (0=off,1=minimal,2=full)
 #'
 #'@return dataframe with size comps in 'wide' format.
 #'
 #'@details Factors (e.g., 'SEX', 'MATURITY', 'SHELL_CONDITION') in the input dataframe that are
-#'missing from the 'facs' vector will be aggregated over by summing. STRATUM is \bold{not} regarded as 
+#'missing from the 'facs' vector will be aggregated over by summing. STRATUM is \bold{not} regarded as
 #'a potential factor.
 #'
 #'Output column order will be STRATUM, facs, YEAR, numStations, numIndivs, size bins
@@ -33,8 +33,8 @@ exportSizeComps.wide<-function(dfr,
                                 export=FALSE,
                                 out.csv=paste('SurveySizeComps',var[1],'wide.csv',sep='.'),
                                 out.dir=NULL,
-                                verbosity=1){
-    
+                                verbosity=0){
+
     #determine data type to plot
     if (toupper(var[1])=='ABUNDANCE'){
         ylab<-'abundance';
@@ -47,7 +47,7 @@ exportSizeComps.wide<-function(dfr,
         return(NULL);
     }
     var<-paste("tot",toupper(var[1]),sep='');
-    
+
     #determine id and measure variables for melting
     nf<-length(facs)
     if (nf>0){
@@ -58,10 +58,10 @@ exportSizeComps.wide<-function(dfr,
         id.z<-2;#index of SIZE column
     }
     measure.vars<-c("numIndivs",var[1]);
-    
+
     #melt the input dataframe
     mdfr<-melt(dfr,id.vars,measure.vars,factorsAsStrings=TRUE);
-    
+
     #drop requested factor levels
     if (is.list(dropLevels)){
         dfacs<-names(dropLevels);
@@ -69,7 +69,7 @@ exportSizeComps.wide<-function(dfr,
             mdfr<-mdfr[!(mdfr[[dfac]] %in% dropLevels[[dfac]]),];
         }
     }
-    
+
     #calculate the number of individuals sampled, summing over aggregated factors
     str<-"STRATUM&&facs+YEAR+numStations~.";
     if (nf>0){
@@ -83,7 +83,7 @@ exportSizeComps.wide<-function(dfr,
                          subset=.(variable=="numIndivs"),
                          value.var="value")
     ss<-zcs.ss.wide[["."]]
-    
+
     #calculate the abundance or biomass, summing over aggregated factors
     str<-"STRATUM&&facs+YEAR~SIZE";
     if (nf>0){
@@ -96,13 +96,13 @@ exportSizeComps.wide<-function(dfr,
                       fun.aggregate=sum,
                       subset=.(variable==var[1]),
                       value.var="value");
-    
+
     #add in sample size column
     zcs.wide<-cbind(list(numIndivs=ss),zcs.wide)
-    
+
     #rearrange columns to standard order
     zcs.wide<-zcs.wide[,c(2:(2+nf+1),1,(2+nf+2):ncol(zcs.wide))];
-            
+
     if (export){
         if (!is.null(out.dir)){
             if (verbosity>1) cat("\nTesting existence of folder '",out.dir,"'\n",sep='')
@@ -116,6 +116,6 @@ exportSizeComps.wide<-function(dfr,
         }
         write.csv(zcs.wide,out.csv,na='',row.names=FALSE);
     }
-    
+
     return(zcs.wide);
 }

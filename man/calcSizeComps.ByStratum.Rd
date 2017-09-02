@@ -14,7 +14,7 @@ calcSizeComps.ByStratum(tbl_strata, tbl_cpue = NULL, tbl_hauls = NULL,
   maturity = c("IMMATURE", "MATURE", "ALL"), calcMaleMaturity = FALSE,
   minSize = -Inf, maxSize = Inf, export = FALSE,
   out.csv = "SurveySizeComps.ByStratum.csv", out.dir = NULL,
-  verbosity = 1)
+  verbosity = 0)
 }
 \arguments{
 \item{tbl_strata}{: data frame from call to \code{\link{selectStrata.TrawlSurvey}} [required]}
@@ -95,13 +95,13 @@ This function calculates size compositions by stratum from cpue (by survey stati
 \details{
 If tbl_cpue is not a dataframe, it can be a cpue csv file or NULL. If it is NULL,
 then tbl_hauls (tbl_indivs) must either be: 1) a dataframe of hauls (indivs); 2) a filename
-for a hauls (indivs), or 3) NULL (in which case the user may select the csv file using 
+for a hauls (indivs), or 3) NULL (in which case the user may select the csv file using
 a dialog box). \cr
-\cr 
+\cr
 Other notes: \cr
 \itemize{
   \item{Area is in square nautical miles}
-  \item{Abundance is in 10^6 indivs} 
+  \item{Abundance is in 10^6 indivs}
   \item{Biomass   is in 10^3 mt}
 }
 }

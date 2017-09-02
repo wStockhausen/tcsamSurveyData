@@ -6,7 +6,7 @@
 \usage{
 selectStrata.TrawlSurvey(tbl = NULL, species = "BTC", strataType = "2015",
   export = FALSE, out.csv = paste("SelectedStations", species, "csv", sep =
-  "."), out.dir = NULL, verbosity = 1)
+  "."), out.dir = NULL, verbosity = 0)
 }
 \arguments{
 \item{tbl}{: table (dataframe) of survey station/strata data (or name of survey station/strata csv file, or NULL)}

@@ -14,7 +14,7 @@ plotMaps.CPUE(tbl_cpue, years = NULL, ztype = "numCPUE", scaleBy = 1,
   plt_reflines = TRUE, reflines = list(list(lon = -166 + 0 * seq(from = 50,
   to = 80, by = 1), lat = seq(from = 50, to = 80, by = 1))),
   bathymetryFile = "/Users/WilliamStockhausen/Programming/R/GitPackages/wtsGMT/data/depthcontour_200500.prn",
-  basename = "SurveyMaps", cleanup = TRUE, verbosity = 1)
+  basename = "SurveyMaps", cleanup = TRUE, verbosity = 0)
 }
 \arguments{
 \item{tbl_cpue}{: dataframe from call to \code{\link{calcCPUE.ByHaul}} or \code{\link{calcCPUE.ByStation}} (or crab cpue filename, or NULL)}
@@ -37,7 +37,7 @@ plotMaps.CPUE(tbl_cpue, years = NULL, ztype = "numCPUE", scaleBy = 1,
 }
 \value{
 the max zscale, or a named list (names corresponding to individual factor combinations)
-of max zscales that were used for plots. This value can be used to scale all maps 
+of max zscales that were used for plots. This value can be used to scale all maps
 (if a single numeric value) or maps corresponding to a given factor combination (if
 a named list) when running the function on the same cpue values a second time.
 }
@@ -48,9 +48,9 @@ Function to map cpue by survey haul or station and other factors (e.g., sex) fro
 Needs to filled in. \cr
 Note: Multiple values at the same location will be summed prior to being mapped.
 \cr
-Note: zscl can be NULL, a numeric value, or a named list with numeric values as 
+Note: zscl can be NULL, a numeric value, or a named list with numeric values as
 list elements. If NULL, then the max z value for the data plotted on an individual
-map will be used to scale that map. If a numeric value, then it is used as the 
-z-axis scale for all maps produced. If a named list, the element corresponding to 
+map will be used to scale that map. If a numeric value, then it is used as the
+z-axis scale for all maps produced. If a named list, the element corresponding to
 each combination of factors will be used as the z-axis scale for that set of maps.
 }

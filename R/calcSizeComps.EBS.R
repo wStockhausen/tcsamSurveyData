@@ -7,7 +7,7 @@
 #'@param in.csv  : csv filename from which to read input dataframe
 #'@param export  : boolean flag to write results to csv file
 #'@param out.csv : output file name
-#'@param out.dir : output file directory 
+#'@param out.dir : output file directory
 #'@param verbosity : integer flag indicating level of printed output (0=off,1=minimal,2=full)
 #'
 #'@return data frame with columns: \cr
@@ -35,7 +35,7 @@
 #'
 #' @importFrom sqldf sqldf
 #' @importFrom wtsUtilities selectFile
-#'      
+#'
 #'@export
 #'
 #######################################################################
@@ -44,9 +44,9 @@ calcSizeComps.EBS<-function(tbl=NULL,
                             export=TRUE,
                             out.csv='SurveySizeComps.EBS.csv',
                             out.dir=NULL,
-                            verbosity=1){    
+                            verbosity=0){
     if (verbosity>1) cat("starting calcSizeComps.EBS\n");
-    
+
     in.csv<-NULL;
     if (!is.data.frame(tbl)){
         if (!is.character(tbl)) {
@@ -59,20 +59,20 @@ calcSizeComps.EBS<-function(tbl=NULL,
         tbl<-read.csv(in.csv,stringsAsFactors=FALSE);
         if (verbosity>1) cat("Done reading input csv file.\n")
     }
-    
+
     if (is.null(out.dir)) {
         out.dir<-dirname(file.path('.'));
         if (!is.null(in.csv)) {out.dir<-dirname(file.path(in.csv));}
     }
     if (verbosity>0) cat("Output directory for calcSizeComps.EBS will be '",out.dir,"'\n",sep='');
-    
+
     #determine columns of size comps by stratum table
     nc0f<-9;#number of coulmns if SIZE is the only 'factor' in the table
-    cols<-names(tbl); 
+    cols<-names(tbl);
     nc<-length(cols);
-    if (nc==nc0f){cols<-'';} else 
+    if (nc==nc0f){cols<-'';} else
     {cols<-cols[4:(3+nc-nc0f)];}#extract factor columns (including SIZE)
-                                 
+
     #
     qry<-"select
             YEAR,
@@ -86,9 +86,9 @@ calcSizeComps.EBS<-function(tbl=NULL,
             sum(totBIOMASS) as totBIOMASS
           from
             tbl
-          group by 
+          group by
             YEAR&&cols
-          order by 
+          order by
             YEAR&&cols;"
     if (nc==nc0f) {
         qry<-gsub("&&cols",'',qry);
@@ -97,7 +97,7 @@ calcSizeComps.EBS<-function(tbl=NULL,
     }
     if (verbosity>1) cat("\nquery is:\n",qry,"\n");
     tbl1<-sqldf(qry);
-                                 
+
     if (export){
         if (!is.null(out.dir)){
             if (verbosity>1) cat("\nTesting existence of folder '",out.dir,"'\n",sep='')
@@ -111,7 +111,7 @@ calcSizeComps.EBS<-function(tbl=NULL,
         }
         write.csv(tbl1,out.csv,na='',row.names=FALSE);
     }
-    
+
     if (verbosity>1) cat("finished calcSizeComps.EBS\n");
     return(tbl1)
 }

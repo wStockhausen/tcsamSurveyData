@@ -29,24 +29,24 @@
 #'@param verbosity : integer flag indicating level of printed output (0=off,1=minimal,2=full)
 #'
 #'@return   a list with the following elements: \cr
-#'\itemize{  
+#'\itemize{
 #' \item {cpue.byH}     {: data frame of cpue (numbers and weight) by year, haul and other factor levels}
 #' \item {cpue.byS}     {: data frame of cpue (numbers and weight) by year, station and other factor levels (optional)}
 #' \item {bio.byStrata} {: data frame with abundance, biomass by year, stratum and other factor levels}
 #' \item {bio.EW166}    {: data frame with abundance, biomass by year, EW166 split and other factor levels (optional)}
 #' \item {bio.tot}      {: data frame with abundance, biomass by year and other factor levels}
 #'}
-#'       
-#'@details 
+#'
+#'@details
 #'Notes: \itemize{
-#'   \item CPUE in numbers is in no/(sq. nm.) 
-#'   \item CPUE in weight  is in mt/(sq. nm.) 
-#'   \item Abundance is in 10^6 individuals 
+#'   \item CPUE in numbers is in no/(sq. nm.)
+#'   \item CPUE in weight  is in mt/(sq. nm.)
+#'   \item Abundance is in 10^6 individuals
 #'   \item Biomass   is in 10^3 mt
 #'   }
-#'   
+#'
 #' @export
-#' 
+#'
 doBiomassCalcs<-function(tbl.strata,
                          tbl.hauls,
                          tbl.indivs,
@@ -70,12 +70,12 @@ doBiomassCalcs<-function(tbl.strata,
                          out.csv.bio.EW166='bio.EW166.csv',
                          out.csv.totBio='totBiomass.csv',
                          out.dir=NULL,
-                         verbosity=1){
-    
+                         verbosity=0){
+
     if (verbosity>1) cat("starting doBiomassCalcs.\n");
-    
+
     res<-list();#empty list for output
-    
+
     #calc cpue by haul for all selected individuals
     cpue.byH<-calcCPUE.ByHaul(tbl.hauls,
                               tbl_indivs=tbl.indivs,
@@ -92,7 +92,7 @@ doBiomassCalcs<-function(tbl.strata,
                               verbosity=verbosity);
     res[["cpue.byH"]]<-cpue.byH;
 
-    
+
     #calc abundance, biomass by strata
     if (calcCPUE.byStation){
         #calc cpue by station from cpue by haul
@@ -102,7 +102,7 @@ doBiomassCalcs<-function(tbl.strata,
                                      out.dir=out.dir,
                                      verbosity=verbosity);
         res[["cpue.byS"]]<-cpue.byS;
-        
+
         bio.byStr<-calcBiomass.ByStratum(tbl.strata,
                                          cpue.byS,
                                          export=export.bio.byStrata,
@@ -118,7 +118,7 @@ doBiomassCalcs<-function(tbl.strata,
                                          verbosity=verbosity);
     }
     res[["bio.byStr"]]<-bio.byStr;
-    
+
     #calc total abundance, biomass
     if (calcBiomass.byEW166){
         #calc abundance, biomass in EW166 regions
@@ -141,7 +141,7 @@ doBiomassCalcs<-function(tbl.strata,
                                  verbosity=verbosity)
     }
     res[["bio.tot"]]<-bio.tot;
-    
+
     if (verbosity>1) cat("finished doBiomassCalcs.\n");
     return(res)
 }

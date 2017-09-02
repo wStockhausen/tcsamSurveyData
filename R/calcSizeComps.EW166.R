@@ -7,7 +7,7 @@
 #'@param strata_toEW166 : data frame w/ conversion from original strata to EW166 strata
 #'@param export      : boolean flag to write results to csv file
 #'@param out.csv     : output file name
-#'@param out.dir     : output file directory 
+#'@param out.dir     : output file directory
 #'@param verbosity   : integer flag indicating level of printed output (0=off,1=minimal,2=full)
 #'
 #'@return  Dataframe w/ estimates of abundance, size comps size comps by year, strata as east/west of 166W, and other factors. Columns are \cr
@@ -35,7 +35,7 @@
 #'
 #' @importFrom sqldf sqldf
 #' @importFrom wtsUtilities selectFile
-#'      
+#'
 #'@export
 #'
 calcSizeComps.EW166<-function(tbl=NULL,
@@ -43,9 +43,9 @@ calcSizeComps.EW166<-function(tbl=NULL,
                               export=TRUE,
                               out.csv='SurveySizeComps.EW166.csv',
                               out.dir=NULL,
-                              verbosity=1){
+                              verbosity=0){
     if (verbosity>1) cat("starting calcSizeComps.EW166\n");
-    
+
     in.csv<-NULL;
     if (!is.data.frame(tbl)){
         if (!is.character(tbl)) {
@@ -58,21 +58,21 @@ calcSizeComps.EW166<-function(tbl=NULL,
         tbl<-read.csv(in.csv,stringsAsFactors=FALSE);
         if (verbosity>1) cat("Done reading input csv file.\n")
     }
-    
+
     if (is.null(out.dir)) {
         out.dir<-dirname(file.path('.'));
         if (!is.null(in.csv)) {out.dir<-dirname(file.path(in.csv));}
     }
     if (verbosity>0) cat("Output directory for calcSizeComps.EW166 will be '",out.dir,"'\n",sep='');
-    
-    
+
+
     #determine columns of size comps by stratum table
     nc0f<-9;#number of coulmns if SIZE is the only 'factor' in the table
-    cols<-names(tbl); 
+    cols<-names(tbl);
     nc<-length(cols);
-    if (nc==nc0f){cols<-'';} else 
+    if (nc==nc0f){cols<-'';} else
     {cols<-cols[4:(3+nc-nc0f)];}#extract factor columns (including SIZE)
-                                 
+
     qry<-"select
             t.YEAR,
             s.revd as newSTRATUM,
@@ -89,7 +89,7 @@ calcSizeComps.EW166<-function(tbl=NULL,
             strata_toEW166 as s
           where
             t.STRATUM=s.orig
-          order by 
+          order by
             t.YEAR,s.revd,t.STRATUM&&cols;"
     if (nc==9) {
         qry<-gsub("&&cols",'',qry);
@@ -98,7 +98,7 @@ calcSizeComps.EW166<-function(tbl=NULL,
     }
     if (verbosity>1) cat("\nquery is:\n",qry,"\n");
     tbl2<-sqldf(qry);
-    
+
     qry<-"select
             YEAR,
             newSTRATUM as STRATUM,
@@ -111,9 +111,9 @@ calcSizeComps.EW166<-function(tbl=NULL,
             sum(totBIOMASS) as totBIOMASS
           from
             tbl2
-          group by 
+          group by
             YEAR,newSTRATUM&&cols
-          order by 
+          order by
             YEAR,newSTRATUM&&cols;"
     if (nc==9) {
         qry<-gsub("&&cols",'',qry);
@@ -122,7 +122,7 @@ calcSizeComps.EW166<-function(tbl=NULL,
     }
     if (verbosity>1) cat("\nquery is:\n",qry,"\n");
     tbl1<-sqldf(qry);
-                                 
+
     if (export){
         if (!is.null(out.dir)){
             if (verbosity>1) cat("\nTesting existence of folder '",out.dir,"'\n",sep='')
@@ -136,7 +136,7 @@ calcSizeComps.EW166<-function(tbl=NULL,
         }
         write.csv(tbl1,out.csv,na='',row.names=FALSE);
     }
-    
+
     if (verbosity>1) cat("finished calcSizeComps.EW166\n");
     return(tbl1)
 }

@@ -8,7 +8,7 @@
 #'@param strataType : type of strata ('orig','revd','2015')
 #'@param export     : boolean flag to export results to csv file
 #'@param out.csv    : output file name
-#'@param out.dir    : output file directory 
+#'@param out.dir    : output file directory
 #'@param verbosity  : integer flag indicating level of printed output (0=off,1=minimal,2=full)
 #'
 #'@details If tbl is NULL, the user will be prompted for a csv file via a file dialog box.
@@ -23,21 +23,21 @@
 #'         }
 #'
 #' @return a dataframe with strata/stations info.
-#' 
+#'
 #' @importFrom sqldf sqldf
 #' @importFrom wtsUtilities selectFile
-#' 
+#'
 #' @export
-#' 
+#'
 selectStrata.TrawlSurvey<-function(tbl=NULL,
                                    species='BTC',
                                    strataType='2015',
                                    export=FALSE,
                                    out.csv=paste('SelectedStations',species,'csv',sep='.'),
                                    out.dir=NULL,
-                                   verbosity=1){
+                                   verbosity=0){
     if (verbosity>0) cat("starting selectStrata.TrawlSurvey.\n");
-    
+
     in.csv<-NULL;
     if (!is.data.frame(tbl)){
         if (!is.character(tbl)) {
@@ -50,25 +50,25 @@ selectStrata.TrawlSurvey<-function(tbl=NULL,
         tbl<-read.csv(in.csv,stringsAsFactors=FALSE);
         if (verbosity>1) cat("Done reading input csv file.\n")
     }
-    
+
     if (is.null(out.dir)) {
         out.dir<-dirname(file.path('.'));
         if (!is.null(in.csv)) {out.dir<-dirname(file.path(in.csv));}
     }
     if (verbosity>0) cat("Output directory for selectStrata.TrawlSurvey will be '",out.dir,"'\n",sep='');
-    
+
     #rearrange columns, drop some
     cols<-c("SURVEY_YEAR","STATION_ID","STRATUM","TOTAL_AREA","LONGITUDE","LATITUDE")
     tbl<-tbl[,cols];
     new.cols<-c("SURVEY_YEAR","STATION_ID","STRATUM_CODE","TOTAL_AREA","LONGITUDE","LATITUDE")
     names(tbl)<-new.cols;
-    
+
     qry<-"select distinct
             SURVEY_YEAR, STRATUM_CODE, TOTAL_AREA
           from tbl
           order by SURVEY_YEAR, STRATUM_CODE;"
     tbl_areas<-sqldf(qry);
-    
+
     strata<-NULL;
     codes<-Codes.TrawlSurvey();
     if (tolower(strataType)=='orig'){strata<-codes[[paste("strata.orig",species,sep='.')]];} else
@@ -76,12 +76,12 @@ selectStrata.TrawlSurvey<-function(tbl=NULL,
     if (tolower(strataType)=='2015'){strata<-codes[[paste("strata.2015",species,sep='.')]];} else
     {cat("strataType '",strataType,"' not recognized.\nAborting...\n");
      return(NULL);}
-    
+
     if (is.null(strata)){
         cat('table strata is NULL for strataType = "',strataType='"\nAborting...\n');
         return(NULL);
     }
-    
+
     qry<-"select
             SURVEY_YEAR,
             STRATUM,
@@ -97,7 +97,7 @@ selectStrata.TrawlSurvey<-function(tbl=NULL,
             SURVEY_YEAR,STRATUM;"
     if (verbosity>1) cat("\nquery is:\n",qry,"\n");
     tbl_areas1<-sqldf(qry);
-    
+
     qry<-"select
             t.SURVEY_YEAR as YEAR,
             s.STRATUM as STRATUM,
@@ -116,10 +116,10 @@ selectStrata.TrawlSurvey<-function(tbl=NULL,
             s.STRATUM=a.STRATUM
           order by
             t.SURVEY_YEAR,s.STRATUM,t.STATION_ID;"
-    
+
     if (verbosity>1) cat("\nquery is:\n",qry,"\n");
     tbl<-sqldf(qry)
-    
+
     if (export){
         if (!is.null(out.dir)){
             if (verbosity>1) cat("\nTesting existence of folder '",out.dir,"'\n",sep='')
@@ -133,7 +133,7 @@ selectStrata.TrawlSurvey<-function(tbl=NULL,
         }
         write.csv(tbl,out.csv,na='',row.names=FALSE);
     }
-    
+
     if (verbosity>1) cat("finished selectStrata.TrawlSurvey.\n");
     return(tbl)
 }

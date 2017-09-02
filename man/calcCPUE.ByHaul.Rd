@@ -8,7 +8,7 @@ calcCPUE.ByHaul(tbl_hauls, tbl_indivs = NULL, bySex = FALSE,
   byShellCondition = FALSE, byMaturity = FALSE, bySize = FALSE,
   cutpts = seq(from = 25, to = 185, by = 5), truncate.low = TRUE,
   truncate.high = FALSE, export = FALSE, out.csv = "cpue.ByHaul.csv",
-  out.dir = NULL, verbosity = 1)
+  out.dir = NULL, verbosity = 0)
 }
 \arguments{
 \item{tbl_hauls}{: dataframe from call to \code{\link{selectHauls.TrawlSurvey}} [required]}

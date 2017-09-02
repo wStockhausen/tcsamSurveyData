@@ -14,7 +14,7 @@ doBiomassCalcs(tbl.strata, tbl.hauls, tbl.indivs, calcCPUE.byStation = TRUE,
   out.csv.cpue.byS = "cpue.byS.csv",
   out.csv.bio.byStrata = "bio.byStrata.csv",
   out.csv.bio.EW166 = "bio.EW166.csv", out.csv.totBio = "totBiomass.csv",
-  out.dir = NULL, verbosity = 1)
+  out.dir = NULL, verbosity = 0)
 }
 \arguments{
 \item{tbl.strata}{: dataframe with survey strata info (output from \code{\link{selectStrata.TrawlSurvey}})}
@@ -67,7 +67,7 @@ doBiomassCalcs(tbl.strata, tbl.hauls, tbl.indivs, calcCPUE.byStation = TRUE,
 }
 \value{
 a list with the following elements: \cr
-\itemize{  
+\itemize{
 \item {cpue.byH}     {: data frame of cpue (numbers and weight) by year, haul and other factor levels}
 \item {cpue.byS}     {: data frame of cpue (numbers and weight) by year, station and other factor levels (optional)}
 \item {bio.byStrata} {: data frame with abundance, biomass by year, stratum and other factor levels}
@@ -80,9 +80,9 @@ Function to calculate cpue by survey haul from station, haul and individual crab
 }
 \details{
 Notes: \itemize{
-  \item CPUE in numbers is in no/(sq. nm.) 
-  \item CPUE in weight  is in mt/(sq. nm.) 
-  \item Abundance is in 10^6 individuals 
+  \item CPUE in numbers is in no/(sq. nm.)
+  \item CPUE in weight  is in mt/(sq. nm.)
+  \item Abundance is in 10^6 individuals
   \item Biomass   is in 10^3 mt
   }
 }
