@@ -162,7 +162,7 @@ calcSizeComps.ByStratum<-function(tbl_strata,
                     if (verbosity>0) cat("Output directory for calcSizeComps.ByStratum will be '",out.dir,"'\n",sep='');
                 }
             }#creating tbl_cpue
-            cat("creating tbl_cpue\n")
+            if (verbosity>1) cat("creating tbl_cpue\n")
             tbl_cpue<-calcCPUE.ByHaul(tbl_hauls,
                                       tbl_indivs=tbl_indivs,
                                       bySex=bySex,
