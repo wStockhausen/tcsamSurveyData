@@ -4,17 +4,27 @@
 \alias{plotChelaHeights}
 \title{Plot chela height data}
 \usage{
-plotChelaHeights(dfrp, ratio = 0.18, discrim = NULL, useLnScales = FALSE,
-  aggYears = 5, rng = NULL, ncol = 2, showPlot = FALSE)
+plotChelaHeights(dfrp, ratio = 0.18, discrim = NULL,
+  byShellCondition = TRUE, facet_grid = NULL, plotRatio = FALSE,
+  plotLMs = TRUE, useLnScales = FALSE, aggYears = 5, rng = NULL,
+  ncol = 2, title = NULL, showPlot = FALSE)
 }
 \arguments{
 \item{dfrp}{- dataframe of chela height data from call to getChelaHeights(...)}
 
-\item{ratio}{- default ratio}
+\item{ratio}{- default ratio (if NULL, maturity status will not be characterized)}
 
 \item{discrim}{- optional function taking a vector of sizes (CW) and returning the associated chela height cutline values yielding a "mature" classification}
 
-\item{useLnScales}{- flag (T/F) to plot data on ln-scales}
+\item{byShellCondition}{- flag (T/F) to color points by shell condition}
+
+\item{facet_grid}{- formula to use for a faceted grid plot (default=NULL)}
+
+\item{plotRatio}{- flag to plot CH/CW vs CW, rather than CH vs. CW (default=FALSE)}
+
+\item{plotLMs}{- flag to plot linear model fits to immature/mature data (default=TRUE)}
+
+\item{useLnScales}{- flag (T/F) to plot data on ln-scales default=FALSE)}
 
 \item{aggYears}{- number of years over which to aggregate}
 
@@ -22,14 +32,22 @@ plotChelaHeights(dfrp, ratio = 0.18, discrim = NULL, useLnScales = FALSE,
 
 \item{ncol}{- number of coulmns to use for faceting}
 
+\item{title}{- title for plot}
+
 \item{showPlot}{- flag to show plots immediately}
 }
 \value{
 ggplot2 plot object to print
 }
 \description{
-Function to plot chela height data
+Function to plot chela height data.
 }
 \details{
-none.
+If "ratio" is NULL (not the default), then maturity status (immature/mature) will not be determined
+(even if "discrim" is given) and the maturity state-specific linear model fits (CH ~ CW or ln{CH}~ln{CW})
+will not be shown. If "ratio" is not NULL (the default), then the discriminant function (if "discrim" is not NULL)
+or the given ratio will be used to charaterize maturity state on the basis of CH vs. CW.
+
+If "facet_grid" is NULL, then plots are produced by facet_wrapping by YEAR. Otherwise, the faceting formula given by
+"facet_grid" is used to create a faceted grid plot.
 }

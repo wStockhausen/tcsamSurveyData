@@ -58,7 +58,7 @@ selectStrata.TrawlSurvey<-function(tbl=NULL,
     if (verbosity>0) cat("Output directory for selectStrata.TrawlSurvey will be '",out.dir,"'\n",sep='');
 
     #rearrange columns, drop some
-    cols<-c("SURVEY_YEAR","STATION_ID","STRATUM","TOTAL_AREA","LONGITUDE","LATITUDE")
+    cols<-c("SURVEY_YEAR","STATION_ID","STRATUM","TOTAL_AREA_SQ_NM","LONGITUDE","LATITUDE")
     tbl<-tbl[,cols];
     new.cols<-c("SURVEY_YEAR","STATION_ID","STRATUM_CODE","TOTAL_AREA","LONGITUDE","LATITUDE")
     names(tbl)<-new.cols;
