@@ -44,5 +44,5 @@ tmap.CreateBaseMap(layer.land = NULL, layer.bathym = NULL,
 This function creates a basemap layer for maps based on the tmap package
 }
 \details{
-
+Uses \code{wtsUtilities::tmap.CreateLayerFromShapefile}.
 }

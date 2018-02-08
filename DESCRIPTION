@@ -14,17 +14,18 @@ Imports:
     ggplot2 (>= 1.0.1),
     jpeg (>= 0.1-8),
     plyr (>= 1.8.3),
-    raster (>= 2.4-18),
     reshape2 (>= 1.4.1),
-    rgdal (>= 1.0-4),
-    rgeos (>= 0.3-11),
     scales (>= 0.3.0),
-    sp (>= 1.1-1),
     sqldf (>= 0.4-10),
     tcsamFunctions (>= 1.1.0),
-    tmap (>= 1.10),
-    tmaptools (>= 1.2-1),
     wtsGMT (>= 1.0.2),
-    wtsPlots (>= 2018.02.06),
-    wtsUtilities (>= 2017.09.05)
+    wtsPlots (>= 2018.02.07),
+    wtsUtilities (>= 2018.02.07)
+Suggests:
+    raster (>= 2.4-18),
+    rgdal (>= 1.0-4),
+    rgeos (>= 0.3-11),
+    sp (>= 1.1-1),
+    tmap (>= 1.10),
+    tmaptools (>= 1.2-1)
 RoxygenNote: 6.0.1

@@ -3,11 +3,11 @@
 #'
 #' @description This function creates a basemap layer for maps based on the tmap package
 #'
-#' @details
+#' @details Uses \code{wtsUtilities::tmap.CreateLayerFromShapefile}.
 #'
 #' @param layer.land - a tmap layer representing land
-#' @param layer.bathym - 
-#' @param layers.survey - 
+#' @param layer.bathym -
+#' @param layers.survey -
 #' @param gisDir - path to top level folder for shapefiles
 #' @param shapeFile.bathymetry - bathymetry shapefile
 #' @param shapeFile.land - land shapefile
@@ -35,41 +35,41 @@ tmap.CreateBaseMap<-function( layer.land=NULL,
                               colors.bathym="darkblue",
                               points.size=0.01
                               ){
-    
+
   #strWGS84<-tmaptools::get_proj4("longlat");
   #crsWGS84<-sp::CRS(strWGS84);
-  
+
   land<-layer.land;
   if (is.null(land))
     if (!is.null(shapeFile.land))
-        land<-tmap.CreateLayerFromShapefile(file.path(gisDir,shapeFile.land),strCRS=strCRS);
-  
+        land<-wtsUtilities::tmap.CreateLayerFromShapefile(file.path(gisDir,shapeFile.land),strCRS=strCRS);
+
   bathym<-layer.bathym;
   if (is.null(bathym))
     if (!is.null(shapeFile.bathymetry))
-        bathym<-tmap.CreateLayerFromShapefile(file.path(gisDir,shapeFile.bathymetry),strCRS=strCRS);
+        bathym<-wtsUtilities::tmap.CreateLayerFromShapefile(file.path(gisDir,shapeFile.bathymetry),strCRS=strCRS);
 
-    
+
   surveyLayers<-layers.survey;
   if (is.null(surveyLayers))
     if (!is.null(shapeFiles.survey))
       surveyLayers<-tmap.CreateSurveyGridLayers(gisDir=gisDir,shapeFiles=shapeFiles.survey,strCRS=strCRS);
-  
+
   #define bounding box for map extent
   bbext<-tmaptools::bb(land);#just to get a bounding box
   bbext['x','min']<-boundingbox$bottomleft$lon;
   bbext['y','min']<-boundingbox$bottomleft$lat;
   bbext['x','max']<-boundingbox$topright$lon;
   bbext['y','max']<-boundingbox$topright$lat;
-  
+
   #basemap using WGS84
   basemap<-tmap::tm_shape(land,bbox=bbext,is.master=TRUE)+tmap::tm_fill();
-  if (!is.null(bathym)) 
+  if (!is.null(bathym))
       basemap <- basemap + tmap::tm_shape(bathym)+tmap::tm_lines(col=colors.bathym);
-  if (!is.null(surveyLayers$grid)) 
+  if (!is.null(surveyLayers$grid))
       basemap <- basemap + tmap::tm_shape(surveyLayers$grid)+tmap::tm_borders()+
-  if (!is.null(surveyLayers$stations)) 
+  if (!is.null(surveyLayers$stations))
       basemap <- basemap + tmap::tm_shape(surveyLayers$stations)+tmap::tm_squares(size=points.size);
-  
+
   return(basemap);
 }
