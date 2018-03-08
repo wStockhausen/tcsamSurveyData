@@ -3,7 +3,7 @@
 #'
 #' @description This function creates a basemap layer for maps based on the tmap package
 #'
-#' @details Uses \code{wtsUtilities::tmap.CreateLayerFromShapefile}.
+#' @details Uses \code{wtsGIS::tmap.CreateLayerFromShapefile}.
 #'
 #' @param layer.land - a tmap layer representing land
 #' @param layer.bathym -
@@ -24,11 +24,11 @@
 tmap.CreateBaseMap<-function( layer.land=NULL,
                               layer.bathym=NULL,
                               layers.survey=NULL,
-                              gisDir="~",
+                              gisDir=system.file("extdata/Shapefiles",package="wtsGIS"),
                               shapeFile.bathymetry="Bathymetry/ShelfBathymetry.shp",
                               shapeFile.land      ="Land/Alaska.shp",
-                              shapeFiles.survey=list(grid    ="NMFS Survey Info/NMFS_EBSSurveyBlocks.shp",
-                                                     stations="NMFS Survey Info/NMFS_EBSSurveyStations.PointsLL.shp"),
+                              shapeFiles.survey=list(grid    ="NMFS_Survey_Info/NMFS_EBSSurveyBlocks.shp",
+                                                     stations="NMFS_Survey_Info/NMFS_EBSSurveyStations.PointsLL.shp"),
                               strCRS=tmaptools::get_proj4("longlat"),
                               boundingbox=list(bottomleft=list(lon=-179,lat=54),
                                                topright  =list(lon=-157,lat=62.5)),
@@ -42,12 +42,12 @@ tmap.CreateBaseMap<-function( layer.land=NULL,
   land<-layer.land;
   if (is.null(land))
     if (!is.null(shapeFile.land))
-        land<-wtsUtilities::tmap.CreateLayerFromShapefile(file.path(gisDir,shapeFile.land),strCRS=strCRS);
+        land<-wtsGIS::tmap.CreateLayerFromShapefile(file.path(gisDir,shapeFile.land),strCRS=strCRS);
 
   bathym<-layer.bathym;
   if (is.null(bathym))
     if (!is.null(shapeFile.bathymetry))
-        bathym<-wtsUtilities::tmap.CreateLayerFromShapefile(file.path(gisDir,shapeFile.bathymetry),strCRS=strCRS);
+        bathym<-wtsGIS::tmap.CreateLayerFromShapefile(file.path(gisDir,shapeFile.bathymetry),strCRS=strCRS);
 
 
   surveyLayers<-layers.survey;

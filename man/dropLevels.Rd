@@ -9,7 +9,7 @@ dropLevels(tbl, dropLevels = NULL)
 \arguments{
 \item{tbl}{- dataframe to drop levels from}
 
-\item{dropLevels}{- factor levels to drop}
+\item{dropLevels}{- list by factor name of factor levels to drop}
 
 \item{verbosity}{- integer flag indicating level of printed output (0=off,1=minimal,2=full)}
 }
@@ -21,6 +21,6 @@ Function to drop factor levels from a dataframe.
 }
 \details{
 Distinct levels of each factor can be dropped from the
-exported dataframe by seting dropLevels to a list with names corresponding to 
+exported dataframe by seting dropLevels to a list with names corresponding to
 factor columns and values being vectors of factor levels to drop.
 }

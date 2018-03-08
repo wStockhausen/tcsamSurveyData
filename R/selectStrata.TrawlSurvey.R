@@ -24,9 +24,6 @@
 #'
 #' @return a dataframe with strata/stations info.
 #'
-#' @importFrom sqldf sqldf
-#' @importFrom wtsUtilities selectFile
-#'
 #' @export
 #'
 selectStrata.TrawlSurvey<-function(tbl=NULL,
@@ -41,7 +38,7 @@ selectStrata.TrawlSurvey<-function(tbl=NULL,
     in.csv<-NULL;
     if (!is.data.frame(tbl)){
         if (!is.character(tbl)) {
-            in.csv<-selectFile(ext="csv",caption=paste("Select AFSC crab survey strata file for strata type",strataType));
+            in.csv<-wtsUtilities::selectFile(ext="csv",caption=paste("Select AFSC crab survey strata file for strata type",strataType));
             if (is.null(in.csv)|(in.csv=='')) return(NULL);
         } else {
             in.csv<-tbl;#tbl is a filename
@@ -58,7 +55,11 @@ selectStrata.TrawlSurvey<-function(tbl=NULL,
     if (verbosity>0) cat("Output directory for selectStrata.TrawlSurvey will be '",out.dir,"'\n",sep='');
 
     #rearrange columns, drop some
-    cols<-c("SURVEY_YEAR","STATION_ID","STRATUM","TOTAL_AREA_SQ_NM","LONGITUDE","LATITUDE")
+    if ("TOTAL_AREA_SQ_NM" %in% names(tbl)){
+      cols<-c("SURVEY_YEAR","STATION_ID","STRATUM","TOTAL_AREA_SQ_NM","LONGITUDE","LATITUDE");
+    } else if ("TOTAL_AREA" %in% names(tbl)){
+      cols<-c("SURVEY_YEAR","STATION_ID","STRATUM","TOTAL_AREA","LONGITUDE","LATITUDE");
+    }
     tbl<-tbl[,cols];
     new.cols<-c("SURVEY_YEAR","STATION_ID","STRATUM_CODE","TOTAL_AREA","LONGITUDE","LATITUDE")
     names(tbl)<-new.cols;
@@ -67,7 +68,7 @@ selectStrata.TrawlSurvey<-function(tbl=NULL,
             SURVEY_YEAR, STRATUM_CODE, TOTAL_AREA
           from tbl
           order by SURVEY_YEAR, STRATUM_CODE;"
-    tbl_areas<-sqldf(qry);
+    tbl_areas<-sqldf::sqldf(qry);
 
     strata<-NULL;
     codes<-Codes.TrawlSurvey();
@@ -96,7 +97,7 @@ selectStrata.TrawlSurvey<-function(tbl=NULL,
           order by
             SURVEY_YEAR,STRATUM;"
     if (verbosity>1) cat("\nquery is:\n",qry,"\n");
-    tbl_areas1<-sqldf(qry);
+    tbl_areas1<-sqldf::sqldf(qry);
 
     qry<-"select
             t.SURVEY_YEAR as YEAR,
@@ -118,7 +119,7 @@ selectStrata.TrawlSurvey<-function(tbl=NULL,
             t.SURVEY_YEAR,s.STRATUM,t.STATION_ID;"
 
     if (verbosity>1) cat("\nquery is:\n",qry,"\n");
-    tbl<-sqldf(qry)
+    tbl<-sqldf::sqldf(qry)
 
     if (export){
         if (!is.null(out.dir)){

@@ -2,7 +2,7 @@
 % Please edit documentation in R/aggregateCatchData.R
 \name{aggregateCatchData}
 \alias{aggregateCatchData}
-\title{Export aggregated catch data to stock assessment format.}
+\title{Export aggregated catch data to stock assessment format}
 \usage{
 aggregateCatchData(tbl, facs = "", dropLevels = NULL, var = c("ABUNDANCE",
   "BIOMASS"), export = FALSE, out.csv = paste("SurveyACD", var[1], "csv",
@@ -33,10 +33,10 @@ Function to export aggregated catch data to stock assessment format.
 }
 \details{
 Factors (e.g., 'SEX', 'MATURITY', 'SHELL_CONDITION') in the input dataframe that are
-missing from the 'facs' vector will be aggregated over by summing. STRATUM is \bold{not} regarded as 
+missing from the 'facs' vector will be aggregated over by summing. STRATUM is \bold{not} regarded as
 a potential factor. The time series for each factor level combination is exported.
 Distinct levels of each factor can be dropped from the
-exported dataframe by seting dropLevels to a list with names corresponding to 
+exported dataframe by seting dropLevels to a list with names corresponding to
 factor columns and values being vectors of factor levels to drop.
 
 Output column order will be STRATUM, facs, YEAR, value, cv

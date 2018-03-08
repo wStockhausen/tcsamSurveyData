@@ -2,12 +2,11 @@
 % Please edit documentation in R/aggregateSizeComps.R
 \name{aggregateSizeComps}
 \alias{aggregateSizeComps}
-\title{Aggregate size comps from survey data over factors.}
+\title{Aggregate size comps from survey data over factors}
 \usage{
-aggregateSizeComps(zcs, facs = "", dropLevels = NULL, multipliers = NULL,
-  var = c("ABUNDANCE", "BIOMASS"), export = FALSE,
-  out.csv = paste("SurveyACD", var[1], "csv", sep = "."), out.dir = NULL,
-  verbosity = 0)
+aggregateSizeComps(zcs, facs = "", dropLevels = NULL, var = c("ABUNDANCE",
+  "BIOMASS"), export = FALSE, out.csv = paste("SurveyACD", var[1], "csv",
+  sep = "."), out.dir = NULL, verbosity = 0)
 }
 \arguments{
 \item{zcs}{- dataframe from call to one of the calcSizeComps... functions}
@@ -27,7 +26,7 @@ aggregateSizeComps(zcs, facs = "", dropLevels = NULL, multipliers = NULL,
 \item{verbosity}{- integer flag indicating level of printed output (0=off,1=minimal,2=full)}
 }
 \value{
-list of ggplot2 plot objects
+a dataframe
 }
 \description{
 Function to aggregate size comps from survey data over factors.
@@ -35,11 +34,6 @@ Function to aggregate size comps from survey data over factors.
 \details{
 The time series for each factor level combination is plotted
 separately. Distinct levels of each factor can be dropped from the
-final plot by seting dropLevels to a list with names corresponding to 
+final plot by seting dropLevels to a list with names corresponding to
 factor columns and values being vectors of factor levels to drop.
-
-'multipliers' is a list of lists, with each sublist has two elements, 'factors' and 'value'.
-'factors' should be a list of factor=level pairs. 'value' should be the value to multiply by. 
-
-One plot is created for each distinct level of 'STRATUM'.
 }

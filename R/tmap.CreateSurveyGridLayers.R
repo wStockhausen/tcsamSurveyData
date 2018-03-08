@@ -14,9 +14,9 @@
 #' @export
 #'
 tmap.CreateSurveyGridLayers<-function(
-                                  gisDir="~",
-                                  shapeFiles=list(grid    ="NMFS Survey Info/NMFS_EBSSurveyBlocks.shp",
-                                                  stations="NMFS Survey Info/NMFS_EBSSurveyStations.PointsLL.shp"),
+                                  gisDir=system.file("extdata/Shapefiles",package="wtsGIS"),
+                                  shapeFiles=list(grid    ="NMFS_Survey_Info/NMFS_EBSSurveyBlocks.shp",
+                                                  stations="NMFS_Survey_Info/NMFS_EBSSurveyStations.PointsLL.shp"),
                                   strCRS=tmaptools::get_proj4("longlat")
                                     ){
   stns.polys<-NULL;

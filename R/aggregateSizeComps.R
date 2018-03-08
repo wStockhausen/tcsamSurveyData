@@ -1,30 +1,24 @@
 #'
-#'@title Aggregate size comps from survey data over factors.
+#'@title Aggregate size comps from survey data over factors
 #'
 #'@description Function to aggregate size comps from survey data over factors.
 #'
 #'@param zcs - dataframe from call to one of the calcSizeComps... functions
-#'@param facs - factors to include in output 
+#'@param facs - factors to include in output
 #'@param dropLevels - list by factor of factor levels to drop
 #'@param var - variable type to export (abundance or biomass)
 #'@param export  - boolean flag to write results to csv file
 #'@param out.csv - output file name
-#'@param out.dir - output file directory 
+#'@param out.dir - output file directory
 #'@param verbosity - integer flag indicating level of printed output (0=off,1=minimal,2=full)
 #'
-#'@return list of ggplot2 plot objects
+#'@return a dataframe
 #'
 #'@details The time series for each factor level combination is plotted
 #'separately. Distinct levels of each factor can be dropped from the
-#'final plot by seting dropLevels to a list with names corresponding to 
+#'final plot by seting dropLevels to a list with names corresponding to
 #'factor columns and values being vectors of factor levels to drop.
 #'
-#''multipliers' is a list of lists, with each sublist has two elements, 'factors' and 'value'.
-#''factors' should be a list of factor=level pairs. 'value' should be the value to multiply by. 
-#' 
-#'One plot is created for each distinct level of 'STRATUM'.
-#'
-#'@import ggplot2
 #'@importFrom plyr .
 #'@importFrom reshape2 dcast
 #'@importFrom reshape2 melt
@@ -34,7 +28,6 @@
 aggregateSizeComps<-function(zcs,
                              facs='',
                              dropLevels=NULL,
-                             multipliers=NULL,
                              var=c('ABUNDANCE','BIOMASS'),
                              export=FALSE,
                              out.csv=paste('SurveyACD',var[1],'csv',sep='.'),
@@ -51,7 +44,7 @@ aggregateSizeComps<-function(zcs,
         cat("Exiting function\n");
         return(NULL);
     }
-    
+
     ##determine id and measure variables for melting
     nf<-length(facs)
     if (nf>0){
@@ -62,10 +55,10 @@ aggregateSizeComps<-function(zcs,
         id.z<-3;#index of SIZE column
     }
     measure.vars<-paste("tot",toupper(var[1]),sep='');
-    
+
     ##melt the input dataframe
     mdfr<-melt(zcs,id.vars,measure.vars,factorsAsStrings=TRUE,value.name='value');
-    
+
     ##drop requested factor levels
     if (is.list(dropLevels)){
         dfacs<-names(dropLevels);
@@ -73,7 +66,7 @@ aggregateSizeComps<-function(zcs,
             mdfr<-mdfr[!(mdfr[[dfac]] %in% dropLevels[[dfac]]),];
         }
     }
-    
+
     #cast the dataframe to aggregate over missing factors
     str<-"STRATUM&&facs+YEAR+SIZE~.";
     if (nf>0){
@@ -90,7 +83,7 @@ aggregateSizeComps<-function(zcs,
     nms<-tolower(nms);
     nms[length(nms)]<-'value';
     names(dfr)<-nms;
-                
+
     if (export){
         if (!is.null(out.dir)){
             if (verbosity>1) cat("\nTesting existence of folder '",out.dir,"'\n",sep='')
@@ -104,6 +97,6 @@ aggregateSizeComps<-function(zcs,
         }
         write.csv(dfr,out.csv,na='',row.names=FALSE);
     }
-    
+
     return(dfr);
 }

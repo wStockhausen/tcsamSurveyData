@@ -1,0 +1,307 @@
+---
+author: "William Stockhausen"
+date: '`r format(Sys.Date(),"%d %B, %Y")`'
+output: 
+    word_document: 
+      reference_docx: '`r system.file("rmd/StylesforRmdDocs.docx",package="wtsUtilities")`'
+    pdf_document: 
+        toc: TRUE
+        fig_width: 6.5
+        fig_height: 4.0
+        fig_crop: FALSE
+        fig_caption: TRUE
+        keep_tex: FALSE
+    includes:
+      in_header: '`r system.file("rmd/StylesforRmdPDFs.sty",package="wtsUtilities")`'
+params: 
+  species: "Snow crab"
+  cpueType: "biomass"
+  title: "&&species spatial patterns in the NMFS trawl survey" 
+  outPath: "./"
+  dataPath: "./"
+  strataFile: ""
+  haulFiles: ""
+  gisPath: NULL
+  strataType: "2015"
+  minYr: 2016
+  maxYr: 2017
+  HaulTypes: NULL
+  sex: "ALL"
+  maturity: "ALL"
+  shell_condition: "ALL"
+  aggBySex: FALSE
+  aggByMaturity: FALSE
+  aggByShellCondition: FALSE
+  minSize: 0
+  maxSize: '`r Inf`'
+  verbosity: 0
+title: '`r gsub("&&species",params$species,params$title,fixed=TRUE)`'
+fontsize: 11pt
+---
+
+```{r,echo=FALSE,results='hide'}
+##set knitr options for subsequent chunks
+knitr::opts_chunk$set(echo=FALSE, error=FALSE, message=FALSE, warning=FALSE, concordance=TRUE, fig.width=6.5, fig.height=7, dpi=300)
+```
+
+```{r inputs}
+  fn.SD<-file.path(params$dataPath,params$strataFile);
+  fn.CH<-file.path(params$dataPath,params$haulFiles);
+    
+  gisDir<-params$gisPath;
+
+  outDir<-params$outPath;
+  if (!dir.exists(outDir)) dir.create(outDir);
+
+  ##determine crab type
+  if (tolower(params$species)=="tanner crab") {species<-"BTC"; crabType<-"Tanner crab";}    else
+  if (tolower(params$species)=="snow crab")   {species<-"OTC"; crabType<-"snow crab";}      else
+  if (tolower(params$species)=="BKC") {species<-"BKC"; crabType<-"blue king crab";} else
+  if (tolower(params$species)=="RKC") {species<-"RKC"; crabType<-"red king crab";}
+
+  verbosity<-params$verbosity;##0=off,1=minimal,2=full
+  
+  ##required packages
+  require(tcsamSurveyData);
+  require(ggpubr);
+
+  ##required preliminary calculations
+  codes.TS<-Codes.TrawlSurvey();
+```
+
+#Introduction
+
+This report creates a time series of maps of `r crabType` CPUE and bottom temperature from the NMFS EBS bottom trawl survey. 
+
+```{r readDataFiles}
+    ##read strata definitions
+    csvStrata<-read.csv(fn.SD,check.names=FALSE,stringsAsFactors=FALSE)[,1:8];
+		#load crabhaul files
+		csvCrabhauls<-NULL;
+		for (f in fn.CH){
+			tmp<-read.csv(file=f);
+			csvCrabhauls<-rbind(csvCrabhauls,tmp);
+			rm(tmp);
+		}
+    rm(f);
+```
+
+```{r getStrata.TrawlSurvey}
+    dfr.SD<-selectStrata.TrawlSurvey(csvStrata,
+    																 species=species,
+    																 strataType=params$strataType,
+                                     export=FALSE,
+    																 verbosity=verbosity);
+```
+
+```{r getHauls.TrawlSurvey}
+    ##select haul data
+    dfr.HD<-selectHauls.TrawlSurvey(dfr.SD,
+    								                tbl=csvCrabhauls,
+                                    YearRange=c(params$minYr,params$maxYr),
+                                    export=FALSE,
+                                    verbosity=verbosity);
+```
+
+```{r getIndivs.TrawlSurvey}
+    #select individuals
+    dfr.ID<-selectIndivs.TrawlSurvey(dfr.HD,
+    								                 tbl=csvCrabhauls,
+                                     sex=params$sex,
+    								                 shell_condition=params$shell_condition,
+                                     maturity=params$maturity,
+    								                 calcMaleMaturity=FALSE,
+                                     minSize=params$minSize,
+    								                 maxSize=params$maxSize,
+                                     export=FALSE,
+    								                 verbosity=verbosity);
+```
+
+```{r cleanupInputCSVs}
+  rm(csvStrata,csvCrabhauls);
+```
+
+```{r calcSurveyCPUE}
+    ##calculate CPUE by haul
+    dfrCPUE.ByXMS<-calcCPUE.ByHaul(dfr.HD,
+  															  dfr.ID,
+                                  bySex=!params$aggBySex,
+                                  byMaturity=!params$aggByMaturity,
+                                  byShellCondition=!params$aggByShellCondition,
+                                  bySize=FALSE,
+                                  export=FALSE,
+  															  verbosity=verbosity);
+
+    ##calculate CPUE by station
+    dfrCPUE.ByXMS<-calcCPUE.ByStation(dfr.SD,
+  																     dfrCPUE.ByXMS,
+                                       export=FALSE,
+  																     verbosity=verbosity);
+
+		##drop levels
+		dfrCPUE.ByXMS<-dropLevels(dfrCPUE.ByXMS,
+													   list(SEX=c('MISSING',"HERMAPHRODITIC")));
+
+    ##aggregate to requested levels
+    if (params$aggBySex)            dfrCPUE.ByXMS$SEX            <-"ALL";
+    if (params$aggByMaturity)       dfrCPUE.ByXMS$MATURITY       <-"ALL";
+    if (params$aggByShellCondition) dfrCPUE.ByXMS$SHELL_CONDITION<-"ALL";
+
+    ##export to csv
+    write.csv(dfrCPUE.ByXMS,file=file.path(outDir,"cpue.csv"))
+```
+
+#Basemap
+
+The following figure illustrates the base map for subsequent maps of bottom temperature and survey CPUE.
+
+```{r createBasemap}
+  surveyGridLayers<-tcsamSurveyData::tmap.CreateSurveyGridLayers();
+  basemap <- tcsamSurveyData::tmap.CreateBaseMap(layers.survey=surveyGridLayers);
+```
+
+```{r printBasemap,results="asis",fig.height=3,fig.width=3.5,fig.cap=cap,eval.after="fig.cap",fig.pos="H",fig.align="center"}
+  cap<-"Basemap for future maps, with EBS bathymetry (blue lines) and the NMFS EBS bottom trawl survey station grid.";
+  print(basemap);
+  cat("\n\n");
+```
+
+```{r calcEnvVars}
+  stns.polys<-surveyGridLayers$grid;
+  stns.pnts<-surveyGridLayers$stations;
+  evs.csv<-tcsamSurveyData::calcEnvData.ByStation(dfr.SD,dfr.HD,verbosity=verbosity);
+  #join annual evs to stns.polys by station
+  evs.polys<-wtsGIS::tmap.MergeDataframeWithLayer(
+                                     evs.csv,stns.polys,
+                                     dataID="STATION_ID",geomsID="GIS_STATION",
+                                     allData=FALSE,duplicateGeoms=TRUE);
+  #join annual evs to stns.pnts by station
+  evs.pnts<-wtsGIS::tmap.MergeDataframeWithLayer(
+                                     evs.csv,stns.pnts,
+                                     dataID="ID",geomsID="GIS_STATION",
+                                     allData=FALSE,duplicateGeoms=TRUE);
+  rm(evs.csv,stns.polys);
+```
+
+```{r createRasters}
+  strWGS84<-tmaptools::get_proj4("longlat");
+  crsWGS84<-sp::CRS(strWGS84);
+
+  bbext<-tmaptools::bb(basemap[[1]]$bbox);
+  evs.grds<-list();
+  yrs<-sort(unique(evs.pnts$YEAR));
+  for (yr in yrs){
+    idx<-(evs.pnts$YEAR==yr)&(!is.na(evs.pnts$BOTTOM_TEMP));
+    spdfr<-evs.pnts[idx,];
+    evs.grds[[as.character(yr)]]<-wtsGIS::tmap.CreateRasterLayer(
+                                                    spdfr,
+                                                    "BOTTOM_TEMP",
+                                                    bbext,
+                                                    nx=500,ny=500,
+                                                    crs=crsWGS84);
+  }
+  rm(strWGS84,crsWGS84,yr,yrs,idx,spdfr);
+```
+
+#Survey CPUE
+
+The following maps present survey CPUE (in biomass) for components of the `r crabType` stock superimposed on bottom temperature at the time of the survey for each year of the NMFS bottom trawl survey.
+
+```{r createPtsCPUE}
+    uXMSs<-unique(dfrCPUE.ByXMS[,c("SEX","MATURITY","SHELL_CONDITION")]);
+    if (tolower(params$cpueType)=="abundance"){
+      value.var<-"numCPUE";
+    } else {
+      value.var<-"wgtCPUE";
+    } 
+    pntsCPUE<-NULL;
+    for (iXMS in 1:nrow(uXMSs)){
+      idx<-dfrCPUE.ByXMS$SEX            ==uXMSs$SEX[iXMS];
+      idm<-dfrCPUE.ByXMS$MATURITY       ==uXMSs$MATURITY[iXMS];
+      ids<-dfrCPUE.ByXMS$SHELL_CONDITION==uXMSs$SHELL_CONDITION[iXMS];
+      tmp<-dfrCPUE.ByXMS[idx&idm&ids,];
+      if (nrow(tmp)>0){
+        dfr<-reshape2::dcast(tmp,formula=YEAR+GIS_STATION+SEX+MATURITY+SHELL_CONDITION~.,
+                             fun.aggregate=sum,value.var="wgtCPUE");
+        names(dfr)[6]<-"value";
+        dfrp<-wtsGIS::tmap.MergeDataframeWithLayer(dfr,stns.pnts,
+                                                         dataID="ID",geomsID="GIS_STATION",
+                                                         allData=FALSE,duplicateGeoms=TRUE);
+        if (is.null(pntsCPUE)) {pntsCPUE<-dfrp;} else {pntsCPUE<-rbind(pntsCPUE,dfrp);}
+      }
+    }#-iXMS
+    rm(iXMS,idx,idm,ids,tmp,dfr,dfrp,stns.pnts);
+```
+
+
+```{r createMaps}
+  yrs<-sort(unique(pntsCPUE$YEAR));
+  ncol<-min(2,nrow(uXMSs)); nrow<-ceiling(nrow(uXMSs)/2);
+  ngpp<-nrow(uXMSs);
+  nyrs<-length(yrs);
+  brks<-seq(from=-2,to=8,by=1);
+  pal<-wtsUtilities::createColorPalette("jet",n=100);
+  maps<-list();
+  for (yr in yrs){
+    idy<-pntsCPUE$YEAR==yr;
+    mx<-max(pntsCPUE$value[idy],na.rm=TRUE);
+    cntr<-1;
+    mapsXMS<-list();
+    for (iXMS in 1:nrow(uXMSs)){
+      uXMS<-uXMSs[iXMS,];
+      uX<-uXMS$SEX;
+      uM<-uXMS$MATURITY;
+      uS<-uXMS$SHELL_CONDITION;
+      
+      uXp<-""; if (uX!="ALL") uXp<-paste0(" ",uX);
+      uMp<-""; if (uM!="ALL") uMp<-paste0(" ",uM);
+      uSp<-""; if (uS!="ALL") uSp<-paste0(" ",uS);
+      label<-tolower(paste0(as.character(yr),":",uMp,uSp,uXp));
+      
+      idx<-pntsCPUE$SEX==uX;
+      idm<-pntsCPUE$MATURITY==uM;
+      ids<-pntsCPUE$SHELL_CONDITION==uS;
+      tmp<-pntsCPUE[idy&idx&idm&ids,];
+      if (verbosity>0) cat("Creating map",iXMS,"for",uX,uM,uS,"using",nrow(tmp),"points\n");
+      if (nrow(tmp)>0){
+        map <- tmap.CreateSurveyMap.CPUE(basemap=basemap,cpue=tmp,raster=evs.grds[[as.character(yr)]],
+                                         cpueCol="value",cpueLabel="CPUE",cpueColor="blue",cpueAlpha=0.6,maxCPUE=mx,
+                                         rasterCol="z",rasterLabel="T (degC)",rasterPalette=pal,rasterAlpha=0.6,rasterBreaks=brks,
+                                         rasterLegend=(cntr==min(c(2,ngpp))),panelLabel=label);
+        mapsXMS[[paste(uX,uM,uS)]]<-map;
+        cntr<-cntr+1;#increment counter for including legend on map
+        rm(map);
+      } else {
+        if (verbosity>0) cat("--no map created\n")
+        mapsXMS[[paste(uX,uM,uS)]]<-NULL;
+      }
+      rm(uX,uM,uS,uXMS,uXp,uMp,uSp,label,idx,idm,ids,tmp);
+    }#-iXMS
+    maps[[as.character(yr)]]<-mapsXMS;
+    rm(idy,mx,iXMS,mapsXMS,cntr);
+  }#-yr
+```
+
+```{r printMaps,results="asis",out.width="6.5in",out.height="7.5in",fig.cap=captions,eval.after="fig.cap",fig.pos="H"}
+  captions<-vector("character",0);
+  for (yr in as.character(yrs)){
+    mapsXMS<-maps[[yr]];
+    str.expr<-"tmap::tmap_arrange("
+    for (iXMS in 1:nrow(uXMSs)){
+      uX<-uXMSs$SEX[iXMS];
+      uM<-uXMSs$MATURITY[iXMS];
+      uS<-uXMSs$SHELL_CONDITION[iXMS];
+      str.expr<-paste0(str.expr,"mapsXMS[['",paste(uX,uM,uS),"']],")
+    }
+    str.expr<-paste0(str.expr,"ncol=",ncol,",nrow=",nrow,",outer.margins=0)");
+    if (verbosity>0) cat(str.expr,"\n");
+    
+    #str.expr<-paste0("tmap::tmap_arrange(maps[[cyr]]$mapIM,maps[[cyr]]$mapIF,maps[[cyr]]$mapMM,maps[[cyr]]$mapMF,ncol=2,nrow=2,outer.margins=0)");
+    eval(parse(text=str.expr)[[1]])
+    cap<-paste0(crabType," CPUE (",params$cpueType,") from the ",yr," NMFS EBS bottom trawl survey.");
+    captions<-c(captions,cap);
+  }
+```
+
+
+

@@ -1,24 +1,24 @@
 #'
-#'@title Export aggregated catch data to stock assessment format.
+#'@title Export aggregated catch data to stock assessment format
 #'
 #'@description Function to export aggregated catch data to stock assessment format.
 #'
 #'@param tbl - dataframe from call to one of the calcBiomass... functions
-#'@param facs - factors to include in output 
-#'@param dropLevels - factor levels to drop 
+#'@param facs - factors to include in output
+#'@param dropLevels - factor levels to drop
 #'@param var - variable type to export (abundance or biomass)
 #'@param export  - boolean flag to write results to csv file
 #'@param out.csv - output file name
-#'@param out.dir - output file directory 
+#'@param out.dir - output file directory
 #'@param verbosity - integer flag indicating level of printed output (0=off,1=minimal,2=full)
 #'
 #'@return dataframe in stock assessment format
 #'
 #'@details Factors (e.g., 'SEX', 'MATURITY', 'SHELL_CONDITION') in the input dataframe that are
-#'missing from the 'facs' vector will be aggregated over by summing. STRATUM is \bold{not} regarded as 
+#'missing from the 'facs' vector will be aggregated over by summing. STRATUM is \bold{not} regarded as
 #'a potential factor. The time series for each factor level combination is exported.
 #'Distinct levels of each factor can be dropped from the
-#'exported dataframe by seting dropLevels to a list with names corresponding to 
+#'exported dataframe by seting dropLevels to a list with names corresponding to
 #'factor columns and values being vectors of factor levels to drop.
 #'
 #'Output column order will be STRATUM, facs, YEAR, value, cv
@@ -51,7 +51,7 @@ aggregateCatchData<-function(tbl,
         return(NULL);
     }
     vars<-c(paste("tot",toupper(var[1]),sep=''),'var');
-    
+
     #determine id and measure variables for melting
     nf<-length(facs)
     if (nf>0){
@@ -65,10 +65,10 @@ aggregateCatchData<-function(tbl,
         id.vars<-c("STRATUM","YEAR")
     }
     measure.vars<-vars;
-    
+
     #melt the input dataframe
     mdfr<-melt(tbl,id.vars,measure.vars,factorsAsStrings=TRUE,value.name='value');
-    
+
     #drop requested factor levels
     if (is.list(dropLevels)){
         dfacs<-names(dropLevels);
@@ -76,7 +76,7 @@ aggregateCatchData<-function(tbl,
             mdfr<-mdfr[!(mdfr[[dfac]] %in% dropLevels[[dfac]]),];
         }
     }
-    
+
     #cast the dataframe to aggregate the value over unspecified factors
     str<-"STRATUM&&facs+YEAR~.";
     if (nf>0){
@@ -93,7 +93,7 @@ aggregateCatchData<-function(tbl,
     nms<-tolower(nms);
     nms[length(nms)]<-'value';
     names(dfr)<-nms;
-    
+
     #cast the dataframe to aggregate the associated variance over unspecified factors
     str<-"STRATUM&&facs+YEAR~.";
     if (nf>0){
@@ -110,9 +110,9 @@ aggregateCatchData<-function(tbl,
     nms<-tolower(nms);
     nms[length(nms)]<-'var';
     names(vdfr)<-nms;
-    
+
     dfr$cv<-sqrt(vdfr$var)/dfr$value;
-                
+
     if (export){
         if (!is.null(out.dir)){
             if (verbosity>1) cat("\nTesting existence of folder '",out.dir,"'\n",sep='')
@@ -126,6 +126,6 @@ aggregateCatchData<-function(tbl,
         }
         write.csv(dfr,out.csv,na='',row.names=FALSE);
     }
-    
+
     return(dfr);
 }
