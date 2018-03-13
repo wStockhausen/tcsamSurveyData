@@ -153,6 +153,10 @@ This report creates a time series of maps of `r crabType` CPUE and bottom temper
     write.csv(dfrCPUE.ByXMS,file=file.path(outDir,"cpue.csv"))
 ```
 
+```{r extractEnvVars}
+  evs.csv<-tcsamSurveyData::calcEnvData.ByStation(dfr.SD,dfr.HD,verbosity=verbosity);
+```
+
 #Basemap
 
 The following figure illustrates the base map for subsequent maps of bottom temperature and survey CPUE.
@@ -171,7 +175,6 @@ The following figure illustrates the base map for subsequent maps of bottom temp
 ```{r calcEnvVars}
   stns.polys<-surveyGridLayers$grid;
   stns.pnts<-surveyGridLayers$stations;
-  evs.csv<-tcsamSurveyData::calcEnvData.ByStation(dfr.SD,dfr.HD,verbosity=verbosity);
   #join annual evs to stns.polys by station
   evs.polys<-wtsGIS::tmap.MergeDataframeWithLayer(
                                      evs.csv,stns.polys,

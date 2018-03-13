@@ -52,7 +52,7 @@ calcEnvData.ByStation<-function(tbl_strata=NULL,
     in.csv<-NULL;
     if (!is.data.frame(tbl_hauls)){
         if (!is.character(tbl_hauls)) {
-            in.csv<-selectFile(ext="csv",caption="Select csv file with haul info");
+            in.csv<-wtsUtilities::selectFile(ext="csv",caption="Select csv file with haul info");
             if (is.null(in.csv)|(in.csv=='')) return(NULL);
         } else {
             in.csv<-tbl_hauls;#tbl is a filename
@@ -78,9 +78,10 @@ calcEnvData.ByStation<-function(tbl_strata=NULL,
               (select distinct YEAR from tbl_hauls) y
             where
               s.YEAR=y.YEAR;";
+    if (verbosity>1) cat("\nyear query is:\n",qry,"\n");
     tbl_strata<-sqldf::sqldf(qry);
 
-    #Calculate and average cpue by year, station and factor levels
+    #Calculate and average env var values by year, station and factor levels
     #(e.g., sex, shell condition) over hauls.
     qry<-"select
             s.YEAR,
@@ -101,7 +102,7 @@ calcEnvData.ByStation<-function(tbl_strata=NULL,
             s.YEAR,s.STRATUM,s.GIS_STATION,s.LONGITUDE,s.LATITUDE
           order by
             s.YEAR,s.STRATUM,s.GIS_STATION;";
-    if (verbosity>1) cat("\nquery is:\n",qry,"\n");
+    if (verbosity>1) cat("\naveraging query is:\n",qry,"\n");
     tbl_hauls<-sqldf::sqldf(qry);
 
     if (export){
