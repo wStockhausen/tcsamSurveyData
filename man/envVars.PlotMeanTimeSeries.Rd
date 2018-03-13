@@ -9,7 +9,19 @@ envVars.PlotMeanTimeSeries(dfr, yearCol = "YEAR", envVarCol = "BOTTOM_TEMP",
   verbose = FALSE)
 }
 \arguments{
-\item{dfr}{- dataframe from call to \code{calcEnvData.ByStation}}
+\item{dfr}{- dataframe from call to \code{\link{calcEnvData.ByStation}}}
+
+\item{yearCol}{- dataframe column name for year}
+
+\item{envVarCol}{- dataframe column name for the environmental variable}
+
+\item{xlab}{- x axis label}
+
+\item{ylab}{- y axis label}
+
+\item{showPlot}{- flag (T/F) to show plot}
+
+\item{verbose}{- flag (T/F) to print debugging info}
 }
 \value{
 ggplot2 object
@@ -18,5 +30,5 @@ ggplot2 object
 Function to plot time series of mean environmental variable
 }
 \details{
-uses \code{wtsUtilities::plotMDFR.XY} and the \code{reshape2} package.
+uses \code{\link{wtsUtilities::plotMDFR.XY}} and the \code{reshape2} package.
 }

@@ -1,14 +1,15 @@
 #'
-#'@title Resample size compositions by year/stratum for AFSC trawl survey data
+#'@title Resample haul data to bootstrap size compositions by year/stratum from AFSC trawl survey data
 #'
 #'@param N          : number of resamples/year
 #'@param tbl_strata : data frame from call to \code{\link{selectStrata.TrawlSurvey}} [required]
 #'@param tbl_hauls  : dataframe from call to \code{\link{selectHauls.TrawlSurvey}} [required only if tbl_cpue not given]
 #'@param tbl_indivs : dataframe from call to \code{\link{selectIndivs.TrawlSurvey}} (or crab survey filename, or NULL) [required only if tbl_cpue not given]
-#'@param avgHaulsByStation: flag (T/F) to average hauls by station before calc'ing size comps
-#'@param bySex            : flag (T/F) to calc by sex
-#'@param byShellCondition : flag (T/F) to calc by shell condition
-#'@param byMaturity       : flag (T/F) to calc by maturity state
+#'@param byEW166           : flag (T/F) to aggregate size comps to EW166
+#'@param byEBS             : flag (T/F) to aggregate size comps to the EBS
+#'@param bySex             : flag (T/F) to calc by sex
+#'@param byShellCondition  : flag (T/F) to calc by shell condition
+#'@param byMaturity        : flag (T/F) to calc by maturity state
 #'@param cutpts        : vector of cutpoints to create size bins from
 #'@param truncate.low  : flag (T/F) to exclude individuals smaller than minSize
 #'@param truncate.high : flag (T/F) to exclude individuals larger than maxSize
@@ -49,7 +50,6 @@ calcResampledSizeComps<-function(tbl_strata,
                                   tbl_hauls=NULL,
                                   tbl_indivs=NULL,
                                   N=100,
-                                  avgHaulsByStation=FALSE,
                                   byEW166=FALSE,
                                   byEBS=TRUE,
                                   bySex=FALSE,

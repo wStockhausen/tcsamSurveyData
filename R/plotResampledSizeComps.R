@@ -19,9 +19,11 @@ plotResampledSizeComps<-function(dfr,
   sdN<-reshape2::dcast(dfr,YEAR+STRATUM+SEX+SHELL_CONDITION+MATURITY+SIZE~.,fun.aggregate=sd,value.var="totABUNDANCE");
   #combine mean, std devs and drop unnecessary levels
   dfrStats<-cbind(mnN,stdev=sdN[["."]],ymin=mnN$mean-sdN[["."]],ymax=mnN$mean+sdN[["."]]);
-  dfrStats<-dropLevels(dfrStats,
-                       dropLevels=list(SEX=c("HERMAPHRODITE","HERMAPHRODITIC","UNDETERMINED"),
-                                       MATURITY="UNDETERMINED"))
+  dfrStats<-wtsUtilities::dropLevels(
+                            dfrStats,
+                            dropLevels=list(SEX=c("HERMAPHRODITE","HERMAPHRODITIC","UNDETERMINED"),
+                                            MATURITY="UNDETERMINED")
+                          );
   #convert to lower case and replace "_"'s with spaces
   dfrStats$SEX<-tolower(dfrStats$SEX);
   dfrStats$MATURITY<-tolower(dfrStats$MATURITY);

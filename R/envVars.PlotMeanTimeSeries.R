@@ -3,11 +3,17 @@
 #'
 #' @description Function to plot time series of mean environmental variable
 #'
-#' @param dfr - dataframe from call to \code{calcEnvData.ByStation}
+#' @param dfr - dataframe from call to \code{\link{calcEnvData.ByStation}}
+#' @param yearCol - dataframe column name for year
+#' @param envVarCol - dataframe column name for the environmental variable
+#' @param xlab - x axis label
+#' @param ylab - y axis label
+#' @param showPlot - flag (T/F) to show plot
+#' @param verbose - flag (T/F) to print debugging info
 #'
 #' @return ggplot2 object
 #'
-#' @details uses \code{wtsUtilities::plotMDFR.XY} and the \code{reshape2} package.
+#' @details uses \code{\link{wtsUtilities::plotMDFR.XY}} and the \code{reshape2} package.
 #'
 #' @export
 #'

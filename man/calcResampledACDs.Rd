@@ -2,13 +2,12 @@
 % Please edit documentation in R/calcResampledACDs.R
 \name{calcResampledACDs}
 \alias{calcResampledACDs}
-\title{Resample size compositions by year/stratum for AFSC trawl survey data}
+\title{Resample haul data to bootstrap aggregated catch data by year/stratum from AFSC trawl survey data}
 \usage{
 calcResampledACDs(tbl_strata, tbl_hauls = NULL, tbl_indivs = NULL,
-  N = 100, avgHaulsByStation = FALSE, byEW166 = FALSE, byEBS = TRUE,
-  bySex = FALSE, byShellCondition = FALSE, byMaturity = FALSE,
-  minSize = 25, truncate.low = TRUE, truncate.high = FALSE,
-  verbosity = 0)
+  N = 100, byEW166 = FALSE, byEBS = TRUE, bySex = FALSE,
+  byShellCondition = FALSE, byMaturity = FALSE, minSize = 25,
+  truncate.low = TRUE, truncate.high = FALSE, verbosity = 0)
 }
 \arguments{
 \item{tbl_strata}{: data frame from call to \code{\link{selectStrata.TrawlSurvey}} [required]}
@@ -18,6 +17,10 @@ calcResampledACDs(tbl_strata, tbl_hauls = NULL, tbl_indivs = NULL,
 \item{tbl_indivs}{: dataframe from call to \code{\link{selectIndivs.TrawlSurvey}} (or crab survey filename, or NULL) [required only if tbl_cpue not given]}
 
 \item{N}{: number of resamples/year}
+
+\item{byEW166}{: flag (T/F) to aggregate size comps to EW166}
+
+\item{byEBS}{: flag (T/F) to aggregate size comps to the EBS}
 
 \item{bySex}{: flag (T/F) to calc by sex}
 
@@ -30,10 +33,6 @@ calcResampledACDs(tbl_strata, tbl_hauls = NULL, tbl_indivs = NULL,
 \item{truncate.high}{: flag (T/F) to exclude individuals larger than maxSize}
 
 \item{verbosity}{: integer flag indicating level of printed output (0=off,1=minimal,2=full)}
-
-\item{avgHaulsByStation:}{flag (T/F) to average hauls by station before calc'ing size comps}
-
-\item{cutpts}{: vector of cutpoints to create size bins from}
 }
 \value{
 data frame with ACDs by stratum. Columns are \cr

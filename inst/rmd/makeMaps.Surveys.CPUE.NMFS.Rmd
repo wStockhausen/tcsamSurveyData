@@ -139,8 +139,10 @@ This report creates a time series of maps of `r crabType` CPUE and bottom temper
   																     verbosity=verbosity);
 
 		##drop levels
-		dfrCPUE.ByXMS<-dropLevels(dfrCPUE.ByXMS,
-													   list(SEX=c('MISSING',"HERMAPHRODITIC")));
+		dfrCPUE.ByXMS<-wtsUtilities::dropLevels(
+		                 dfrCPUE.ByXMS,
+										 list(SEX=c('MISSING',"HERMAPHRODITIC"))
+									 );
 
     ##aggregate to requested levels
     if (params$aggBySex)            dfrCPUE.ByXMS$SEX            <-"ALL";

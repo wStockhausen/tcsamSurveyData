@@ -63,12 +63,13 @@ exportSizeComps.wide<-function(dfr,
     mdfr<-melt(dfr,id.vars,measure.vars,factorsAsStrings=TRUE);
 
     #drop requested factor levels
-    if (is.list(dropLevels)){
-        dfacs<-names(dropLevels);
-        for (dfac in dfacs){
-            mdfr<-mdfr[!(mdfr[[dfac]] %in% dropLevels[[dfac]]),];
-        }
-    }
+    mdfr<-wtsUtilities::dropLevels(mdfr,dropLevels);
+    # if (is.list(dropLevels)){
+    #     dfacs<-names(dropLevels);
+    #     for (dfac in dfacs){
+    #         mdfr<-mdfr[!(mdfr[[dfac]] %in% dropLevels[[dfac]]),];
+    #     }
+    # }
 
     #calculate the number of individuals sampled, summing over aggregated factors
     str<-"STRATUM&&facs+YEAR+numStations~.";

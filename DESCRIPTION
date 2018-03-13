@@ -1,8 +1,8 @@
 Package: tcsamSurveyData
 Type: Package
-Title: Functions to process AFSC bottom trawl survey data.
-Version: 2018.03.08
-Date: 2018-03-08
+Title: Functions to process AFSC bottom trawl survey data
+Version: 2018.03.13
+Date: 2018-03-13
 Author: William Stockhausen
 Maintainer: William Stockhausen <william.stockhausen@noaa.gov>
 Description: Provides a set of functions to calculate and plot abundance,
@@ -10,20 +10,18 @@ Description: Provides a set of functions to calculate and plot abundance,
 License: MIT + file LICENSE
 LazyData: true
 Imports:
-    ggmap (>= 2.5.2),
     ggplot2 (>= 1.0.1),
-    jpeg (>= 0.1-8),
     plyr (>= 1.8.3),
     reshape2 (>= 1.4.1),
     scales (>= 0.3.0),
     sqldf (>= 0.4-10),
     tcsamFunctions (>= 1.1.0),
     wtsGIS (>= 2018.03.07),
-    wtsGMT (>= 1.0.2),
     wtsPlots (>= 2018.02.07),
-    wtsUtilities (>= 2018.02.07)
+    wtsUtilities (>= 2018.03.13)
 Suggests:
     dplyr (>= 0.7.4),
+    rmarkdown (>= 1.8),
     tmap (>= 1.10),
     tmaptools (>= 1.2-1)
 RoxygenNote: 6.0.1

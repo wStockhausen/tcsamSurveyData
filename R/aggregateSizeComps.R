@@ -60,12 +60,13 @@ aggregateSizeComps<-function(zcs,
     mdfr<-melt(zcs,id.vars,measure.vars,factorsAsStrings=TRUE,value.name='value');
 
     ##drop requested factor levels
-    if (is.list(dropLevels)){
-        dfacs<-names(dropLevels);
-        for (dfac in dfacs){
-            mdfr<-mdfr[!(mdfr[[dfac]] %in% dropLevels[[dfac]]),];
-        }
-    }
+    mdfr<-wtsUtilities::dropLevels(mdfr,dropLevels);
+    # if (is.list(dropLevels)){
+    #     dfacs<-names(dropLevels);
+    #     for (dfac in dfacs){
+    #         mdfr<-mdfr[!(mdfr[[dfac]] %in% dropLevels[[dfac]]),];
+    #     }
+    # }
 
     #cast the dataframe to aggregate over missing factors
     str<-"STRATUM&&facs+YEAR+SIZE~.";
