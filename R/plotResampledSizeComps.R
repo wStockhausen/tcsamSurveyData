@@ -24,11 +24,17 @@ plotResampledSizeComps<-function(dfr,
                             dropLevels=list(SEX=c("HERMAPHRODITE","HERMAPHRODITIC","UNDETERMINED"),
                                             MATURITY="UNDETERMINED")
                           );
+  dfrStats<-wtsUtilities::dropLevels(
+                            dfrStats,
+                            dropLevels=list(SHELL_CONDITION=c("OLD_SHELL"),
+                                            MATURITY="IMMATURE");
+                          );
   #convert to lower case and replace "_"'s with spaces
   dfrStats$SEX<-tolower(dfrStats$SEX);
   dfrStats$MATURITY<-tolower(dfrStats$MATURITY);
   dfrStats$SHELL_CONDITION<-tolower(dfrStats$SHELL_CONDITION);
   dfrStats$SHELL_CONDITION<-gsub("_"," ",dfrStats$SHELL_CONDITION,fixed=TRUE);
+  dfrStats$MS<-paste0(dfrStats$MATURITY,", ",dfrStats$MATURITY);
 
   #create plot list by year for size compositions
   ps<-list();
@@ -38,7 +44,7 @@ plotResampledSizeComps<-function(dfr,
     p <- ggplot2::ggplot(data=pdfrStats,mapping=aes_string(x="SIZE",y="mean",colour="SEX"));
     p <- p + ggplot2::geom_ribbon(mapping=aes_string(ymin="ymin",ymax="ymax",fill="SEX"),alpha=0.5);
     p <- p + ggplot2::geom_line();
-    p <- p + ggplot2::facet_grid(MATURITY+SHELL_CONDITION~YEAR+STRATUM,scales=scales);
+    p <- p + ggplot2::facet_grid(MS~YEAR+STRATUM,scales=scales);
     p <- p + ggplot2::labs(x="size (mm CW)",y="abundance (millions)");
     ps[[paste0("Figure &&figno. Resampled size compositions for survey year ",y)]]<-p;
   }
@@ -57,14 +63,15 @@ plotResampledSizeComps<-function(dfr,
       p <- pdfrStats$p[idx];
       v <- pdfrStats$stdev[idx]^2;
       effN <- sum(v)/sum(p*(1-p));
-      dfrEffN<-rbind(dfrEffN,data.frame(year=y,stratum=s,effN=effN))
+      dfrEffN<-rbind(dfrEffN,data.frame(year=y,stratum=s,effective=effN,original=mean(pdfrStats$totN)))
     }
   }
-  p <- ggplot2::ggplot(dfrEffN,aes_string(x="year",y="effN",colour="stratum"));
+  tmp<-reshape2::melt(dfrEffN,measure.vars=c("effective","original"),variable.name="type",value.name="N")
+  p <- ggplot2::ggplot(tmp,aes_string(x="year",y="N",colour="stratum",linetype="type",shape="type"));
   p <- p + ggplot2::geom_line();
   p <- p + ggplot2::geom_point();
-  p <- p + ggplot2::labs(x="year",y="effective N");
-  ps[[paste0("Figure &&figno. Effective N.")]]<-p;
+  p <- p + ggplot2::labs(x="year",y="N");
+  ps[[paste0("Figure &&figno. Original N and effective N.")]]<-p;
 
   return(list(plots=ps,effN=dfrEffN));
 }

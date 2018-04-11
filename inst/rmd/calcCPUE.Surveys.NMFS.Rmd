@@ -1,0 +1,160 @@
+---
+author: "William Stockhausen"
+date: '`r format(Sys.Date(),"%d %B, %Y")`'
+output: 
+    word_document: 
+      reference_docx: '`r system.file("rmd/StylesforRmdDocs.docx",package="wtsUtilities")`'
+    pdf_document: 
+        toc: TRUE
+        fig_width: 6.5
+        fig_height: 4.0
+        fig_crop: FALSE
+        fig_caption: TRUE
+        keep_tex: FALSE
+    includes:
+      in_header: '`r system.file("rmd/StylesforRmdPDFs.sty",package="wtsUtilities")`'
+params: 
+  species: "Snow crab"
+  cpueType: "biomass"
+  title: "NMFS trawl survey &&species CPUE" 
+  outPath: "./"
+  dataPath: "./"
+  strataFile: ""
+  haulFiles: ""
+  strataType: "2015"
+  minYr: 2016
+  maxYr: 2017
+  HaulTypes: NULL
+  sex: "ALL"
+  maturity: "ALL"
+  shell_condition: "ALL"
+  aggBySex: FALSE
+  aggByMaturity: FALSE
+  aggByShellCondition: FALSE
+  minSize: 0
+  maxSize: '`r Inf`'
+  verbosity: 0
+title: '`r gsub("&&species",params$species,params$title,fixed=TRUE)`'
+fontsize: 11pt
+---
+
+```{r,echo=FALSE,results='hide'}
+##set knitr options for subsequent chunks
+knitr::opts_chunk$set(echo=FALSE, error=FALSE, message=FALSE, warning=FALSE, concordance=TRUE, fig.width=6.5, fig.height=7, dpi=300)
+```
+
+```{r inputs}
+  fn.SD<-file.path(params$dataPath,params$strataFile);
+  fn.CH<-file.path(params$dataPath,params$haulFiles);
+    
+  gisDir<-params$gisPath;
+
+  outDir<-params$outPath;
+  if (!dir.exists(outDir)) dir.create(outDir);
+
+  ##determine crab type
+  if (tolower(params$species)=="tanner crab") {species<-"BTC"; crabType<-"Tanner crab";}    else
+  if (tolower(params$species)=="snow crab")   {species<-"OTC"; crabType<-"snow crab";}      else
+  if (tolower(params$species)=="BKC") {species<-"BKC"; crabType<-"blue king crab";} else
+  if (tolower(params$species)=="RKC") {species<-"RKC"; crabType<-"red king crab";}
+
+  verbosity<-params$verbosity;##0=off,1=minimal,2=full
+  
+  ##required packages
+  require(tcsamSurveyData);
+
+  ##required preliminary calculations
+  codes.TS<-Codes.TrawlSurvey();
+```
+
+#Introduction
+
+This report creates csv files of CPUE and bottom temperature from the NMFS EBS bottom trawl survey. 
+
+```{r readDataFiles}
+    ##read strata definitions
+    csvStrata<-read.csv(fn.SD,check.names=FALSE,stringsAsFactors=FALSE)[,1:8];
+		#load crabhaul files
+		csvCrabhauls<-NULL;
+		for (f in fn.CH){
+			tmp<-read.csv(file=f);
+			csvCrabhauls<-rbind(csvCrabhauls,tmp);
+			rm(tmp);
+		}
+    rm(f);
+```
+
+```{r getStrata.TrawlSurvey}
+    dfr.SD<-selectStrata.TrawlSurvey(csvStrata,
+    																 species=species,
+    																 strataType=params$strataType,
+                                     export=FALSE,
+    																 verbosity=verbosity);
+```
+
+```{r getHauls.TrawlSurvey}
+    ##select haul data
+    dfr.HD<-selectHauls.TrawlSurvey(dfr.SD,
+    								                tbl=csvCrabhauls,
+                                    YearRange=c(params$minYr,params$maxYr),
+                                    export=FALSE,
+                                    verbosity=verbosity);
+```
+
+```{r getIndivs.TrawlSurvey}
+    #select individuals
+    dfr.ID<-selectIndivs.TrawlSurvey(dfr.HD,
+    								                 tbl=csvCrabhauls,
+                                     sex=params$sex,
+    								                 shell_condition=params$shell_condition,
+                                     maturity=params$maturity,
+    								                 calcMaleMaturity=FALSE,
+                                     minSize=params$minSize,
+    								                 maxSize=params$maxSize,
+                                     export=FALSE,
+    								                 verbosity=verbosity);
+```
+
+```{r cleanupInputCSVs}
+  rm(csvStrata,csvCrabhauls);
+```
+
+```{r calcSurveyCPUE}
+    ##calculate CPUE by haul
+    dfrCPUE.ByXMS<-calcCPUE.ByHaul(dfr.HD,
+  															  dfr.ID,
+                                  bySex=!params$aggBySex,
+                                  byMaturity=!params$aggByMaturity,
+                                  byShellCondition=!params$aggByShellCondition,
+                                  bySize=FALSE,
+                                  export=FALSE,
+  															  verbosity=verbosity);
+
+    ##calculate CPUE by station
+    dfrCPUE.ByXMS<-calcCPUE.ByStation(dfr.SD,
+  																     dfrCPUE.ByXMS,
+                                       export=FALSE,
+  																     verbosity=verbosity);
+
+		##drop levels
+		dfrCPUE.ByXMS<-wtsUtilities::dropLevels(
+		                 dfrCPUE.ByXMS,
+										 list(SEX=c('MISSING',"HERMAPHRODITIC"))
+									 );
+
+    ##aggregate to requested levels
+    if (params$aggBySex)            dfrCPUE.ByXMS$SEX            <-"ALL";
+    if (params$aggByMaturity)       dfrCPUE.ByXMS$MATURITY       <-"ALL";
+    if (params$aggByShellCondition) dfrCPUE.ByXMS$SHELL_CONDITION<-"ALL";
+
+    ##export to csv
+    write.csv(dfrCPUE.ByXMS,file=file.path(outDir,"cpue.Surveys.NMFS.csv"))
+```
+
+```{r extractEnvVars}
+  evs.csv<-tcsamSurveyData::calcEnvData.ByStation(dfr.SD,dfr.HD,verbosity=verbosity);
+  write.csv(evs.csv,file=file.path(outDir,"temp.Surveys.NMFS.csv"))
+```
+
+
+

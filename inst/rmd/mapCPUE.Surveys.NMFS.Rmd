@@ -45,9 +45,6 @@ knitr::opts_chunk$set(echo=FALSE, error=FALSE, message=FALSE, warning=FALSE, con
 ```
 
 ```{r inputs}
-  fn.SD<-file.path(params$dataPath,params$strataFile);
-  fn.CH<-file.path(params$dataPath,params$haulFiles);
-    
   gisDir<-params$gisPath;
 
   outDir<-params$outPath;
@@ -64,97 +61,6 @@ knitr::opts_chunk$set(echo=FALSE, error=FALSE, message=FALSE, warning=FALSE, con
   ##required packages
   require(tcsamSurveyData);
   require(ggpubr);
-
-  ##required preliminary calculations
-  codes.TS<-Codes.TrawlSurvey();
-```
-
-#Introduction
-
-This report creates a time series of maps of `r crabType` CPUE and bottom temperature from the NMFS EBS bottom trawl survey. 
-
-```{r readDataFiles}
-    ##read strata definitions
-    csvStrata<-read.csv(fn.SD,check.names=FALSE,stringsAsFactors=FALSE)[,1:8];
-		#load crabhaul files
-		csvCrabhauls<-NULL;
-		for (f in fn.CH){
-			tmp<-read.csv(file=f);
-			csvCrabhauls<-rbind(csvCrabhauls,tmp);
-			rm(tmp);
-		}
-    rm(f);
-```
-
-```{r getStrata.TrawlSurvey}
-    dfr.SD<-selectStrata.TrawlSurvey(csvStrata,
-    																 species=species,
-    																 strataType=params$strataType,
-                                     export=FALSE,
-    																 verbosity=verbosity);
-```
-
-```{r getHauls.TrawlSurvey}
-    ##select haul data
-    dfr.HD<-selectHauls.TrawlSurvey(dfr.SD,
-    								                tbl=csvCrabhauls,
-                                    YearRange=c(params$minYr,params$maxYr),
-                                    export=FALSE,
-                                    verbosity=verbosity);
-```
-
-```{r getIndivs.TrawlSurvey}
-    #select individuals
-    dfr.ID<-selectIndivs.TrawlSurvey(dfr.HD,
-    								                 tbl=csvCrabhauls,
-                                     sex=params$sex,
-    								                 shell_condition=params$shell_condition,
-                                     maturity=params$maturity,
-    								                 calcMaleMaturity=FALSE,
-                                     minSize=params$minSize,
-    								                 maxSize=params$maxSize,
-                                     export=FALSE,
-    								                 verbosity=verbosity);
-```
-
-```{r cleanupInputCSVs}
-  rm(csvStrata,csvCrabhauls);
-```
-
-```{r calcSurveyCPUE}
-    ##calculate CPUE by haul
-    dfrCPUE.ByXMS<-calcCPUE.ByHaul(dfr.HD,
-  															  dfr.ID,
-                                  bySex=!params$aggBySex,
-                                  byMaturity=!params$aggByMaturity,
-                                  byShellCondition=!params$aggByShellCondition,
-                                  bySize=FALSE,
-                                  export=FALSE,
-  															  verbosity=verbosity);
-
-    ##calculate CPUE by station
-    dfrCPUE.ByXMS<-calcCPUE.ByStation(dfr.SD,
-  																     dfrCPUE.ByXMS,
-                                       export=FALSE,
-  																     verbosity=verbosity);
-
-		##drop levels
-		dfrCPUE.ByXMS<-wtsUtilities::dropLevels(
-		                 dfrCPUE.ByXMS,
-										 list(SEX=c('MISSING',"HERMAPHRODITIC"))
-									 );
-
-    ##aggregate to requested levels
-    if (params$aggBySex)            dfrCPUE.ByXMS$SEX            <-"ALL";
-    if (params$aggByMaturity)       dfrCPUE.ByXMS$MATURITY       <-"ALL";
-    if (params$aggByShellCondition) dfrCPUE.ByXMS$SHELL_CONDITION<-"ALL";
-
-    ##export to csv
-    write.csv(dfrCPUE.ByXMS,file=file.path(outDir,"cpue.csv"))
-```
-
-```{r extractEnvVars}
-  evs.csv<-tcsamSurveyData::calcEnvData.ByStation(dfr.SD,dfr.HD,verbosity=verbosity);
 ```
 
 #Basemap
@@ -238,7 +144,6 @@ The following maps present survey CPUE (in biomass) for components of the `r cra
     rm(iXMS,idx,idm,ids,tmp,dfr,dfrp,stns.pnts);
 ```
 
-
 ```{r createMaps}
   yrs<-sort(unique(pntsCPUE$YEAR));
   ncol<-min(2,nrow(uXMSs)); nrow<-ceiling(nrow(uXMSs)/2);
@@ -307,6 +212,4 @@ The following maps present survey CPUE (in biomass) for components of the `r cra
     captions<-c(captions,cap);
   }
 ```
-
-
 
