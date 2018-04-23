@@ -44,7 +44,9 @@ data frame with size comps by stratum. Columns are \cr
 \item  YEAR
 \item  STRATUM
 \item  STRATUM_AREA
-\item  other user-defined factors (e.g., sex, shell_condition)
+\item  SEX
+\item  MATURTITY
+\item  SHELL_CONDITION
 \item  SIZE
 \item  numStations
 \item  numHauls
@@ -59,7 +61,8 @@ This function resamples size compositions by year/stratum for AFSC trawl survey 
 }
 \details{
 This function performs two-stage resampling (hauls w/in strata, individuals w/in hauls)
-to calculate a set of resampled size compositions by year. \cr
+to calculate a set of resampled size compositions by year. The size comps with resampling index i=0
+are the observed size comps.\cr
 \cr
 Other notes: \cr
 \itemize{

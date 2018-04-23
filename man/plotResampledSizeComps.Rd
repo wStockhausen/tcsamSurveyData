@@ -4,10 +4,12 @@
 \alias{plotResampledSizeComps}
 \title{Plot resampled size compositions}
 \usage{
-plotResampledSizeComps(dfr, scales = "free_y")
+plotResampledSizeComps(dfr, N = 200, scales = "free_y")
 }
 \arguments{
 \item{dfr}{- dataframe with resampled size compositions}
+
+\item{N}{- assumed effective sample size (for plotting)}
 
 \item{scales}{- 'scales' parameter passed to facet_grid ("fixed" or "free_y")}
 }

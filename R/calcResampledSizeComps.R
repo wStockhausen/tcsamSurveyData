@@ -18,7 +18,8 @@
 #'@description This function resamples size compositions by year/stratum for AFSC trawl survey data.
 #'
 #'@details This function performs two-stage resampling (hauls w/in strata, individuals w/in hauls)
-#'to calculate a set of resampled size compositions by year. \cr
+#'to calculate a set of resampled size compositions by year. The size comps with resampling index i=0
+#'are the observed size comps.\cr
 #'\cr
 #'Other notes: \cr
 #'\itemize{
@@ -33,7 +34,9 @@
 #'\item  YEAR
 #'\item  STRATUM
 #'\item  STRATUM_AREA
-#'\item  other user-defined factors (e.g., sex, shell_condition)
+#'\item  SEX
+#'\item  MATURTITY
+#'\item  SHELL_CONDITION
 #'\item  SIZE
 #'\item  numStations
 #'\item  numHauls
@@ -72,6 +75,10 @@ calcResampledSizeComps<-function(tbl_strata,
                                  cutpts=cutpts,
                                  truncate.low=truncate.low,
                                  truncate.high=truncate.high);
+  if (byEW166|byEBS){
+    zcs<-calcSizeComps.EW166(tbl=zcs,export=FALSE);
+    if (byEBS) zcs<-calcSizeComps.EBS(tbl=zcs,export=FALSE);
+  }
   dfr.zcs<-rbind(dfr.zcs,cbind(i=0,zcs));
 
   if (N>0){
@@ -131,16 +138,18 @@ calcResampledSizeComps<-function(tbl_strata,
                                            truncate.low=truncate.low,
                                            truncate.high=truncate.high);
             dfr.zcs.byStrat<-rbind(dfr.zcs.byStrat,zcs);
+            rm(zcs);
           } else {
             cat("no indivs selected for year",y,",stratum",s,",sample",i,"\n");
           }
         }#s-loop
         if (!is.null(dfr.zcs.byStrat)){
           cat("calculating size comps for year",y,"sample",i,"\n");
+          zcs<-dfr.zcs.byStrat;
           if (byEW166|byEBS){
-            zcs<-calcSizeComps.EW166(tbl=dfr.zcs.byStrat,export=FALSE);
+            zcs<-calcSizeComps.EW166(tbl=dfr,export=FALSE);
             if (byEBS) zcs<-calcSizeComps.EBS(tbl=zcs,export=FALSE);
-          } else zcs<-dfr.zcs.byStrat;
+          }
           dfr.zcs<-rbind(dfr.zcs,cbind(i=i,zcs));
         } else {
           cat("no size comps for year",y,",sample",i,"\n");
@@ -148,6 +157,10 @@ calcResampledSizeComps<-function(tbl_strata,
       }#i-loop
     }#y-loop
   }#N>0
+
+  if (!("SEX" %in% names(dfr.zcs)))             dfr.zcs$SEX<-"all";
+  if (!("MATURITY" %in% names(dfr.zcs)))        dfr.zcs$MATURITY<-"all";
+  if (!("SHELL_CONDITION" %in% names(dfr.zcs))) dfr.zcs$SHELL_CONDITION<-"all";
   return(dfr.zcs)
 }
 

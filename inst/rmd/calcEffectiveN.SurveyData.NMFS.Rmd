@@ -1,0 +1,214 @@
+---
+title: '`r params$title`'
+author: "William Stockhausen"
+date: '`r format(Sys.Date(),"%d %B, %Y")`'
+output:
+  pdf_document:
+    keep_tex: yes
+    toc: yes
+    fig_caption: yes
+    fig_crop: no
+    fig_height: 3.5
+    fig_width: 6.5
+    includes:
+      in_header: '`r system.file("rmd/StylesforRmdPDFs.sty",package="wtsUtilities")`'
+  word_document:
+    reference_docx: '`r system.file("rmd/StylesforRmdDocs.docx",package="wtsUtilities")`'
+params:
+  loadRZCs: "`r NULL`"
+  outDir: "./OutputFiles"
+  title: "Effective N for NMFS Survey Size Compositions"
+  species: "BTC"
+  bootN: 100
+  minYr: 1975
+  maxYr: 2017
+  minSize: 25
+  maxSize: 185
+  binSize: 5
+  lglZ: 125
+  bySex: "`r TRUE`"
+  byMaturity: "`r TRUE`"
+  byShellCondition: "`r TRUE`"
+  verbosity: 0
+fontsize: 11pt
+---
+
+```{r setup,echo=FALSE, error=FALSE, message=FALSE, warning=FALSE,results='hide'}
+  ##dir.top<-"Y:"; ##Windows
+  dir.top<-"~";    ##Mac
+  dir.TS<-"StockAssessments-Crab/Data/Survey.NMFS.EBS/Current";##could be an input
+	path<-file.path(dir.top,dir.TS);
+  fn.SD<-"TannerCrab_SurveyStrata.csv";
+  fn.CH<-"TannerCrab_HaulData.csv";
+  outDir<-params$outDir;
+  if (!dir.exists(outDir)) dir.create(outDir);
+
+  figno<-1;
+  tblno<-1;
+
+  #load required packages
+  require(tcsamSurveyData);
+  require(wtsPlots);
+  require(tables);
+  options(stringsAsFactors=FALSE);
+
+  ##set knitr options for subsequent chunks
+  knitr::opts_chunk$set(echo=FALSE, error=FALSE, message=FALSE, warning=FALSE, concordance=TRUE, dpi=300);
+```
+
+\listoftables
+
+\listoffigures
+
+\clearpage
+
+#Introduction
+
+This report estimates the effective N associated with size compositions from NMFS survey data.
+
+```{r inputs}
+  if (!is.null(params$loadRZCs)){
+    load(params$loadRZCs);#restore saved variables
+  } else {
+    ##
+    species<-params$species;
+    strataType<-'2015';
+    minYr<-params$minYr;
+    maxYr<-params$maxYr;
+  	haulTypes<-NULL;#get ALL haul types for new time series
+  	minSize<-params$minSize;#minimum size of individuals to extract
+  	cutpts<-seq(from=minSize,to=params$maxSize,by=5);
+  
+    lglZ<-params$lglZ;#industry-preferred male size
+  }
+    verbosity<-params$verbosity;##0=off,1=minimal,2=full
+      
+    ##required preliminary calculations
+    codes.TS<-Codes.TrawlSurvey();
+    Sum<-function(x){base::sum(x, na.rm=TRUE)};#sum function with na.rm=TRUE
+```
+
+The survey data were processed using the following parameters: 
+
+```{r makeTable,results="asis"}
+  cap<-"Parameters used to process crab haul data.";
+  dfr<-data.frame(Quantity=c(
+                    "min size (mm CW)","max size (mm CW)","bin size (mm CW)","strata type","haul types"),
+                  Value=as.character(c(
+                    minSize,maxSize,binSize,strataType,ifelse(is.null(haulTypes),"all",haulTypes))),stringsAsFactors=FALSE);
+  tbl<-as.tabular(dfr);
+  latex(tbl,
+        options=list(tabular="longtable",
+                     toprule=paste0("\\caption{",cap,"} \\\\ \n\\hline"),
+                     midrule="\\hline\\\\\n[-2\\normalbaselineskip]\\endhead\\hline\\endfoot\\\\"));
+  cat("\n\n");
+  rm(dfr,tbl);
+```
+
+```{r readDataFiles}
+  if (is.null(params$loadRZCs)){
+      ##select strata definitions
+      tmp0<-read.csv(file.path(path,fn.SD),check.names=FALSE,stringsAsFactors=FALSE)[,1:8];
+      names(tmp0)[8]<-"TOTAL_AREA";
+      dfr.SD<-selectStrata.TrawlSurvey(tmp0,
+      																 species=species,
+      																 strataType=strataType,
+                                       export=FALSE,
+      																 verbosity=verbosity);
+  		#load crabhaul files
+  		dfr.crabhauls<-NULL;
+  		for (f in fn.CH){
+  			tmp1<-read.csv(file=file.path(path,f));
+  			dfr.crabhauls<-rbind(dfr.crabhauls,tmp1);
+  		}
+  
+      rm(tmp0,tmp1);
+  }
+```
+
+```{r getData.TrawlSurvey}
+  if (is.null(params$loadRZCs)){
+      ##select haul data
+      dfr.HD<-selectHauls.TrawlSurvey(dfr.SD,
+      								                tbl=dfr.crabhauls,
+                                      YearRange=c(minYr,maxYr),
+                                      export=FALSE,
+                                      verbosity=verbosity);
+      #select individuals
+      dfr.ID<-selectIndivs.TrawlSurvey(dfr.HD,
+      								                 tbl=dfr.crabhauls,
+                                       sex='ALL',
+      								                 shell_condition='ALL',
+                                       maturity='ALL',
+      								                 calcMaleMaturity=TRUE,
+                                       minSize=minSize,
+      								                 maxSize=Inf,
+                                       export=FALSE,
+      								                 verbosity=verbosity);
+    rm(dfr.crabhauls);
+  }
+```
+
+```{r calcResampledSizeCompositions}
+  if (is.null(params$loadRZCs)){
+    dfrRZCs <- calcResampledSizeComps(N=params$bootN,
+                                      tbl_strata=dfr.SD,
+                                      tbl_hauls=dfr.HD,
+                                      tbl_indivs=dfr.ID,
+                                      bySex=params$bySex,
+                                      byMaturity=params$byMaturity,
+                                      byShellCondition=params$byShellCondition,
+                                      byEBS=TRUE,
+                                      truncate.low=TRUE,
+                                      truncate.high=FALSE,
+                                      cutpts=cutpts);
+    if (!("SEX" %in% names(dfrRZCs)))             dfrRZCs$SEX<-"all";
+    if (!("MATURITY" %in% names(dfrRZCs)))        dfrRZCs$MATURITY<-"all";
+    if (!("SHELL_CONDITION" %in% names(dfrRZCs))) dfrRZCs$SHELL_CONDITION<-"all";
+  }
+```
+
+#Resampled size compositions
+The resampled size compositions are presented in this section. 
+
+```{r plotResampledSizeCompositions,results="asis",out.width="6.5in",fig.cap=captions,eval.after="fig.cap",fig.pos="H"}
+  lstRZCs<-plotResampledSizeComps(dfrRZCs);
+  caps<-names(lstRZCs$plots)[1:(length(names(lstRZCs$plots))-2)];
+  captions<-gsub("Figure &&figno. ","",caps,fixed=TRUE);
+  for (p in caps) {print(lstRZCs$plots[[p]])};
+  rm(caps)
+```
+
+\clearpage
+
+#Effective sample sizes
+The resulting effective sample sizes are presented in the following figure and table.
+
+```{r plotEffectiveNs,results="asis",out.height="3.0in",fig.cap=captions,eval.after="fig.cap",fig.pos="H"}
+  caps<-names(lstRZCs$plots)[(length(names(lstRZCs$plots))-1):length(names(lstRZCs$plots))];
+  captions<-gsub("Figure &&figno. ","",caps,fixed=TRUE);
+  for (p in caps) {print(lstRZCs$plots[[p]])};
+  rm(caps)
+```
+
+\clearpage
+
+
+```{r printEffNs, results='asis'}
+  tbl<-as.tabular(lstRZCs$effN);
+  cap<-"Effective sample sizes for size compositions based on bootstrap resampling."
+  latex(tbl,
+        options=list(tabular="longtable",
+                     toprule=paste0("\\caption{",cap,"} \\\\ \n\\hline"),
+                     midrule="\\hline\\\\\n[-2\\normalbaselineskip]\\endhead\\hline\\endfoot\\\\"));
+  cat("\n\n");
+  rm(tbl,cap);
+```
+
+```{r saveAll}
+  if (is.null(params$loadRZCs)) 
+    save(species,minYr,maxYr,minSize,maxSize,binSize,cutpts,lglZ,
+         strataType,haulTypes,dfrRZCs,lstRZCs,file="newRZCs.RData");
+  write.csv(lstRZCs$effN,file=file.path(outDir,"EffectiveNs.csv"))
+```
+
