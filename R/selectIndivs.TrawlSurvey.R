@@ -1,5 +1,5 @@
 #'
-#'@title Function to extract crab data on individuals w/ selected characteristics from NMFS trawl survey csv files.
+#'@title Function to extract crab data on individuals w/ selected characteristics from NMFS trawl survey csv files
 #'
 #'@description Function to extract crab data on individuals w/ selected characteristics from NMFS trawl survey csv files.
 #'
@@ -17,7 +17,7 @@
 #'@param out.dir - base path for output csv file              (set to folder of input csv file or current working directory)
 #'@param verbosity : integer flag indicating level of printed output (0=off,1=minimal,2=full)
 #'
-#'@return dataframe (see Details for coulmn names)
+#'@return dataframe (see \link{details} for coulmn names)
 #'
 #'@details If neither tbl or in.csv is given, the user will be prompted for a csv file via a file dialog box.\cr
 #' Returned dataframe will have columns:

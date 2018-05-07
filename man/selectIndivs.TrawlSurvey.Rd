@@ -2,7 +2,7 @@
 % Please edit documentation in R/selectIndivs.TrawlSurvey.R
 \name{selectIndivs.TrawlSurvey}
 \alias{selectIndivs.TrawlSurvey}
-\title{Function to extract crab data on individuals w/ selected characteristics from NMFS trawl survey csv files.}
+\title{Function to extract crab data on individuals w/ selected characteristics from NMFS trawl survey csv files}
 \usage{
 selectIndivs.TrawlSurvey(tbl_hauls, tbl = NULL, col.Size = "WIDTH",
   sex = c("MALE", "FEMALE", "ALL"), shell_condition = c("NEW_SHELL",
@@ -39,7 +39,7 @@ selectIndivs.TrawlSurvey(tbl_hauls, tbl = NULL, col.Size = "WIDTH",
 \item{verbosity}{: integer flag indicating level of printed output (0=off,1=minimal,2=full)}
 }
 \value{
-dataframe (see Details for coulmn names)
+dataframe (see \link{details} for coulmn names)
 }
 \description{
 Function to extract crab data on individuals w/ selected characteristics from NMFS trawl survey csv files.

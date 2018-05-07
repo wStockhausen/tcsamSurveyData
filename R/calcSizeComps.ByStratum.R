@@ -1,5 +1,5 @@
 #'
-#'@title Calculate size compositions by stratum from AFSC trawl survey data.
+#'@title Calculate size compositions by stratum from NMFS trawl survey data
 #'
 #'@param tbl_strata : data frame from call to \code{\link{selectStrata.TrawlSurvey}} [required]
 #'@param tbl_cpue   : data frame from call to \code{\link{calcCPUE.ByHaul}} or \code{\link{calcCPUE.ByStation}}, or filename for csv file, or NULL

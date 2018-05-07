@@ -2,7 +2,7 @@
 % Please edit documentation in R/calcSizeComps.ByStratum.R
 \name{calcSizeComps.ByStratum}
 \alias{calcSizeComps.ByStratum}
-\title{Calculate size compositions by stratum from AFSC trawl survey data.}
+\title{Calculate size compositions by stratum from NMFS trawl survey data}
 \usage{
 calcSizeComps.ByStratum(tbl_strata, tbl_cpue = NULL, tbl_hauls = NULL,
   tbl_indivs = NULL, avgHaulsByStation = FALSE, bySex = FALSE,
