@@ -1,12 +1,12 @@
 Package: tcsamSurveyData
 Type: Package
-Title: Functions to process AFSC bottom trawl survey data
-Version: 2018.05.07
-Date: 2018-05-07
+Title: Functions to process AFSC and BSFRF trawl survey data
+Version: 2018.06.15
+Date: 2018-06-15
 Author: William Stockhausen
 Maintainer: William Stockhausen <william.stockhausen@noaa.gov>
 Description: Provides a set of functions to calculate and plot abundance,
-    biomass, size frequencies from nmfs EBS survey data.
+    biomass, size frequencies from AFSC and BSFRF EBS survey data.
 License: MIT + file LICENSE
 LazyData: true
 Imports:
