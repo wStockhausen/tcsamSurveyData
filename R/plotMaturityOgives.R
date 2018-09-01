@@ -50,7 +50,10 @@ plotMaturityOgives<-function(dfrp,
     p <- p + ggplot2::scale_colour_brewer(type='div',palette=2)
     p <- p + ggplot2::scale_x_continuous();
     p <- p + ggplot2::scale_y_continuous(breaks=pretty(c(0,1)),limits=c(0,1),expand=c(0.01,0))
-    p <- p + ggplot2::facet_grid(facets=facet_grid);
+    if (!is.null(facet_grid)){
+      if (packageVersion("ggplot2")<="2.2.1") p <- p + ggplot2::facet_grid(facets=facet_grid);
+      if (packageVersion("ggplot2")>="3.0.0") p <- p + ggplot2::facet_grid(rows=facet_grid);
+    }
     p <- p + ggplot2::labs(x=xlab,y=ylab,size="sample\n size",shape="sex");
     if (!is.null(title)) p <- p + ggplot2::ggtitle(title);
     p <- p + ggplot2::guides(color=guide_legend('year'))

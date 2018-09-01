@@ -4,17 +4,18 @@
 \alias{doBiomassCalcs}
 \title{Function to calculate cpue by survey haul from station, haul and individual crab info.}
 \usage{
-doBiomassCalcs(tbl.strata, tbl.hauls, tbl.indivs, calcCPUE.byStation = TRUE,
-  calcBiomass.byEW166 = TRUE, bySex = FALSE, byShellCondition = FALSE,
-  byMaturity = FALSE, bySize = FALSE, cutpts = seq(from = 0, to = 185, by
-  = 5), truncate.low = TRUE, truncate.high = FALSE,
+doBiomassCalcs(tbl.strata, tbl.hauls, tbl.indivs,
+  calcCPUE.byStation = TRUE, calcBiomass.byEW166 = TRUE,
+  bySex = FALSE, byShellCondition = FALSE, byMaturity = FALSE,
+  bySize = FALSE, cutpts = seq(from = 0, to = 185, by = 5),
+  truncate.low = TRUE, truncate.high = FALSE,
   export.cpue.byH = FALSE, export.cpue.byS = FALSE,
   export.bio.byStrata = FALSE, export.bio.EW166 = FALSE,
   export.totBio = FALSE, out.csv.cpue.byH = "cpue.byH.csv",
   out.csv.cpue.byS = "cpue.byS.csv",
   out.csv.bio.byStrata = "bio.byStrata.csv",
-  out.csv.bio.EW166 = "bio.EW166.csv", out.csv.totBio = "totBiomass.csv",
-  out.dir = NULL, verbosity = 0)
+  out.csv.bio.EW166 = "bio.EW166.csv",
+  out.csv.totBio = "totBiomass.csv", out.dir = NULL, verbosity = 0)
 }
 \arguments{
 \item{tbl.strata}{: dataframe with survey strata info (output from \code{\link{selectStrata.TrawlSurvey}})}

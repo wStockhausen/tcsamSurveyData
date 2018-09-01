@@ -4,8 +4,9 @@
 \alias{calcEnvData.ByStation}
 \title{Function to calculate environmental data by survey station, averaging over values by haul.}
 \usage{
-calcEnvData.ByStation(tbl_strata = NULL, tbl_hauls = NULL, export = FALSE,
-  out.csv = "envData.ByStation.csv", out.dir = NULL, verbosity = 0)
+calcEnvData.ByStation(tbl_strata = NULL, tbl_hauls = NULL,
+  export = FALSE, out.csv = "envData.ByStation.csv", out.dir = NULL,
+  verbosity = 0)
 }
 \arguments{
 \item{tbl_strata}{: dataframe w/ station info}

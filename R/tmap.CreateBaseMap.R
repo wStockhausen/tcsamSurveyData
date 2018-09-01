@@ -13,7 +13,7 @@
 #' @param shapeFile.land - land shapefile
 #' @param shapeFiles.survey - list (grid, stations) of shapfiles to define survey stations
 #' @param strCRS - string representation of CRS (default = WGS84) used for ALL shapefiles
-#' @param boundingbox - a tmap-style bounding box
+#' @param boundingbox - a bounding box (list with elements "bottomleft" and "topright")
 #' @param colors.bathym - color for the bathymetry
 #' @param points.size - size for the station locations
 #'
@@ -29,15 +29,12 @@ tmap.CreateBaseMap<-function( layer.land=NULL,
                               shapeFile.land      ="Land/Alaska.shp",
                               shapeFiles.survey=list(grid    ="NMFS_Survey_Info/NMFS_EBSSurveyBlocks.shp",
                                                      stations="NMFS_Survey_Info/NMFS_EBSSurveyStations.PointsLL.shp"),
-                              strCRS=tmaptools::get_proj4("longlat"),
+                              strCRS=tmaptools::get_proj4("longlat",output="character"),
                               boundingbox=list(bottomleft=list(lon=-179,lat=54),
                                                topright  =list(lon=-157,lat=62.5)),
                               colors.bathym="darkblue",
                               points.size=0.01
                               ){
-
-  #strWGS84<-tmaptools::get_proj4("longlat");
-  #crsWGS84<-sp::CRS(strWGS84);
 
   land<-layer.land;
   if (is.null(land))
@@ -57,10 +54,10 @@ tmap.CreateBaseMap<-function( layer.land=NULL,
 
   #define bounding box for map extent
   bbext<-tmaptools::bb(land);#just to get a bounding box
-  bbext['x','min']<-boundingbox$bottomleft$lon;
-  bbext['y','min']<-boundingbox$bottomleft$lat;
-  bbext['x','max']<-boundingbox$topright$lon;
-  bbext['y','max']<-boundingbox$topright$lat;
+  bbext['xmin']<-boundingbox$bottomleft$lon;
+  bbext['ymin']<-boundingbox$bottomleft$lat;
+  bbext['xmax']<-boundingbox$topright$lon;
+  bbext['ymax']<-boundingbox$topright$lat;
 
   #basemap using WGS84
   basemap<-tmap::tm_shape(land,bbox=bbext,is.master=TRUE)+tmap::tm_fill();

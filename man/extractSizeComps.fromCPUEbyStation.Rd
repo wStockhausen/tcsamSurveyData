@@ -4,15 +4,19 @@
 \alias{extractSizeComps.fromCPUEbyStation}
 \title{Extract size compositions from size-specific CPUE data by station}
 \usage{
-extractSizeComps.fromCPUEbyStation(tbl_cpue = NULL, cutpts = seq(from = 25,
-  to = 185, by = 5), export = FALSE,
-  out.csv = "SurveySizeComps.CPUE.ByStratum.csv", out.dir = NULL,
-  verbosity = 0)
+extractSizeComps.fromCPUEbyStation(tbl_cpue = NULL, cutpts = seq(from =
+  25, to = 185, by = 5), truncate.low = TRUE, truncate.high = FALSE,
+  export = FALSE, out.csv = "SurveySizeComps.CPUE.ByStratum.csv",
+  out.dir = NULL, verbosity = 0)
 }
 \arguments{
 \item{tbl_cpue}{: data frame from call to \code{\link{calcCPUE.ByStation}} or filename for csv file}
 
 \item{cutpts}{: vector of cutpoints to create size bins from}
+
+\item{truncate.low}{: flag (T/F) to exclude individuals smaller than minSize}
+
+\item{truncate.high}{: flag (T/F) to exclude individuals larger than maxSize}
 
 \item{export}{: boolean flag to write results to csv file}
 
@@ -23,16 +27,17 @@ extractSizeComps.fromCPUEbyStation(tbl_cpue = NULL, cutpts = seq(from = 25,
 \item{verbosity}{: integer flag indicating level of printed output (0=off,1=minimal,2=full)}
 }
 \value{
-data frame with size comps by stratum. Columns are \cr
+data frame with size comps by station. Columns are \cr
 \itemize{
 \item  YEAR
 \item  STRATUM
 \item  STRATUM_AREA
-\item  other user-defined factors (e.g., sex, shell_condition)
+\item  SEX
+\item  MATURITY
+\item  SHELL_CONDITION
 \item  SIZE
 \item  numStations
 \item  numHauls
-\item  numNonZeroHauls
 \item  numIndivs
 \item  avgNumCPUE = average cpue-by-size (numbers/sq. nautical mile) by stratum
 \item  stdNumCPUE = standard deviation in cpue-by-size (numbers/sq. nautical mile) by stratum

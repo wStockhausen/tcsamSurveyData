@@ -4,11 +4,12 @@
 \alias{tmap.CreateSurveyGridLayers}
 \title{Create the polygon and point geometry tmap layers from polygon and point shapefiles for a survey grid}
 \usage{
-tmap.CreateSurveyGridLayers(gisDir = system.file("extdata/Shapefiles", package
-  = "wtsGIS"), shapeFiles = list(grid =
+tmap.CreateSurveyGridLayers(gisDir = system.file("extdata/Shapefiles",
+  package = "wtsGIS"), shapeFiles = list(grid =
   "NMFS_Survey_Info/NMFS_EBSSurveyBlocks.shp", stations =
   "NMFS_Survey_Info/NMFS_EBSSurveyStations.PointsLL.shp"),
-  strCRS = tmaptools::get_proj4("longlat"))
+  strCRS = tmaptools::get_proj4("longlat", output = "character"),
+  as.sf = FALSE)
 }
 \arguments{
 \item{gisDir}{- common toplevel directory for files}
@@ -16,6 +17,8 @@ tmap.CreateSurveyGridLayers(gisDir = system.file("extdata/Shapefiles", package
 \item{shapeFiles}{- a list of shapefiles to read ("grid" and "stations")}
 
 \item{strCRS}{- string describing the final coordinate reference system (CRS)}
+
+\item{as.sf}{- flag to create grid layers as simple features (sf)}
 }
 \value{
 a 2-element list with the grid and stations map layers consistent with the tmap package

@@ -4,8 +4,9 @@
 \alias{envVars.PlotMeanTimeSeries}
 \title{Plot time series of mean environmental variable}
 \usage{
-envVars.PlotMeanTimeSeries(dfr, yearCol = "YEAR", envVarCol = "BOTTOM_TEMP",
-  xlab = "year", ylab = "Bottom Temperature (degC)", showPlot = FALSE,
+envVars.PlotMeanTimeSeries(dfr, yearCol = "YEAR",
+  envVarCol = "BOTTOM_TEMP", xlab = "year",
+  ylab = "Bottom Temperature (degC)", showPlot = FALSE,
   verbose = FALSE)
 }
 \arguments{

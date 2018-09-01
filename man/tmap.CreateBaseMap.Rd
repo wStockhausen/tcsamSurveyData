@@ -5,14 +5,16 @@
 \title{Create a basemap layer for maps based on the tmap package}
 \usage{
 tmap.CreateBaseMap(layer.land = NULL, layer.bathym = NULL,
-  layers.survey = NULL, gisDir = system.file("extdata/Shapefiles", package =
-  "wtsGIS"), shapeFile.bathymetry = "Bathymetry/ShelfBathymetry.shp",
+  layers.survey = NULL, gisDir = system.file("extdata/Shapefiles",
+  package = "wtsGIS"),
+  shapeFile.bathymetry = "Bathymetry/ShelfBathymetry.shp",
   shapeFile.land = "Land/Alaska.shp", shapeFiles.survey = list(grid =
   "NMFS_Survey_Info/NMFS_EBSSurveyBlocks.shp", stations =
   "NMFS_Survey_Info/NMFS_EBSSurveyStations.PointsLL.shp"),
-  strCRS = tmaptools::get_proj4("longlat"), boundingbox = list(bottomleft =
-  list(lon = -179, lat = 54), topright = list(lon = -157, lat = 62.5)),
-  colors.bathym = "darkblue", points.size = 0.01)
+  strCRS = tmaptools::get_proj4("longlat", output = "character"),
+  boundingbox = list(bottomleft = list(lon = -179, lat = 54), topright =
+  list(lon = -157, lat = 62.5)), colors.bathym = "darkblue",
+  points.size = 0.01)
 }
 \arguments{
 \item{layer.land}{- a tmap layer representing land}
@@ -31,7 +33,7 @@ tmap.CreateBaseMap(layer.land = NULL, layer.bathym = NULL,
 
 \item{strCRS}{- string representation of CRS (default = WGS84) used for ALL shapefiles}
 
-\item{boundingbox}{- a tmap-style bounding box}
+\item{boundingbox}{- a bounding box (list with elements "bottomleft" and "topright")}
 
 \item{colors.bathym}{- color for the bathymetry}
 

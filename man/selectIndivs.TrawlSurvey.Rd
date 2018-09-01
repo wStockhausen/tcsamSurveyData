@@ -2,7 +2,7 @@
 % Please edit documentation in R/selectIndivs.TrawlSurvey.R
 \name{selectIndivs.TrawlSurvey}
 \alias{selectIndivs.TrawlSurvey}
-\title{Function to extract crab data on individuals w/ selected characteristics from NMFS trawl survey csv files}
+\title{Function to extract crab data on individuals w/ selected characteristics from trawl survey data in NMFS csv format}
 \usage{
 selectIndivs.TrawlSurvey(tbl_hauls, tbl = NULL, col.Size = "WIDTH",
   sex = c("MALE", "FEMALE", "ALL"), shell_condition = c("NEW_SHELL",
@@ -18,7 +18,7 @@ selectIndivs.TrawlSurvey(tbl_hauls, tbl = NULL, col.Size = "WIDTH",
 
 \item{col.Size}{: column name for size information}
 
-\item{sex}{: one of 'MALE','FEMALE' or 'ALL' for narrowing selection of individuals}
+\item{sex}{: one of 'MALE','FEMALE','MISSING', 'HERMAPHRODITE', or 'ALL' for narrowing selection of individuals}
 
 \item{shell_condition}{: one of 'NEW_SHELL','OLD_SHELL' or 'ALL' for narrowing selection of individuals}
 
@@ -42,10 +42,10 @@ selectIndivs.TrawlSurvey(tbl_hauls, tbl = NULL, col.Size = "WIDTH",
 dataframe (see \link{details} for coulmn names)
 }
 \description{
-Function to extract crab data on individuals w/ selected characteristics from NMFS trawl survey csv files.
+Function to extract crab data on individuals w/ selected characteristics from trawl survey data in NMFS csv format.
 }
 \details{
-If neither tbl or in.csv is given, the user will be prompted for a csv file via a file dialog box.\cr
+If neither tbl or in.csv is given, the user will be prompted for a survey data csv file via a file dialog box.\cr
 Returned dataframe will have columns:
 \itemize{\item {HAULJOIN}
          \item {numIndivs}

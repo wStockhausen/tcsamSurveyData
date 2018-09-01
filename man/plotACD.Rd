@@ -7,8 +7,8 @@
 plotACD(acd, type = c("abundance", "biomass"), factors = NULL,
   faceting = NULL, facetsScale = "fixed", facetsDrop = FALSE,
   xlab = "year", ylab = NULL, ci = 0.8, ci.type = "normal",
-  xlims = NULL, ylims = NULL, ggtheme = theme_grey(), jitter = TRUE,
-  showPlots = TRUE, verbosity = 0)
+  xlims = NULL, ylims = NULL, ggtheme = theme_grey(),
+  jitter = TRUE, showPlots = TRUE, verbosity = 0)
 }
 \arguments{
 \item{acd}{- dataframe with aggregated catch data (e.g., abundance or biomass)}
@@ -17,7 +17,7 @@ plotACD(acd, type = c("abundance", "biomass"), factors = NULL,
 
 \item{factors}{- column names to use as factors for plots}
 
-\item{faceting}{- faceting formula}
+\item{faceting}{- faceting formula (depnds on ggplot2 version)}
 
 \item{facetsScale}{- value for \code{scale} parameter passed to \code{facet_grid()} ("fixed","free_x","free_y","free")}
 

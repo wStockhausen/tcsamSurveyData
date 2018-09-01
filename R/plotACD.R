@@ -6,7 +6,7 @@
 #'@param acd - dataframe with aggregated catch data (e.g., abundance or biomass)
 #'@param type - "abundance" or "biomass"
 #'@param factors - column names to use as factors for plots
-#'@param faceting - faceting formula
+#'@param faceting - faceting formula (depnds on ggplot2 version)
 #'@param facetsScale - value for \code{scale} parameter passed to \code{facet_grid()} ("fixed","free_x","free_y","free")
 #'@param facetsDrop - value for \code{drop} parameter passed to \code{facet_grid()} (drop missing facet levels)
 #'@param xlab - x-axis label ("year")
@@ -114,7 +114,10 @@ plotACD<-function(acd,
 #        p <- p + position_jitter()
         p <- p + geom_hline(yintercept=0,colour='black',size=0.5);
         p <- p + labs(x=xlab,y=ylab)
-        if (!is.null(faceting)) p <- p + facet_grid(tolower(faceting),scales=facetsScale,drop=facetsDrop);
+        if (!is.null(faceting)) {
+          if (packageVersion("ggplot2")<="2.2.1") p <- p + facet_grid(tolower(faceting),scales=facetsScale,drop=facetsDrop);
+          if (packageVersion("ggplot2")>="3.0.0") p <- p + facet_grid(rows=faceting,scales=facetsScale,drop=facetsDrop);
+        }
         p <- p + guides(fill=guide_legend(''),colour=guide_legend(''),shape=guide_legend(''));
         p <- p + ggtheme;
         if (showPlots) print(p);

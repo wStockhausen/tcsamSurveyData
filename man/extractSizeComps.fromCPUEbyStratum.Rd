@@ -4,8 +4,8 @@
 \alias{extractSizeComps.fromCPUEbyStratum}
 \title{Extract size compositions from size-specific CPUE data by stratum}
 \usage{
-extractSizeComps.fromCPUEbyStratum(tbl_cpue = NULL, cutpts = seq(from = 25,
-  to = 185, by = 5), export = FALSE,
+extractSizeComps.fromCPUEbyStratum(tbl_cpue = NULL, cutpts = seq(from =
+  25, to = 185, by = 5), export = FALSE,
   out.csv = "SurveySizeComps.CPUE.ByStratum.csv", out.dir = NULL,
   verbosity = 0)
 }

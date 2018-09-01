@@ -4,7 +4,8 @@
 \alias{calcEffectiveN.SurveyData.NMFS}
 \title{Calculate and plot effective N's for NMFS survey size compositions using a bootstrapping approach}
 \usage{
-calcEffectiveN.SurveyData.NMFS(loadRZCs = NULL, outDir = "./OutputFiles",
+calcEffectiveN.SurveyData.NMFS(loadRZCs = NULL,
+  outDir = "./OutputFiles",
   title = "Effective N for NMFS Survey Size Compositions", bootN = 100,
   species = "BTC", minYr = 1975, maxYr = 2017, minSize = 25,
   maxSize = 185, binSize = 5, lglZ = 125, bySex = TRUE,

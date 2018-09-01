@@ -121,7 +121,8 @@ plotChelaHeights<-function(dfrp,
     if (is.null(facet_grid)){
         p <- p + facet_wrap(~YEAR,ncol=ncol)
     } else {
-        p <- p + facet_grid(facets=facet_grid)
+        if (packageVersion("ggplot2")<="2.2.1") p <- p + facet_grid(facets=facet_grid);
+        if (packageVersion("ggplot2")>="3.0.0") p <- p + facet_grid(rows=facet_grid);
     }
     p <- p + ggplot2::labs(x=xlab,y=ylab);
     if (!is.null(title)) p <- p + ggtitle(title);

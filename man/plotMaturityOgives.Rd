@@ -4,8 +4,8 @@
 \alias{plotMaturityOgives}
 \title{Plot maturity ogive data}
 \usage{
-plotMaturityOgives(dfrp, facet_grid = "dcd~.", ncol = 4, title = NULL,
-  showPlot = FALSE)
+plotMaturityOgives(dfrp, facet_grid = "dcd~.", ncol = 4,
+  title = NULL, showPlot = FALSE)
 }
 \arguments{
 \item{dfrp}{- dataframe of maturity ogive data}

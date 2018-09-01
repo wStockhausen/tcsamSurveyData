@@ -6,8 +6,8 @@
 \usage{
 calcResampledSizeComps(tbl_strata, tbl_hauls = NULL, tbl_indivs = NULL,
   N = 100, byEW166 = FALSE, byEBS = TRUE, bySex = FALSE,
-  byShellCondition = FALSE, byMaturity = FALSE, cutpts = seq(from = 25, to
-  = 185, by = 5), truncate.low = TRUE, truncate.high = FALSE,
+  byShellCondition = FALSE, byMaturity = FALSE, cutpts = seq(from =
+  25, to = 185, by = 5), truncate.low = TRUE, truncate.high = FALSE,
   verbosity = 0)
 }
 \arguments{

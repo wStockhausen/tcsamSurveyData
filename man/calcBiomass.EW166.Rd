@@ -5,8 +5,9 @@
 \title{Calculate abundance, biomass by year, east/west of 166W, and other factors from a biomass-by-stratum data frame or csv file.}
 \usage{
 calcBiomass.EW166(tbl = NULL,
-  strata_toEW166 = Codes.TrawlSurvey()[["strata.EW166"]], export = TRUE,
-  out.csv = "SurveyBiomass.EW166.csv", out.dir = NULL, verbosity = 0)
+  strata_toEW166 = Codes.TrawlSurvey()[["strata.EW166"]],
+  export = TRUE, out.csv = "SurveyBiomass.EW166.csv", out.dir = NULL,
+  verbosity = 0)
 }
 \arguments{
 \item{tbl}{: data frame with biomass by stratum info from call to \code{\link{calcBiomass.ByStratum}} or csv file with biomass by stratum info, or NULL}

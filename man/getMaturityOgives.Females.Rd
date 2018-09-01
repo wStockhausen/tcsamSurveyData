@@ -4,9 +4,9 @@
 \alias{getMaturityOgives.Females}
 \title{Function to extract female maturity ogives from a size composition dataframe}
 \usage{
-getMaturityOgives.Females(dfrZCs = NULL, showPlot = TRUE, export = FALSE,
-  out.csv = "MaturityOgives.Females.csv", out.dir = NULL, verbosity = 0,
-  ...)
+getMaturityOgives.Females(dfrZCs = NULL, showPlot = TRUE,
+  export = FALSE, out.csv = "MaturityOgives.Females.csv",
+  out.dir = NULL, verbosity = 0, ...)
 }
 \arguments{
 \item{dfrZCs}{: dataframe with new shell female size compositions by maturity state}

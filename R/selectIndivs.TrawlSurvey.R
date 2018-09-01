@@ -1,12 +1,12 @@
 #'
-#'@title Function to extract crab data on individuals w/ selected characteristics from NMFS trawl survey csv files
+#'@title Function to extract crab data on individuals w/ selected characteristics from trawl survey data in NMFS csv format
 #'
-#'@description Function to extract crab data on individuals w/ selected characteristics from NMFS trawl survey csv files.
+#'@description Function to extract crab data on individuals w/ selected characteristics from trawl survey data in NMFS csv format.
 #'
 #'@param tbl_hauls : hauls table (dataframe) from call to selectHauls.TrawlSurvey(...) [required]
 #'@param tbl       : table (dataframe) of survey data (or csv filename or NULL)
 #'@param col.Size  : column name for size information
-#'@param sex             : one of 'MALE','FEMALE' or 'ALL' for narrowing selection of individuals
+#'@param sex             : one of 'MALE','FEMALE','MISSING', 'HERMAPHRODITE', or 'ALL' for narrowing selection of individuals
 #'@param shell_condition : one of 'NEW_SHELL','OLD_SHELL' or 'ALL' for narrowing selection of individuals
 #'@param maturity        : one of 'IMMATURE','MATURE' or 'ALL' for narrowing selection of individuals
 #'@param calcMaleMaturity : flag (T/F) to calculate pr(mature|size) for males based on an ogive
@@ -19,7 +19,7 @@
 #'
 #'@return dataframe (see \link{details} for coulmn names)
 #'
-#'@details If neither tbl or in.csv is given, the user will be prompted for a csv file via a file dialog box.\cr
+#'@details If neither tbl or in.csv is given, the user will be prompted for a survey data csv file via a file dialog box.\cr
 #' Returned dataframe will have columns:
 #' \itemize{\item {HAULJOIN}
 #'          \item {numIndivs}
@@ -127,8 +127,10 @@ selectIndivs.TrawlSurvey<-function(tbl_hauls,
     sex<-sex[1];
     sex_codes<-codes[["sex"]];
     sq.sex<-"(select * from sex_codes &&sex.cri) as x"
-    if (sex=='MALE')   {sq.sex<-gsub("&&sex.cri",'where value="MALE"',  sq.sex)} else
-    if (sex=='FEMALE') {sq.sex<-gsub("&&sex.cri",'where value="FEMALE"',sq.sex)} else
+    if (sex=='MALE')          {sq.sex<-gsub("&&sex.cri",'where value="MALE"',  sq.sex)} else
+    if (sex=='FEMALE')        {sq.sex<-gsub("&&sex.cri",'where value="FEMALE"',sq.sex)} else
+    if (sex=='MISSING')       {sq.sex<-gsub("&&sex.cri",'where value="MISSING"',sq.sex)} else
+    if (sex=='HERMAPHRODITE') {sq.sex<-gsub("&&sex.cri",'where value="HERMAPHRODITE"',sq.sex)} else
                        {sq.sex<-gsub("&&sex.cri",'',sq.sex)}
     #shell condition
     sc<-shell_condition[1];

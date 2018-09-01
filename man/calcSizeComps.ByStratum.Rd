@@ -6,11 +6,12 @@
 \usage{
 calcSizeComps.ByStratum(tbl_strata, tbl_cpue = NULL, tbl_hauls = NULL,
   tbl_indivs = NULL, avgHaulsByStation = FALSE, bySex = FALSE,
-  byShellCondition = FALSE, byMaturity = FALSE, cutpts = seq(from = 25, to
-  = 185, by = 5), truncate.low = TRUE, truncate.high = FALSE,
-  Years = NULL, HaulTypes = NULL, YearRange = NULL, DepthRange = NULL,
-  LatRange = NULL, LonRange = NULL, col.Size = "WIDTH", sex = c("MALE",
-  "FEMALE", "ALL"), shell_condition = c("NEW_SHELL", "OLD_SHELL", "ALL"),
+  byShellCondition = FALSE, byMaturity = FALSE, cutpts = seq(from =
+  25, to = 185, by = 5), truncate.low = TRUE, truncate.high = FALSE,
+  Years = NULL, HaulTypes = NULL, YearRange = NULL,
+  DepthRange = NULL, LatRange = NULL, LonRange = NULL,
+  col.Size = "WIDTH", sex = c("MALE", "FEMALE", "ALL"),
+  shell_condition = c("NEW_SHELL", "OLD_SHELL", "ALL"),
   maturity = c("IMMATURE", "MATURE", "ALL"), calcMaleMaturity = FALSE,
   minSize = -Inf, maxSize = Inf, export = FALSE,
   out.csv = "SurveySizeComps.ByStratum.csv", out.dir = NULL,

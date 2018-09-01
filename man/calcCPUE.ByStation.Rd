@@ -4,8 +4,9 @@
 \alias{calcCPUE.ByStation}
 \title{Function to calculate cpue by survey station, averaging over cpue by haul.}
 \usage{
-calcCPUE.ByStation(tbl_strata = NULL, tbl_cpue = NULL, export = FALSE,
-  out.csv = "cpue.ByStation.csv", out.dir = NULL, verbosity = 0)
+calcCPUE.ByStation(tbl_strata = NULL, tbl_cpue = NULL,
+  export = FALSE, out.csv = "cpue.ByStation.csv", out.dir = NULL,
+  verbosity = 0)
 }
 \arguments{
 \item{tbl_strata}{: dataframe w/ station info}
@@ -22,7 +23,7 @@ calcCPUE.ByStation(tbl_strata = NULL, tbl_cpue = NULL, export = FALSE,
 }
 \value{
 A dataframe of cpue (numbers and weight) by year, stratum, survey station
-and other factors with the following columns. See Details.
+and other factors. Only stations where hauls were conducted are returned. See Details for dataframe structure.
 }
 \description{
 Function to calculate cpue by survey station, averaging over cpue by haul.
@@ -42,7 +43,10 @@ The returned dataframe has the following columns: \cr
 \item   HAULJOIN
 \item   LONGITUDE
 \item   LATITUDE
-\item   requested factors, if any
+\item   SEX
+\item   MATURITY
+\item   SHELL_CONDITION
+\item   SIZE
 \item   numHauls
 \item   numNonZeroHauls
 \item   numIndivs

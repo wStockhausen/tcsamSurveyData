@@ -11,7 +11,8 @@
 #'@param verbosity  : integer flag indicating level of printed output (0=off,1=minimal,2=full)
 #'
 #'@return A dataframe of cpue (numbers and weight) by year, stratum, survey station
-#'and other factors with the following columns. See Details.
+#'and other factors. Only stations where hauls were conducted are returned. See Details for dataframe structure.
+#'
 #'@details
 #'Notes: \cr
 #'\itemize{
@@ -27,7 +28,10 @@
 #'\item   HAULJOIN
 #'\item   LONGITUDE
 #'\item   LATITUDE
-#'\item   requested factors, if any
+#'\item   SEX
+#'\item   MATURITY
+#'\item   SHELL_CONDITION
+#'\item   SIZE
 #'\item   numHauls
 #'\item   numNonZeroHauls
 #'\item   numIndivs
@@ -97,14 +101,13 @@ calcCPUE.ByStation<-function(tbl_strata=NULL,
               (select distinct YEAR from tbl_cpue) y
             where
               s.YEAR=y.YEAR;";
-    tbl_strata<-sqldf(qry);
+    tbl_strata<-sqldf::sqldf(qry);
 
     #Calculate and average cpue by year, station and factor levels
     #(e.g., sex, shell condition) over hauls.
     qry<-"select
-            YEAR,
-            STRATUM,
-            GIS_STATION&&cols,
+            YEAR,STRATUM,GIS_STATION,
+            SEX,MATURITY,SHELL_CONDITION,SIZE,
             count(distinct HAULJOIN) as numHauls,
             sum(numIndivs>0) as numNonZeroHauls,
             sum(numIndivs) as numIndivs,
@@ -113,66 +116,86 @@ calcCPUE.ByStation<-function(tbl_strata=NULL,
           from
             tbl_cpue
           group by
-            YEAR,STRATUM,GIS_STATION&&cols
+            YEAR,STRATUM,GIS_STATION,SEX,MATURITY,SHELL_CONDITION,SIZE
           order by
-            YEAR,STRATUM,GIS_STATION&&cols;";
-    qry<-gsub("&&cols",colstr,qry)
-    if (verbosity>1) cat("\nquery is:\n",qry,"\n");
-    tbl_cpue<-sqldf(qry);
+            YEAR,STRATUM,GIS_STATION,SEX,MATURITY,SHELL_CONDITION,SIZE;";
+    # qry<-gsub("&&cols",colstr,qry)
+    # if (verbosity>1) cat("\nquery is:\n",qry,"\n");
+    tbl_cpue<-sqldf::sqldf(qry);
+
+    #add in latitude, longitude corresponding to GIS_STATION
+    qry<-"select
+            c.YEAR,c.STRATUM,c.GIS_STATION,s.LONGITUDE,s.LATITUDE,
+            c.SEX,c.MATURITY,c.SHELL_CONDITION,c.SIZE,
+            c.numHauls,c.numNonZeroHauls,
+            c.numIndivs,c.numCPUE,c.wgtCPUE
+          from
+            tbl_cpue c, tbl_strata s
+          where
+            c.YEAR=s.YEAR and
+            c.STRATUM=s.STRATUM and
+            c.GIS_STATION=s.GIS_STATION
+          order by
+            c.YEAR,c.STRATUM,c.GIS_STATION,SEX,MATURITY,SHELL_CONDITION,SIZE;";
+    # qry<-gsub("&&cols",colstr,qry)
+    # if (verbosity>1) cat("\nquery is:\n",qry,"\n");
+    tbl_cpue<-sqldf::sqldf(qry);
 
     #get unique combination of factor levels
-    strata_cols<-c('LONGITUDE','LATITUDE','YEAR','STRATUM','GIS_STATION');
-    if (is.null(cols)){
-        qry<-"select distinct &&stratacols from tbl_strata;";
-        qry<-gsub("&&stratacols",paste(strata_cols,collapse=','),qry)
-    } else {
-        qry<-"select * from
-                (select distinct &&stratacols from tbl_strata),
-                (select distinct &&cols from tbl_cpue);";
-        qry<-gsub("&&stratacols",paste(strata_cols,collapse=','),qry)
-        qry<-gsub("&&cols",paste(cols,collapse=','),qry)
-    }
-    if (verbosity>1) cat("\nquery is:\n",qry,"\n");
-    tbl_ufs<-sqldf(qry);
-    ucols<-names(tbl_ufs);
-    nufs<-length(ucols)
+    # strata_cols<-c('LONGITUDE','LATITUDE','YEAR','STRATUM','GIS_STATION');
+    # if (is.null(cols)){
+    #     qry<-"select distinct &&stratacols from tbl_strata;";
+    #     qry<-gsub("&&stratacols",paste(strata_cols,collapse=','),qry)
+    # } else {
+    #     qry<-"select * from
+    #             (select distinct &&stratacols from tbl_strata),
+    #             (select distinct &&cols from tbl_cpue);";
+    #     qry<-gsub("&&stratacols",paste(strata_cols,collapse=','),qry)
+    #     qry<-gsub("&&cols",paste(cols,collapse=','),qry)
+    # }
+    # if (verbosity>1) cat("\nquery is:\n",qry,"\n");
+    # tbl_ufs<-sqldf::sqldf(qry);
+    # ucols<-names(tbl_ufs);
+    # nufs<-length(ucols)
 
-    qry<-"select
-            &&ucols,
-            numHauls,
-            numNonZeroHauls,
-            numIndivs,
-            numCPUE,
-            wgtCPUE
-          from
-            tbl_ufs u left join
-            tbl_cpue c
-          on
-            &&joinstr;";
-    qry<-gsub("&&cols",colstr,qry)
-    qry<-gsub("&&ucols",paste('u.',ucols,sep='',collapse=','),qry)
-    qry<-gsub("&&joinstr",paste(paste('u.',ucols[3:nufs],sep=''),"=",paste('c.',ucols[3:nufs],sep=''),sep='',collapse=' and \n'),qry)
-    if (verbosity>1) cat("\nquery is:\n",qry,"\n");
-    tbl_cpues<-sqldf(qry);
 
-    idx<-is.na(tbl_cpues$numHauls);
-    tbl_cpues$numHauls[idx]<-0;
-    tbl_cpues$numHauls[idx]<-0;
-    tbl_cpues$numNonZeroHauls[idx]<-0;
-    tbl_cpues$numCPUE[idx]<-0;
-    tbl_cpues$wgtCPUE[idx]<-0;
 
-    #re-order rows/columns for output
-    qry<-"select
-            YEAR,STRATUM,GIS_STATION,LONGITUDE,LATITUDE&&cols,
-            numHauls,numNonZeroHauls,numIndivs,numCPUE,wgtCPUE
-          from
-            tbl_cpues
-          order by
-            YEAR,STRATUM,GIS_STATION&&cols;"
-    qry<-gsub("&&cols",colstr,qry)
-    if (verbosity>1) cat("\nquery is:\n",qry,"\n");
-    tbl_cpues<-sqldf(qry);
+    # qry<-"select
+    #         &&ucols,
+    #         numHauls,
+    #         numNonZeroHauls,
+    #         numIndivs,
+    #         numCPUE,
+    #         wgtCPUE
+    #       from
+    #         tbl_ufs u left join
+    #         tbl_cpue c
+    #       on
+    #         &&joinstr;";
+    # qry<-gsub("&&cols",colstr,qry)
+    # qry<-gsub("&&ucols",paste('u.',ucols,sep='',collapse=','),qry)
+    # qry<-gsub("&&joinstr",paste(paste('u.',ucols[3:nufs],sep=''),"=",paste('c.',ucols[3:nufs],sep=''),sep='',collapse=' and \n'),qry)
+    # if (verbosity>1) cat("\nquery is:\n",qry,"\n");
+    # tbl_cpues<-sqldf::sqldf(qry);
+    #
+    # idx<-is.na(tbl_cpues$numHauls);
+    # tbl_cpues$numHauls[idx]<-0;
+    # tbl_cpues$numHauls[idx]<-0;
+    # tbl_cpues$numNonZeroHauls[idx]<-0;
+    # tbl_cpues$numCPUE[idx]<-0;
+    # tbl_cpues$wgtCPUE[idx]<-0;
+    #
+    # #re-order rows/columns for output
+    # qry<-"select
+    #         YEAR,STRATUM,GIS_STATION,LONGITUDE,LATITUDE&&cols,
+    #         numHauls,numNonZeroHauls,numIndivs,numCPUE,wgtCPUE
+    #       from
+    #         tbl_cpues
+    #       order by
+    #         YEAR,STRATUM,GIS_STATION&&cols;"
+    # qry<-gsub("&&cols",colstr,qry)
+    # if (verbosity>1) cat("\nquery is:\n",qry,"\n");
+    # tbl_cpues<-sqldf::sqldf(qry);
 
     if (export){
         if (!is.null(out.dir)){
@@ -185,11 +208,11 @@ calcCPUE.ByStation<-function(tbl_strata=NULL,
             }
             out.csv<-file.path(out.dir,out.csv)
         }
-        write.csv(tbl_cpues,out.csv,na='',row.names=FALSE);
+        write.csv(tbl_cpue,out.csv,na='',row.names=FALSE);
     }
 
     if (verbosity>1) cat("finished calcCPUE.ByStation\n");
-    return(tbl_cpues)
+    return(tbl_cpue)
 }
 
 #tbl.cpue.byS<-calcCPUE.ByStation(tbl.cpue.byH,export=FALSE)

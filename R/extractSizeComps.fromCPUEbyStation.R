@@ -3,6 +3,8 @@
 #'
 #'@param tbl_cpue : data frame from call to \code{\link{calcCPUE.ByStation}} or filename for csv file
 #'@param cutpts   : vector of cutpoints to create size bins from
+#'@param truncate.low  : flag (T/F) to exclude individuals smaller than minSize
+#'@param truncate.high : flag (T/F) to exclude individuals larger than maxSize
 #'@param export   : boolean flag to write results to csv file
 #'@param out.csv  : output file name
 #'@param out.dir  : output file directory
@@ -19,16 +21,17 @@
 #'   \item{avgBioCPUE is in mt/square nautical mile}
 #'}
 #'
-#'@return data frame with size comps by stratum. Columns are \cr
+#'@return data frame with size comps by station. Columns are \cr
 #'\itemize{
 #'\item  YEAR
 #'\item  STRATUM
 #'\item  STRATUM_AREA
-#'\item  other user-defined factors (e.g., sex, shell_condition)
+#'\item  SEX
+#'\item  MATURITY
+#'\item  SHELL_CONDITION
 #'\item  SIZE
 #'\item  numStations
 #'\item  numHauls
-#'\item  numNonZeroHauls
 #'\item  numIndivs
 #'\item  avgNumCPUE = average cpue-by-size (numbers/sq. nautical mile) by stratum
 #'\item  stdNumCPUE = standard deviation in cpue-by-size (numbers/sq. nautical mile) by stratum
@@ -47,6 +50,8 @@
 extractSizeComps.fromCPUEbyStation<-function(
                                     tbl_cpue=NULL,
                                     cutpts=seq(from=25,to=185,by=5),
+                                    truncate.low=TRUE,
+                                    truncate.high=FALSE,
                                     export=FALSE,
                                     out.csv='SurveySizeComps.CPUE.ByStratum.csv',
                                     out.dir=NULL,
@@ -69,57 +74,84 @@ extractSizeComps.fromCPUEbyStation<-function(
         if (verbosity>1) cat("Done reading input csv file.\n")
     }#read in or created tbl_cpue
 
-    #now expand to all sizes
-    tbl_ufacs<-subset(tbl_cpue,select=-c(SIZE,numIndivs,numCPUE,wgtCPUE));
-    ucols<-names(tbl_ufacs);
-    if (verbosity>1) cat("ucols:",ucols,"\n");
-    nf<-length(ucols)-7;#number of factors other than SIZE
-    qry<-"select distinct
-            &&ucols
-          from tbl_ufacs;";
-    qry<-gsub("&&ucols",paste(ucols,collapse=","),qry)
-    if (verbosity>1) cat(qry,"\n");
-    tbl_ufacs<-sqldf(qry);
-    if (verbosity>1) print(head(tbl_ufacs));
+    #bin current sizes to new size bins
+    ##expand cutpts to truncate or not
+    nCtPts<-length(cutpts);
+    ctpts.tmp<-cutpts;
+    if (!truncate.low ) ctpts.tmp[1]<-0;
+    if (!truncate.high) ctpts.tmp[nCtPts]<-Inf;
+    ##apply cutpts to sizes
+    cuts<-cut(tbl_cpue$SIZE,ctpts.tmp,right=FALSE,labels=FALSE)
+    tbl_cpue$SIZE<-cutpts[cuts];
+    tbl_cpue<-tbl_cpue[!is.na(tbl_cpue$SIZE),];
 
-    tbl_zs<-as.data.frame(list(SIZE=cutpts[1:(length(cutpts)-1)]))
-    qry<-"select * from tbl_ufacs, tbl_zs;";
-    tbl_uzfacs<-sqldf(qry);
+    #now expand to all sizes
+    ##get table with unique factors other than size
+    qry<-"select distinct
+            YEAR,STRATUM,GIS_STATION,LONGITUDE,LATITUDE,
+            SEX,MATURITY,SHELL_CONDITION,numHauls
+          from tbl_cpue
+          order by
+            YEAR,STRATUM,GIS_STATION,LONGITUDE,LATITUDE,
+            SEX,MATURITY,SHELL_CONDITION,numHauls;";
+    tbl_ufacs<-sqldf::sqldf(qry);
+    ##get table with sizes defined by lower cutpts
+    tbl_uzs<-data.frame(SIZE=cutpts[1:(length(cutpts)-1)]);
+    ##combine them
+    qry<-"select
+            YEAR,STRATUM,GIS_STATION,LONGITUDE,LATITUDE,
+            SEX,MATURITY,SHELL_CONDITION,SIZE,numHauls
+          from tbl_ufacs,tbl_uzs
+          order by
+            YEAR,STRATUM,GIS_STATION,LONGITUDE,LATITUDE,
+            SEX,MATURITY,SHELL_CONDITION,SIZE,numHauls;";
+    tbl_uzfacs<-sqldf::sqldf(qry);
     if (verbosity>1) print(head(tbl_uzfacs));
 
-    #rearrange column names to get SIZE at end of other factors (if any)
-    nms<-names(tbl_uzfacs);
-    if (verbosity>1) cat("nms:",nms,"\n");
-    nc<-length(nms);
-    nmsp<-c(nms[1:(5+nf)],nms[nc],nms[(6+nf):(nc-1)]);
-    if (verbosity>1) cat("nmsp:",nmsp,"\n");
-
-    ucols<-paste("u",nmsp,sep='.');
-    zcols<-paste("z",nmsp,sep='.');
-    ucolstr<-paste(ucols,collapse=",")
-    ncols<-length(ucols);
-    joinConds<-paste(ucols,zcols,sep='=',collapse=' and ');
-
+    #expand tbl_cpue to include missing sizes
     qry<-"select
-            &&ucols,z.numIndivs,
+            u.YEAR,u.STRATUM,u.GIS_STATION,u.LONGITUDE,u.LATITUDE,
+            u.SEX,u.MATURITY,u.SHELL_CONDITION,u.SIZE,u.numHauls,
+            z.numNonZeroHauls,z.numIndivs,
             z.numCPUE,z.wgtCPUE
           from
             tbl_uzfacs u left join
             tbl_cpue z
           on
-            &&joinConds
+            u.YEAR=z.YEAR and u.STRATUM=z.STRATUM and u.GIS_STATION=z.GIS_STATION and
+            u.SEX=z.SEX and u.MATURITY=z.MATURITY and u.SHELL_CONDITION=z.SHELL_CONDITION and
+            u.SIZE=z.SIZE
           order by
-            &&ucols;"
-    qry<-gsub("&&ucols",ucolstr,qry);
-    qry<-gsub("&&joinConds",joinConds,qry);
-    if (verbosity>0) cat(qry,'\n')
-    tbl_zcs<-sqldf(qry);
+            u.YEAR,u.STRATUM,u.GIS_STATION,u.LONGITUDE,u.LATITUDE,
+            u.SEX,u.MATURITY,u.SHELL_CONDITION,u.SIZE;"
+    # qry<-gsub("&&ucols",ucolstr,qry);
+    # qry<-gsub("&&joinConds",joinConds,qry);
+    # if (verbosity>0) cat(qry,'\n')
+    tbl_zcs<-sqldf::sqldf(qry);
 
     #change NAs to 0s in formerly missing cells
     idx<-is.na(tbl_zcs$numIndivs);
-    tbl_zcs$numIndivs[idx] <-0;
-    tbl_zcs$numCPUE[idx]   <-0;
-    tbl_zcs$wgtCPUE[idx]   <-0;
+    tbl_zcs$numNonZeroHauls[idx] <-0;
+    tbl_zcs$numIndivs[idx]       <-0;
+    tbl_zcs$numCPUE[idx]         <-0;
+    tbl_zcs$wgtCPUE[idx]         <-0;
+
+    #finally, sum within new size bins
+    qry<-"select
+            YEAR,STRATUM,GIS_STATION,LONGITUDE,LATITUDE,
+            SEX,MATURITY,SHELL_CONDITION,SIZE,numHauls,
+            sum(numIndivs) as numIndivs,
+            sum(numCPUE) as numCPUE,
+            sum(wgtCPUE) as wgtCPUE
+          from
+            tbl_zcs
+          group by
+            YEAR,STRATUM,GIS_STATION,LONGITUDE,LATITUDE,
+            SEX,MATURITY,SHELL_CONDITION,SIZE,numHauls
+          order by
+            YEAR,STRATUM,GIS_STATION,LONGITUDE,LATITUDE,
+            SEX,MATURITY,SHELL_CONDITION,SIZE;"
+    tbl_zcs<-sqldf::sqldf(qry);
 
     if (export){
         if (!is.null(out.dir)){
