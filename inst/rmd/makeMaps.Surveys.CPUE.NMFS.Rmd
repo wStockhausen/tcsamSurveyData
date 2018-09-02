@@ -29,6 +29,7 @@ params:
   sex: "ALL"
   maturity: "ALL"
   shell_condition: "ALL"
+  calcMaleMaturity: FALSE
   aggBySex: FALSE
   aggByMaturity: FALSE
   aggByShellCondition: FALSE
@@ -71,15 +72,19 @@ knitr::opts_chunk$set(echo=FALSE, error=FALSE, message=FALSE, warning=FALSE, con
 
 #Introduction
 
-This report creates a time series of maps of `r crabType` CPUE and bottom temperature from the NMFS EBS bottom trawl survey. 
+This report creates a time series of maps of `r crabType` CPUE and bottom temperature from the NMFS EBS bottom trawl survey.
 
-```{r readDataFiles}
+```{r readDataFiles, results='asis'}
+    if (params$calcMaleMaturity){
+      cat(paste0(" Note that categorization of mmale maturity is based on an ogive",
+                 " developed by Rugolo and Turnock, and is shown here for illustrative purposes.\n"));
+    }
     ##read strata definitions
     csvStrata<-read.csv(fn.SD,check.names=FALSE,stringsAsFactors=FALSE)[,1:8];
 		#load crabhaul files
 		csvCrabhauls<-NULL;
 		for (f in fn.CH){
-			tmp<-read.csv(file=f);
+			tmp<-read.csv(file=f,check.names=FALSE,stringsAsFactors=FALSE);
 			csvCrabhauls<-rbind(csvCrabhauls,tmp);
 			rm(tmp);
 		}
@@ -110,7 +115,7 @@ This report creates a time series of maps of `r crabType` CPUE and bottom temper
                                      sex=params$sex,
     								                 shell_condition=params$shell_condition,
                                      maturity=params$maturity,
-    								                 calcMaleMaturity=FALSE,
+    								                 calcMaleMaturity=params$calcMaleMaturity,
                                      minSize=params$minSize,
     								                 maxSize=params$maxSize,
                                      export=FALSE,
@@ -189,7 +194,7 @@ The following figure illustrates the base map for subsequent maps of bottom temp
 ```
 
 ```{r createRasters}
-  strWGS84<-tmaptools::get_proj4("longlat");
+  strWGS84<-tmaptools::get_proj4("longlat",output="character");
   crsWGS84<-sp::CRS(strWGS84);
 
   bbext<-tmaptools::bb(basemap[[1]]$bbox);
@@ -291,7 +296,7 @@ The following maps present survey CPUE (in biomass) for components of the `r cra
   captions<-vector("character",0);
   for (yr in as.character(yrs)){
     mapsXMS<-maps[[yr]];
-    str.expr<-"tmap::tmap_arrange("
+    str.expr<-"p<-tmap::tmap_arrange("
     for (iXMS in 1:nrow(uXMSs)){
       uX<-uXMSs$SEX[iXMS];
       uM<-uXMSs$MATURITY[iXMS];
@@ -303,6 +308,7 @@ The following maps present survey CPUE (in biomass) for components of the `r cra
     
     #str.expr<-paste0("tmap::tmap_arrange(maps[[cyr]]$mapIM,maps[[cyr]]$mapIF,maps[[cyr]]$mapMM,maps[[cyr]]$mapMF,ncol=2,nrow=2,outer.margins=0)");
     eval(parse(text=str.expr)[[1]])
+    print(p,knit=TRUE);
     cap<-paste0(crabType," CPUE (",params$cpueType,") from the ",yr," NMFS EBS bottom trawl survey.");
     captions<-c(captions,cap);
   }
