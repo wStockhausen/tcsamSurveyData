@@ -16,7 +16,7 @@ output:
 params: 
   species: "Snow crab"
   cpueType: "biomass"
-  title: "NMFS trawl survey &&species CPUE" 
+  title: "&&species spatial patterns in the NMFS trawl survey" 
   outPath: "./"
   dataPath: "./"
   strataFile: ""
@@ -28,6 +28,7 @@ params:
   sex: "ALL"
   maturity: "ALL"
   shell_condition: "ALL"
+  calcMaleMaturity: FALSE
   aggBySex: FALSE
   aggByMaturity: FALSE
   aggByShellCondition: FALSE
@@ -43,12 +44,10 @@ fontsize: 11pt
 knitr::opts_chunk$set(echo=FALSE, error=FALSE, message=FALSE, warning=FALSE, concordance=TRUE, fig.width=6.5, fig.height=7, dpi=300)
 ```
 
-```{r inputs}
+```{r inputs.CalcCPUE.Surveys.NMFS}
   fn.SD<-file.path(params$dataPath,params$strataFile);
   fn.CH<-file.path(params$dataPath,params$haulFiles);
     
-  gisDir<-params$gisPath;
-
   outDir<-params$outPath;
   if (!dir.exists(outDir)) dir.create(outDir);
 
@@ -67,17 +66,17 @@ knitr::opts_chunk$set(echo=FALSE, error=FALSE, message=FALSE, warning=FALSE, con
   codes.TS<-Codes.TrawlSurvey();
 ```
 
-#Introduction
-
-This report creates csv files of CPUE and bottom temperature from the NMFS EBS bottom trawl survey. 
-
-```{r readDataFiles}
+```{r readDataFiles, results='asis'}
+    if (params$calcMaleMaturity){
+      cat(paste0(" Note that categorization of mmale maturity is based on an ogive",
+                 " developed by Rugolo and Turnock, and is shown here for illustrative purposes.\n"));
+    }
     ##read strata definitions
     csvStrata<-read.csv(fn.SD,check.names=FALSE,stringsAsFactors=FALSE)[,1:8];
 		#load crabhaul files
 		csvCrabhauls<-NULL;
 		for (f in fn.CH){
-			tmp<-read.csv(file=f);
+			tmp<-read.csv(file=f,check.names=FALSE,stringsAsFactors=FALSE);
 			csvCrabhauls<-rbind(csvCrabhauls,tmp);
 			rm(tmp);
 		}
@@ -108,7 +107,7 @@ This report creates csv files of CPUE and bottom temperature from the NMFS EBS b
                                      sex=params$sex,
     								                 shell_condition=params$shell_condition,
                                      maturity=params$maturity,
-    								                 calcMaleMaturity=FALSE,
+    								                 calcMaleMaturity=params$calcMaleMaturity,
                                      minSize=params$minSize,
     								                 maxSize=params$maxSize,
                                      export=FALSE,
@@ -148,13 +147,10 @@ This report creates csv files of CPUE and bottom temperature from the NMFS EBS b
     if (params$aggByShellCondition) dfrCPUE.ByXMS$SHELL_CONDITION<-"ALL";
 
     ##export to csv
-    write.csv(dfrCPUE.ByXMS,file=file.path(outDir,"cpue.Surveys.NMFS.csv"))
+    write.csv(dfrCPUE.ByXMS,file=file.path(outDir,"cpue.csv"))
 ```
 
 ```{r extractEnvVars}
   evs.csv<-tcsamSurveyData::calcEnvData.ByStation(dfr.SD,dfr.HD,verbosity=verbosity);
-  write.csv(evs.csv,file=file.path(outDir,"temp.Surveys.NMFS.csv"))
 ```
-
-
 

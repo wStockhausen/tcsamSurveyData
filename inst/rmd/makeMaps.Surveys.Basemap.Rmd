@@ -1,0 +1,39 @@
+---
+author: "William Stockhausen"
+date: '`r format(Sys.Date(),"%d %B, %Y")`'
+output:
+    word_document:
+      reference_docx: '`r system.file("rmd/StylesforRmdDocs.docx",package="wtsUtilities")`'
+    pdf_document:
+        toc: TRUE
+        fig_width: 6.5
+        fig_height: 4.0
+        fig_crop: FALSE
+        fig_caption: TRUE
+        keep_tex: FALSE
+    includes:
+      in_header: '`r system.file("rmd/StylesforRmdPDFs.sty",package="wtsUtilities")`'
+params:
+  title: "Basemap"
+  outPath: "./"
+  gisPath: NULL
+  verbosity: 0
+title: '`r params$title`'
+fontsize: 11pt
+---
+
+```{r,echo=FALSE,results='hide'}
+##set knitr options for subsequent chunks
+knitr::opts_chunk$set(echo=FALSE, error=FALSE, message=FALSE, warning=FALSE, concordance=TRUE, fig.width=6.5, fig.height=7, dpi=300)
+```
+
+```{r createBasemap}
+  surveyGridLayers<-gisCreateSurveyGridLayers();
+  basemap <- gisCreateBaseMap(layers.survey=surveyGridLayers);
+```
+
+```{r printBasemap,results="asis",fig.height=3,fig.width=3.5,fig.cap=cap,eval.after="fig.cap",fig.pos="H",fig.align="center"}
+  cap<-"Basemap for future maps, with EBS bathymetry (blue lines) and the NMFS EBS bottom trawl survey station grid.";
+  print(basemap);
+  cat("\n\n");
+```

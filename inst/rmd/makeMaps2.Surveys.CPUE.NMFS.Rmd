@@ -45,7 +45,7 @@ fontsize: 11pt
 knitr::opts_chunk$set(echo=FALSE, error=FALSE, message=FALSE, warning=FALSE, concordance=TRUE, fig.width=6.5, fig.height=7, dpi=300)
 ```
 
-```{r inputs.MakeMaps.Surveys.CPUE.NMFS}
+```{r inputs}
   fn.SD<-file.path(params$dataPath,params$strataFile);
   fn.CH<-file.path(params$dataPath,params$haulFiles);
     
@@ -74,51 +74,143 @@ knitr::opts_chunk$set(echo=FALSE, error=FALSE, message=FALSE, warning=FALSE, con
 
 This report creates a time series of maps of `r crabType` CPUE and bottom temperature from the NMFS EBS bottom trawl survey.
 
-```{r child=system.file("rmd/calcCPUE.Surveys.NMFS.Rmd",package="tcsamSurveyData")}
-  ##calculate survey CPUE and environmental data (dfrCPUE.ByXMS and evs.csv)
+```{r readDataFiles, results='asis'}
+    if (params$calcMaleMaturity){
+      cat(paste0(" Note that categorization of mmale maturity is based on an ogive",
+                 " developed by Rugolo and Turnock, and is shown here for illustrative purposes.\n"));
+    }
+    ##read strata definitions
+    csvStrata<-read.csv(fn.SD,check.names=FALSE,stringsAsFactors=FALSE)[,1:8];
+		#load crabhaul files
+		csvCrabhauls<-NULL;
+		for (f in fn.CH){
+			tmp<-read.csv(file=f,check.names=FALSE,stringsAsFactors=FALSE);
+			csvCrabhauls<-rbind(csvCrabhauls,tmp);
+			rm(tmp);
+		}
+    rm(f);
+```
+
+```{r getStrata.TrawlSurvey}
+    dfr.SD<-selectStrata.TrawlSurvey(csvStrata,
+    																 species=species,
+    																 strataType=params$strataType,
+                                     export=FALSE,
+    																 verbosity=verbosity);
+```
+
+```{r getHauls.TrawlSurvey}
+    ##select haul data
+    dfr.HD<-selectHauls.TrawlSurvey(dfr.SD,
+    								                tbl=csvCrabhauls,
+                                    YearRange=c(params$minYr,params$maxYr),
+                                    export=FALSE,
+                                    verbosity=verbosity);
+```
+
+```{r getIndivs.TrawlSurvey}
+    #select individuals
+    dfr.ID<-selectIndivs.TrawlSurvey(dfr.HD,
+    								                 tbl=csvCrabhauls,
+                                     sex=params$sex,
+    								                 shell_condition=params$shell_condition,
+                                     maturity=params$maturity,
+    								                 calcMaleMaturity=params$calcMaleMaturity,
+                                     minSize=params$minSize,
+    								                 maxSize=params$maxSize,
+                                     export=FALSE,
+    								                 verbosity=verbosity);
+```
+
+```{r cleanupInputCSVs}
+  rm(csvStrata,csvCrabhauls);
+```
+
+```{r calcSurveyCPUE}
+    ##calculate CPUE by haul
+    dfrCPUE.ByXMS<-calcCPUE.ByHaul(dfr.HD,
+  															  dfr.ID,
+                                  bySex=!params$aggBySex,
+                                  byMaturity=!params$aggByMaturity,
+                                  byShellCondition=!params$aggByShellCondition,
+                                  bySize=FALSE,
+                                  export=FALSE,
+  															  verbosity=verbosity);
+
+    ##calculate CPUE by station
+    dfrCPUE.ByXMS<-calcCPUE.ByStation(dfr.SD,
+  																     dfrCPUE.ByXMS,
+                                       export=FALSE,
+  																     verbosity=verbosity);
+
+		##drop levels
+		dfrCPUE.ByXMS<-wtsUtilities::dropLevels(
+		                 dfrCPUE.ByXMS,
+										 list(SEX=c('MISSING',"HERMAPHRODITIC"))
+									 );
+
+    ##aggregate to requested levels
+    if (params$aggBySex)            dfrCPUE.ByXMS$SEX            <-"ALL";
+    if (params$aggByMaturity)       dfrCPUE.ByXMS$MATURITY       <-"ALL";
+    if (params$aggByShellCondition) dfrCPUE.ByXMS$SHELL_CONDITION<-"ALL";
+
+    ##export to csv
+    write.csv(dfrCPUE.ByXMS,file=file.path(outDir,"cpue.csv"))
+```
+
+```{r extractEnvVars}
+  evs.csv<-tcsamSurveyData::calcEnvData.ByStation(dfr.SD,dfr.HD,verbosity=verbosity);
 ```
 
 #Basemap
 
 The following figure illustrates the base map for subsequent maps of bottom temperature and survey CPUE.
 
-```{r child=system.file("rmd/makeMaps.Surveys.Basemap.Rmd",package="tcsamSurveyData")}
-  ##create the basemap for future maps
+```{r createBasemap}
+  surveyGridLayers<-tcsamSurveyData::tmap.CreateSurveyGridLayers();
+  basemap <- tcsamSurveyData::tmap.CreateBaseMap(layers.survey=surveyGridLayers);
 ```
 
+```{r printBasemap,results="asis",fig.height=3,fig.width=3.5,fig.cap=cap,eval.after="fig.cap",fig.pos="H",fig.align="center"}
+  cap<-"Basemap for future maps, with EBS bathymetry (blue lines) and the NMFS EBS bottom trawl survey station grid.";
+  print(basemap);
+  cat("\n\n");
+```
 
 ```{r calcEnvVars}
   stns.polys<-surveyGridLayers$grid;
   stns.pnts<-surveyGridLayers$stations;
   #join annual evs to stns.polys by station
-  evs.polys<-wtsGIS::mergeDataframeWithLayer(
+  evs.polys<-wtsGIS::tmap.MergeDataframeWithLayer(
                                      evs.csv,stns.polys,
-                                     dataID="GIS_STATION",geomsID="STATION_ID",
+                                     dataID="STATION_ID",geomsID="GIS_STATION",
                                      allData=FALSE,duplicateGeoms=TRUE);
   #join annual evs to stns.pnts by station
-  evs.pnts<-wtsGIS::mergeDataframeWithLayer(
+  evs.pnts<-wtsGIS::tmap.MergeDataframeWithLayer(
                                      evs.csv,stns.pnts,
-                                     dataID="GIS_STATION",geomsID="ID",
+                                     dataID="ID",geomsID="GIS_STATION",
                                      allData=FALSE,duplicateGeoms=TRUE);
   rm(evs.csv,stns.polys);
 ```
 
 ```{r createRasters}
-  strWGS84<-wtsGIS::getCRS("WGS84");
+  strWGS84<-tmaptools::get_proj4("longlat",output="character");
+  crsWGS84<-sp::CRS(strWGS84);
 
   bbext<-tmaptools::bb(basemap[[1]]$bbox);
   evs.grds<-list();
   yrs<-sort(unique(evs.pnts$YEAR));
   for (yr in yrs){
     idx<-(evs.pnts$YEAR==yr)&(!is.na(evs.pnts$BOTTOM_TEMP));
-    spdfr<-as(evs.pnts[idx,],"Spatial");#convert sf object to sp object
-    evs.grds[[as.character(yr)]]<-wtsGIS::createRasterLayer(spdfr,
-                                                            "BOTTOM_TEMP",
-                                                            bbext,
-                                                            nx=500,ny=500,
-                                                            strCRS=strWGS84);
+    spdfr<-evs.pnts[idx,];
+    evs.grds[[as.character(yr)]]<-wtsGIS::tmap.CreateRasterLayer(
+                                                    spdfr,
+                                                    "BOTTOM_TEMP",
+                                                    bbext,
+                                                    nx=500,ny=500,
+                                                    crs=crsWGS84);
   }
-  rm(strWGS84,yr,yrs,idx,spdfr);
+  rm(strWGS84,crsWGS84,yr,yrs,idx,spdfr);
 ```
 
 #Survey CPUE
@@ -142,9 +234,9 @@ The following maps present survey CPUE (in biomass) for components of the `r cra
         dfr<-reshape2::dcast(tmp,formula=YEAR+GIS_STATION+SEX+MATURITY+SHELL_CONDITION~.,
                              fun.aggregate=sum,value.var=value.var);
         names(dfr)[6]<-"value";
-        dfrp<-wtsGIS::mergeDataframeWithLayer(dfr,stns.pnts,
-                                              dataID="GIS_STATION",geomsID="ID",
-                                              allData=FALSE,duplicateGeoms=TRUE);
+        dfrp<-wtsGIS::tmap.MergeDataframeWithLayer(dfr,stns.pnts,
+                                                         dataID="ID",geomsID="GIS_STATION",
+                                                         allData=FALSE,duplicateGeoms=TRUE);
         if (is.null(pntsCPUE)) {pntsCPUE<-dfrp;} else {pntsCPUE<-rbind(pntsCPUE,dfrp);}
       }
     }#-iXMS
@@ -182,22 +274,10 @@ The following maps present survey CPUE (in biomass) for components of the `r cra
       tmp<-pntsCPUE[idy&idx&idm&ids,];
       if (verbosity>0) cat("Creating map",iXMS,"for",uX,uM,uS,"using",nrow(tmp),"points\n");
       if (nrow(tmp)>0){
-        map <- tcsamSurveyData::gisCreateSurveyMap.CPUE(
-                                       basemap=basemap,
-                                       cpue=tmp,
-                                       raster=evs.grds[[as.character(yr)]],
-                                       cpueCol="value",
-                                       cpueLabel="CPUE",
-                                       cpueColor="blue",
-                                       cpueAlpha=0.6,
-                                       maxCPUE=mx,
-                                       rasterCol="z",
-                                       rasterLabel="T (degC)",
-                                       rasterPalette=pal,
-                                       rasterAlpha=0.6,
-                                       rasterBreaks=brks,
-                                       rasterLegend=(cntr==min(c(2,ngpp))),
-                                       panelLabel=label);
+        map <- tmap.CreateSurveyMap.CPUE(basemap=basemap,cpue=tmp,raster=evs.grds[[as.character(yr)]],
+                                         cpueCol="value",cpueLabel="CPUE",cpueColor="blue",cpueAlpha=0.6,maxCPUE=mx,
+                                         rasterCol="z",rasterLabel="T (degC)",rasterPalette=pal,rasterAlpha=0.6,rasterBreaks=brks,
+                                         rasterLegend=(cntr==min(c(2,ngpp))),panelLabel=label);
         mapsXMS[[paste(uX,uM,uS)]]<-map;
         cntr<-cntr+1;#increment counter for including legend on map
         rm(map);
