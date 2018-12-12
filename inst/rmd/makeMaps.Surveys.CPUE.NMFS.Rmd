@@ -40,9 +40,11 @@ title: '`r gsub("&&species",params$species,params$title,fixed=TRUE)`'
 fontsize: 11pt
 ---
 
-```{r,echo=FALSE,results='hide'}
+```{r init.MakeMaps.Surveys.CPUE.NMFS,echo=FALSE,results='hide'}
 ##set knitr options for subsequent chunks
 knitr::opts_chunk$set(echo=FALSE, error=FALSE, message=FALSE, warning=FALSE, concordance=TRUE, fig.width=6.5, fig.height=7, dpi=300)
+##set options
+options(stringsAsFactors=FALSE);
 ```
 
 ```{r inputs.MakeMaps.Surveys.CPUE.NMFS}
@@ -126,6 +128,7 @@ The following figure illustrates the base map for subsequent maps of bottom temp
 The following maps present survey CPUE (in biomass) for components of the `r crabType` stock superimposed on bottom temperature at the time of the survey for each year of the NMFS bottom trawl survey.
 
 ```{r createPtsCPUE}
+    options(stringsAsFactors=FALSE);
     uXMSs<-unique(dfrCPUE.ByXMS[,c("SEX","MATURITY","SHELL_CONDITION")]);
     if (tolower(params$cpueType)=="abundance"){
       value.var<-"numCPUE";
@@ -134,6 +137,7 @@ The following maps present survey CPUE (in biomass) for components of the `r cra
     } 
     pntsCPUE<-NULL;
     for (iXMS in 1:nrow(uXMSs)){
+      #cat("Starting iXMS loop ",iXMS,"\n")
       idx<-dfrCPUE.ByXMS$SEX            ==uXMSs$SEX[iXMS];
       idm<-dfrCPUE.ByXMS$MATURITY       ==uXMSs$MATURITY[iXMS];
       ids<-dfrCPUE.ByXMS$SHELL_CONDITION==uXMSs$SHELL_CONDITION[iXMS];
@@ -145,16 +149,19 @@ The following maps present survey CPUE (in biomass) for components of the `r cra
         dfrp<-wtsGIS::mergeDataframeWithLayer(dfr,stns.pnts,
                                               dataID="GIS_STATION",geomsID="ID",
                                               allData=FALSE,duplicateGeoms=TRUE);
-        if (is.null(pntsCPUE)) {pntsCPUE<-dfrp;} else {pntsCPUE<-rbind(pntsCPUE,dfrp);}
+        #cat("about to bind\n");
+        if (is.null(pntsCPUE)) {pntsCPUE<-dfrp;} else {pntsCPUE<-sf:::rbind.sf(pntsCPUE,dfrp);}
+        #cat("finished binding ",iXMS,"\n")
       }
     }#-iXMS
-    rm(iXMS,idx,idm,ids,tmp,dfr,dfrp,stns.pnts);
+    #rm(iXMS,idx,idm,ids,tmp,dfr,dfrp,stns.pnts);
 ```
 
 
 ```{r createMaps}
   yrs<-sort(unique(pntsCPUE$YEAR));
   ncol<-min(2,nrow(uXMSs)); nrow<-ceiling(nrow(uXMSs)/2);
+  if (nrow==1) {nrow=ncol; ncol=1;}
   ngpp<-nrow(uXMSs);
   nyrs<-length(yrs);
   brks<-seq(from=-2,to=8,by=1);

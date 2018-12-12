@@ -39,9 +39,9 @@ title: '`r gsub("&&species",params$species,params$title,fixed=TRUE)`'
 fontsize: 11pt
 ---
 
-```{r,echo=FALSE,results='hide'}
+```{r init.CalcCPUE.Surveys.NMFS,echo=FALSE,results='hide'}
 ##set knitr options for subsequent chunks
-knitr::opts_chunk$set(echo=FALSE, error=FALSE, message=FALSE, warning=FALSE, concordance=TRUE, fig.width=6.5, fig.height=7, dpi=300)
+knitr::opts_chunk$set(echo=FALSE, error=FALSE, message=FALSE, warning=FALSE, concordance=TRUE)
 ```
 
 ```{r inputs.CalcCPUE.Surveys.NMFS}
@@ -66,7 +66,7 @@ knitr::opts_chunk$set(echo=FALSE, error=FALSE, message=FALSE, warning=FALSE, con
   codes.TS<-Codes.TrawlSurvey();
 ```
 
-```{r readDataFiles, results='asis'}
+```{r readDataFiles.CalcCPUE.Surveys.NMFS, results='asis'}
     if (params$calcMaleMaturity){
       cat(paste0(" Note that categorization of mmale maturity is based on an ogive",
                  " developed by Rugolo and Turnock, and is shown here for illustrative purposes.\n"));
@@ -83,7 +83,7 @@ knitr::opts_chunk$set(echo=FALSE, error=FALSE, message=FALSE, warning=FALSE, con
     rm(f);
 ```
 
-```{r getStrata.TrawlSurvey}
+```{r getStrata.CalcCPUE.Surveys.NMFS}
     dfr.SD<-selectStrata.TrawlSurvey(csvStrata,
     																 species=species,
     																 strataType=params$strataType,
@@ -91,7 +91,7 @@ knitr::opts_chunk$set(echo=FALSE, error=FALSE, message=FALSE, warning=FALSE, con
     																 verbosity=verbosity);
 ```
 
-```{r getHauls.TrawlSurvey}
+```{r getHauls.CalcCPUE.Surveys.NMFS}
     ##select haul data
     dfr.HD<-selectHauls.TrawlSurvey(dfr.SD,
     								                tbl=csvCrabhauls,
@@ -100,7 +100,7 @@ knitr::opts_chunk$set(echo=FALSE, error=FALSE, message=FALSE, warning=FALSE, con
                                     verbosity=verbosity);
 ```
 
-```{r getIndivs.TrawlSurvey}
+```{r getIndivs.CalcCPUE.Surveys.NMFS}
     #select individuals
     dfr.ID<-selectIndivs.TrawlSurvey(dfr.HD,
     								                 tbl=csvCrabhauls,
@@ -114,11 +114,11 @@ knitr::opts_chunk$set(echo=FALSE, error=FALSE, message=FALSE, warning=FALSE, con
     								                 verbosity=verbosity);
 ```
 
-```{r cleanupInputCSVs}
+```{r cleanupInputCSVs.CalcCPUE.Surveys.NMFS}
   rm(csvStrata,csvCrabhauls);
 ```
 
-```{r calcSurveyCPUE}
+```{r calc.CalcCPUE.Surveys.NMFS}
     ##calculate CPUE by haul
     dfrCPUE.ByXMS<-calcCPUE.ByHaul(dfr.HD,
   															  dfr.ID,
@@ -150,7 +150,7 @@ knitr::opts_chunk$set(echo=FALSE, error=FALSE, message=FALSE, warning=FALSE, con
     write.csv(dfrCPUE.ByXMS,file=file.path(outDir,"cpue.csv"))
 ```
 
-```{r extractEnvVars}
-  evs.csv<-tcsamSurveyData::calcEnvData.ByStation(dfr.SD,dfr.HD,verbosity=verbosity);
+```{r extractEnvVars.CalcCPUE.Surveys.NMFS}
+  evs.csv<-calcEnvData.ByStation(dfr.SD,dfr.HD,verbosity=verbosity);
 ```
 
