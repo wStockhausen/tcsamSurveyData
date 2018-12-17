@@ -118,10 +118,3 @@ convertFormat.BSFRF2NMFS<-function(tbl,
 
   return(tbl);
 }
-  # #calculate number of SBS stations occupied
-  # qry<-"select YEAR,
-  #       count(DISTINCT HAULJOIN) as numHauls,
-  #       count(DISTINCT GIS_STATION) as numStations
-  #       from `dfr.HD.BSFRF`
-  #       group by YEAR;";
-  # dfr.numHauls<-sqldf::sqldf(qry);

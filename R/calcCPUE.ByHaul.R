@@ -1,5 +1,5 @@
 #'
-#'@title Calculate cpue by survey haul and other factors from station, haul and individual crab info.
+#'@title Calculate cpue by survey haul and other factors from station, haul and individual crab info
 #'
 #'@description Function to calculate cpue by survey haul and other factors (e.g., sex) from station, haul and individual crab info.
 #'

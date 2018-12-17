@@ -76,16 +76,14 @@ options(stringsAsFactors=FALSE);
 
 This report creates a time series of maps of `r crabType` CPUE and bottom temperature from the NMFS EBS bottom trawl survey.
 
-```{r child=system.file("rmd/calcCPUE.Surveys.NMFS.Rmd",package="tcsamSurveyData")}
-  ##calculate survey CPUE and environmental data (dfrCPUE.ByXMS and evs.csv)
-```
-
-#Basemap
-
 The following figure illustrates the base map for subsequent maps of bottom temperature and survey CPUE.
 
 ```{r child=system.file("rmd/makeMaps.Surveys.Basemap.Rmd",package="tcsamSurveyData")}
   ##create the basemap for future maps
+```
+
+```{r child=system.file("rmd/calcCPUE.Surveys.NMFS.Rmd",package="tcsamSurveyData")}
+  ##calculate survey CPUE and environmental data (dfrCPUE.ByXMS and evs.csv)
 ```
 
 

@@ -47,7 +47,7 @@
 #'
 #' @export
 #'
-doBiomassCalcs<-function(tbl.strata,
+doCalcs_Biomass<-function(tbl.strata,
                          tbl.hauls,
                          tbl.indivs,
                          calcCPUE.byStation=TRUE,
@@ -72,7 +72,7 @@ doBiomassCalcs<-function(tbl.strata,
                          out.dir=NULL,
                          verbosity=0){
 
-    if (verbosity>1) cat("starting doBiomassCalcs.\n");
+    if (verbosity>1) cat("starting doCalcs_Biomass.\n");
 
     res<-list();#empty list for output
 

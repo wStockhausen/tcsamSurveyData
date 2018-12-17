@@ -2,7 +2,7 @@
 % Please edit documentation in R/calcCPUE.ByHaul.R
 \name{calcCPUE.ByHaul}
 \alias{calcCPUE.ByHaul}
-\title{Calculate cpue by survey haul and other factors from station, haul and individual crab info.}
+\title{Calculate cpue by survey haul and other factors from station, haul and individual crab info}
 \usage{
 calcCPUE.ByHaul(tbl_hauls, tbl_indivs = NULL, bySex = FALSE,
   byShellCondition = FALSE, byMaturity = FALSE, bySize = FALSE,

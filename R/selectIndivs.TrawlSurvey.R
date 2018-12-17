@@ -115,7 +115,7 @@ selectIndivs.TrawlSurvey<-function(tbl_hauls,
             t.HAULJOIN=h.HAULJOIN;";
     qry<-gsub("&&cols",paste("t.",cols,sep='',collapse=","),qry);
     if (verbosity>1) cat("\nquery is:\n",qry,"\n");
-    tbl<-sqldf(qry);
+    tbl<-sqldf::sqldf(qry);
 
     #assign -1 to NA's in column CLUTCH_SIZE (i.e., males) to simplify SQL code
     idx<-is.na(tbl$CLUTCH_SIZE);
@@ -192,7 +192,7 @@ selectIndivs.TrawlSurvey<-function(tbl_hauls,
     qry<-gsub("&&sq.mat",sq.mat,qry)
     if (verbosity>1) cat("\nquery is:\n",qry,"\n");
 
-    tbl<-sqldf(qry);
+    tbl<-sqldf::sqldf(qry);
 
     #Change back to NA's from -1's in column CLUTCH_SIZE (i.e., males)
     idx<-tbl$CLUTCH_SIZE==-1;
@@ -223,6 +223,13 @@ selectIndivs.TrawlSurvey<-function(tbl_hauls,
         qry<-"select * from tbl
               order by
                 HAULJOIN,SIZE,SEX,MATURITY,SHELL_CONDITION,CLUTCH_SIZE;"
+    }
+
+    #calculate weight, if not already done so
+    idx_ncw<-is.na(tbl$CALCULATED_WEIGHT);#TRUE where weight not calculated
+    if (any(idx_ncw)){
+      cw <- tcsamFunctions::calc.WatZ(tbl$SIZE[idx_ncw],tbl$SEX[idx_ncw],tbl$MATURITY[idx_ncw]);
+      tbl$CALCULATED_WEIGHT[idx_ncw] <- cw;
     }
 
     if (export){
