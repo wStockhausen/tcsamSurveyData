@@ -55,7 +55,10 @@ The returned dataframe has the following columns: \cr
 \item   HAULJOIN
 \item   LONGITUDE
 \item   LATITUDE
-\item   requested factors, if any
+\item   SEX
+\item   MATURITY
+\item   SHELL_CONDITION
+\item   SIZE
 \item   numIndivs
 \item   numCPUE
 \item   wgtCPUE

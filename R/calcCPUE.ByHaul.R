@@ -29,7 +29,10 @@
 #'\item   HAULJOIN
 #'\item   LONGITUDE
 #'\item   LATITUDE
-#'\item   requested factors, if any
+#'\item   SEX
+#'\item   MATURITY
+#'\item   SHELL_CONDITION
+#'\item   SIZE
 #'\item   numIndivs
 #'\item   numCPUE
 #'\item   wgtCPUE
@@ -130,7 +133,7 @@ calcCPUE.ByHaul<-function(tbl_hauls,
             SHELL_CONDITION,
             SIZE,
             sum(numIndivs) as numIndivs,
-            sum(SAMPLING_FACTOR) as expNUM,
+            sum(SAMPLING_FACTOR*numIndivs) as expNUM,
             sum(SAMPLING_FACTOR*CALCULATED_WEIGHT) as expWGT
           from
             tbl_indivs

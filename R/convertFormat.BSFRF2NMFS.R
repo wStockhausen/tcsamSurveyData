@@ -23,13 +23,13 @@
 #'   \item {MID_LATITUDE}
 #'   \item {MID_LONGITUDE}
 #'   \item {GIS_STATION}
-#'   \item {BOTTOM_DEPTH}
-#'   \item {GEAR_TEMPERATURE}
-#'   \item {AREA_SWEPT_VARIABLE}
+#'   \item {BOTTOM_DEPTH (in meters)}
+#'   \item {GEAR_TEMPERATURE (deg C)}
+#'   \item {AREA_SWEPT_VARIABLE (nm^2)}
 #'   \item {SPECIES_CODE}
 #'   \item {SPECIES_NAME}
 #'   \item {SEX}
-#'   \item {WIDTH}
+#'   \item {WIDTH (mm)}
 #'   \item {SHELL_CONDITION}
 #'   \item {EGG_COLOR}
 #'   \item {EGG_CONDITION}
@@ -79,7 +79,7 @@ convertFormat.BSFRF2NMFS<-function(tbl,
   tbl$MID_LATITUDE       <-as.numeric(tbl$midtowlatitude);
   tbl$MID_LONGITUDE      <-as.numeric(tbl$midtowlongitude);
   tbl$GIS_STATION        <-tbl$nmfs_stn;
-  tbl$BOTTOM_DEPTH       <-as.numeric(tbl$depth_ftm*6*(2.54*12)/100);
+  tbl$BOTTOM_DEPTH       <-as.numeric(tbl$depth_ftm*6*(0.3048));
   tbl$GEAR_TEMPERATURE   <-as.numeric(tbl$temp_c);
   tbl$AREA_SWEPT_VARIABLE<-as.numeric(tbl$sampfactor)/as.numeric(tbl$cpuenum);#recalc to improve precision
   tbl$SPECIES_CODE       <-68560;

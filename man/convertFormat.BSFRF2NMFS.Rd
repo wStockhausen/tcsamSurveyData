@@ -35,13 +35,13 @@ returned dataframe has columns
   \item {MID_LATITUDE}
   \item {MID_LONGITUDE}
   \item {GIS_STATION}
-  \item {BOTTOM_DEPTH}
-  \item {GEAR_TEMPERATURE}
-  \item {AREA_SWEPT_VARIABLE}
+  \item {BOTTOM_DEPTH (in meters)}
+  \item {GEAR_TEMPERATURE (deg C)}
+  \item {AREA_SWEPT_VARIABLE (nm^2)}
   \item {SPECIES_CODE}
   \item {SPECIES_NAME}
   \item {SEX}
-  \item {WIDTH}
+  \item {WIDTH (mm)}
   \item {SHELL_CONDITION}
   \item {EGG_COLOR}
   \item {EGG_CONDITION}
