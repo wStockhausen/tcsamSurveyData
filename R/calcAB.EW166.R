@@ -3,7 +3,7 @@
 #'
 #'@description This function estimates abundance, biomass by year, east/west of 166W from a biomass-by-stratum data frame or csv file.
 #'
-#'@param tbl         : data frame with biomass by stratum info from call to \code{\link{calcBiomass.ByStratum}} or csv file with biomass by stratum info, or NULL
+#'@param tbl         : data frame with biomass by stratum info from call to \code{\link{calcAB.ByStratum}} or csv file with abundance/biomass by stratum info, or NULL
 #'@param strata_toEW166 : data frame w/ conversion from original strata to EW166 strata
 #'@param export      : boolean flag to write results to csv file
 #'@param out.csv     : output file name
@@ -41,13 +41,13 @@
 #'
 #'@export
 #'
-calcBiomass.EW166<-function(tbl=NULL,
-                          strata_toEW166=Codes.TrawlSurvey()[["strata.EW166"]],
-                          export=TRUE,
-                          out.csv='SurveyBiomass.EW166.csv',
-                          out.dir=NULL,
-                          verbosity=0){
-    if (verbosity>1) cat("starting calcBiomass.EW166\n");
+calcAB.EW166<-function(tbl=NULL,
+                        strata_toEW166=Codes.TrawlSurvey()[["strata.EW166"]],
+                        export=TRUE,
+                        out.csv='SurveyBiomass.EW166.csv',
+                        out.dir=NULL,
+                        verbosity=0){
+    if (verbosity>1) cat("starting calcAB.EW166\n");
 
     in.csv<-NULL;
     if (!is.data.frame(tbl)){

@@ -1,5 +1,5 @@
 #'
-#'@title Calculate average cpue, numbers and biomass by stratum from AFSC trawl survey data.
+#'@title Calculate abundance, and biomass by stratum from AFSC trawl survey data.
 #'
 #'@param   tbl_strata : data frame w/ stations/strata from call to selectStrata.TrawlSurvey(...)
 #'@param   tbl_cpue   : data frame w/ cpue by year, station, other factor levels (or csv filename or NULL)
@@ -8,14 +8,12 @@
 #'@param   out.dir : output file directory
 #'@param verbosity : integer flag indicating level of printed output (0=off,1=minimal,2=full)
 #'
-#'@description This function calculates average cpue, numbers and biomass by stratum from cpue (by survey station or by haul).
+#'@description This function calculates abundance, and biomass by stratum from cpue (by survey station or by haul).
 #'
 #'@details If tbl_cpue is NULL, the user is prompted to enter a csv file with cpue info. \cr
 #'\cr Other notes: \cr
 #'\itemize{
 #'   \item Area is in square nautical miles
-#'   \item CPUE in numbers is in no/(sq. nm.)
-#'   \item CPUE in weight  is in mt/(sq. nm.)
 #'   \item Abundance is in 10^6 indivs
 #'   \item Biomass   is in 10^3 mt
 #'}
@@ -44,16 +42,16 @@
 #'@export
 #'
 #######################################################################
-calcBiomass.ByStratum<-function(tbl_strata,
-                                tbl_cpue=NULL,
-                                export=FALSE,
-                                out.csv='SurveyBiomass.ByStratum.csv',
-                                out.dir=NULL,
-                                verbosity=0){
-    if (verbosity>1) cat("starting calcBiomass.ByStratum\n");
+calcAB.ByStratum<-function(tbl_strata,
+                            tbl_cpue=NULL,
+                            export=FALSE,
+                            out.csv='SurveyBiomass.ByStratum.csv',
+                            out.dir=NULL,
+                            verbosity=0){
+    if (verbosity>1) cat("starting calcAB.ByStratum\n");
 
     if (!is.data.frame(tbl_strata)) {
-        cat("Error in calcBiomass.ByStratum:",
+        cat("Error in calcAB.ByStratum:",
             "tbl_strata is NULL. Must supply tbl_strata.",
             "Aborting...",sep='\n');
         return(NULL);
@@ -227,7 +225,7 @@ calcBiomass.ByStratum<-function(tbl_strata,
         write.csv(tbl3,out.csv,na='',row.names=FALSE);
     }
 
-    if (verbosity>1) cat("finished calcBiomass.ByStratum\n");
+    if (verbosity>1) cat("finished calcAB.ByStratum\n");
     return(tbl3);
 }
 

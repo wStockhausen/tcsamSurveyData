@@ -1,7 +1,7 @@
 #'
 #'@title Calculate total abundance and biomass from a by-stratum data frame or csv file.
 #'
-#'@param tbl     : data frame with abundance/biomass by stratum info from call to \code{\link{calcBiomass.ByStratum} or \link{calcBiomass.EW166}}, or a csv file from such a call, or NULL
+#'@param tbl     : data frame with abundance/biomass by stratum info from call to \code{\link{calcAB.ByStratum} or \link{calcAB.EW166}}, or a csv file from such a call, or NULL
 #'@param in.csv  : csv filename from which to read input dataframe
 #'@param export  : boolean flag to write results to csv file
 #'@param out.csv : output file name
@@ -26,7 +26,7 @@
 #'\item  cvBIOMASS  = cv of total biomass estimate
 #'}
 #'
-#'@description This function calculates total abundance and biomass from a by-stratum data frame or csv file.
+#'@description This function calculates total EBS abundance and biomass from a by-stratum data frame or csv file.
 #'
 #'@details If \code{tbl} and \code{in.csv} are both NULL, the user is prompted to enter a csv file with biomass by stratum info. \cr
 #'\cr Notes: \cr
@@ -42,13 +42,13 @@
 #'@export
 #'
 #######################################################################
-calcBiomass.EBS<-function(tbl=NULL,
+calcAB.EBS<-function(tbl=NULL,
                           in.csv=NULL,
                           export=TRUE,
                           out.csv='SurveyBiomass.EBS.csv',
                           out.dir=NULL,
                           verbosity=0){
-    if (verbosity>1) cat("starting calcBiomass.EBS\n");
+    if (verbosity>1) cat("starting calcAB.EBS\n");
 
     in.csv<-NULL;
     if (!is.data.frame(tbl)){
@@ -67,7 +67,7 @@ calcBiomass.EBS<-function(tbl=NULL,
         out.dir<-dirname(file.path('.'));
         if (!is.null(in.csv)) {out.dir<-dirname(file.path(in.csv));}
     }
-    if (verbosity>0) cat("Output directory for calcBiomass.EBS will be '",out.dir,"'\n",sep='');
+    if (verbosity>0) cat("Output directory for calcAB.EBS will be '",out.dir,"'\n",sep='');
 
     #determine columns of biomass by stratum table
     cols<-names(tbl);
@@ -129,7 +129,7 @@ calcBiomass.EBS<-function(tbl=NULL,
         write.csv(tbl1,out.csv,na='',row.names=FALSE);
     }
 
-    if (verbosity>1) cat("finished calcBiomass.EBS\n");
+    if (verbosity>1) cat("finished calcAB.EBS\n");
     return(tbl1)
 }
 

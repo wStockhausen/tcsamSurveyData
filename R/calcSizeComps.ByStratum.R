@@ -181,7 +181,7 @@ calcSizeComps.ByStratum<-function(tbl_strata,
     }#read in or created tbl_cpue
 
     #Now calculate size comps
-    tbl_zcs<-calcBiomass.ByStratum(tbl_strata,tbl_cpue=tbl_cpue,export=FALSE,verbosity=0);
+    tbl_zcs<-calcAB.ByStratum(tbl_strata,tbl_cpue=tbl_cpue,export=FALSE,verbosity=0);
     #Drop lots of columns
     tbl_zcs<-subset(tbl_zcs,select=-c(stdABUNDANCE,cvABUNDANCE,stdBIOMASS,cvBIOMASS))
 

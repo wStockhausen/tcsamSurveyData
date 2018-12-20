@@ -81,7 +81,7 @@ convertFormat.BSFRF2NMFS<-function(tbl,
   tbl$GIS_STATION        <-tbl$nmfs_stn;
   tbl$BOTTOM_DEPTH       <-as.numeric(tbl$depth_ftm*6*(0.3048));
   tbl$GEAR_TEMPERATURE   <-as.numeric(tbl$temp_c);
-  tbl$AREA_SWEPT_VARIABLE<-as.numeric(tbl$sampfactor)/as.numeric(tbl$cpuenum);#recalc to improve precision
+  tbl$AREA_SWEPT_VARIABLE<-as.numeric(tbl$aswept_nm2);
   tbl$SPECIES_CODE       <-68560;
   tbl$SPECIES_NAME       <-"Bairdi Tanner Crab";
   tbl$SEX                <-as.integer(tbl$sex);

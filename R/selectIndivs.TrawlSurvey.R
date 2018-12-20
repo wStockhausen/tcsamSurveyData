@@ -53,7 +53,7 @@
 selectIndivs.TrawlSurvey<-function(tbl_hauls,
                                    tbl=NULL,
                                    col.Size='WIDTH',
-                                   sex=c('MALE','FEMALE','ALL'),
+                                   sex=c('MALE','FEMALE','ALL','MISSING', 'HERMAPHRODITE'),
                                    shell_condition=c('NEW_SHELL','OLD_SHELL','ALL'),
                                    maturity=c('IMMATURE','MATURE','ALL'),
                                    calcMaleMaturity=FALSE,

@@ -4,78 +4,50 @@
 \alias{doCalcs_CPUEbyStation}
 \title{Calculate cpue by survey station and other factors from strata and haul files}
 \usage{
-doCalcs_CPUEbyStation(species = c("Tanner crab", "Snow crab", "BKC",
-  "RKC"), surveyType = c("NMFS", "BSFRF"), bsfrfTypes = c("SBS",
-  "IDX"), strataTbl = NULL, strataFile = "", strataType = "2015",
-  haulFiles = "", HaulTypes = NULL, minYr = 2016, maxYr = 2017,
-  sex = "ALL", maturity = "ALL", shell_condition = "ALL",
-  minSize = 0, maxSize = Inf, calcMaleMaturity = FALSE,
-  cutpts = seq(from = 25, to = 185, by = 5), truncate.low = TRUE,
-  truncate.high = FALSE, aggBySex = FALSE, aggByMaturity = FALSE,
-  aggByShellCondition = FALSE, aggBySize = FALSE, verbosity = 0)
+doCalcs_CPUEbyStation(tbl_strata, tbl_hauls, tbl_indivs,
+  aggBySex = FALSE, aggByMaturity = FALSE,
+  aggByShellCondition = FALSE, aggBySize = FALSE, cutpts = seq(from =
+  25, to = 185, by = 5), truncate.low = TRUE, truncate.high = FALSE,
+  dropLevels = list(SEX = c("MISSING", "HERMAPHRODITIC")),
+  verbosity = 0)
 }
 \arguments{
-\item{species}{: character string indicating species (i.e., "Tanner crab","Snow crab","BKC", or "RKC")}
+\item{tbl_strata}{- dataframe with survey strata info (output from \code{\link{selectStrata.TrawlSurvey}})}
 
-\item{surveyType}{: survey type ("NMFS" or "BSFRF")}
+\item{tbl_hauls}{- dataframe with hauls info (output from \code{\link{selectHauls.TrawlSurvey}})}
 
-\item{bsfrfTypes}{: vector of BSFRF types to include ("SBS" and/or "IDX")}
+\item{tbl_indivs}{- dataframe with individual crab info (output from \code{\link{selectIndivs.TrawlSurvey}})}
 
-\item{strataTbl}{: dataframe previously created by call to \code{\link{selectStrata.TrawlSurvey}}}
+\item{aggBySex}{- flag to agregate CPUE over sexes}
 
-\item{strataFile}{: path to strata file (req'd if strataTbl is NULL)}
+\item{aggByMaturity}{- flag to aggregate of maturity states}
 
-\item{strataType}{: "2015"}
+\item{aggByShellCondition}{- flag to aggregate over shell conditions}
 
-\item{haulFiles}{: vector of paths to haul files}
+\item{aggBySize}{- flag to aggregate over sizes}
 
-\item{HaulTypes}{: haul types (NULL selects all)}
+\item{cutpts}{- vector of cutpoints to create size bins from}
 
-\item{minYr}{: min year to include}
+\item{truncate.low}{- flag (T/F) to exclude individuals smaller than minSize}
 
-\item{maxYr}{: max year to include}
+\item{truncate.high}{- flag (T/F) to exclude individuals larger than maxSize}
 
-\item{sex}{: sexes to include ("MALE", "FEMALE", or "ALL")}
+\item{dropLevels}{- NULL, or list (by factor name) of vectors of factor values to drop (see help for \code{wtsUtilities::dropLevels})}
 
-\item{maturity}{: maturity states to include ("IMMATURE", "MATURE", "UNDETERMINED" , or "ALL")}
-
-\item{shell_condition}{: shell conditions to include ("NEW", "OLD", "ALL")}
-
-\item{minSize}{: min size (CW) to include}
-
-\item{maxSize}{: max size (CW) to include}
-
-\item{calcMaleMaturity}{: flag (T/F) to calculate male maturity using the Rugolo/Turnock maturity ogive}
-
-\item{cutpts}{: vector of cutpoints to create size bins from}
-
-\item{truncate.low}{: flag (T/F) to exclude individuals smaller than minSize}
-
-\item{truncate.high}{: flag (T/F) to exclude individuals larger than maxSize}
-
-\item{aggBySex}{: flag to agregate CPUE over sexes}
-
-\item{aggByMaturity}{: flag to aggregate of maturity states}
-
-\item{aggByShellCondition}{: flag to aggregate over shell conditions}
-
-\item{aggBySize}{: flag to aggregate over sizes}
-
-\item{verbosity}{: integer flag indicating level of printed output (0=off,1=minimal,2=full)}
+\item{verbosity}{- integer flag indicating level of printed output (0=off,1=minimal,2=full)}
 }
 \value{
-A dataframe of cpue (numbers and weight) by haul. See Details.
+A dataframe of cpue (numbers and weight) by survey station. See Details.
 }
 \description{
 Function to calculate cpue by survey sstation and other factors (e.g., sex) from strata and haul files.
 }
 \details{
-The returned dataframe has the following columns: \cr
+The returned dataframes has the following columns: \cr
 \itemize{
 \item   YEAR
 \item   STRATUM
 \item   GIS_STATION
-\item   HAULJOIN
 \item   LONGITUDE
 \item   LATITUDE
 \item   SEX
