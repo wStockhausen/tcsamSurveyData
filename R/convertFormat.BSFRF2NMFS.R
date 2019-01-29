@@ -66,15 +66,17 @@ convertFormat.BSFRF2NMFS<-function(tbl,
   ##-select only "type" stations
   tbl<-tbl[tbl$study%in%types,];
 
+  start_date<-as.numeric(format(as.Date(tbl$date,format="%m/%d/%y"),"%m%d%Y"));
+
   tbl$AKFIN_SURVEY_YEAR  <-tbl$year;
-  tbl$HAULJOIN           <-paste(tbl$study,tbl$boat,tbl$NMFS_DATE,tbl$tow,sep="-");
+  tbl$HAULJOIN           <-paste(tbl$study,tbl$boat,start_date,tbl$tow,sep=";");
   tbl$VESSEL             <-tbl$boat;
   tbl$CRUISE             <--1;
   tbl$HAUL               <-tbl$tow;
   tbl$HAUL_TYPE          <-tbl$study;
   tbl$PERFORMANCE        <-0;
-  tbl$START_DATE         <-as.numeric(format(as.Date(tbl$date,format="%m/%d/%y"),"%m%d%Y"));
-  tbl$AKFIN_SURVEY_DATE  <-format(as.Date(tbl$date,format="%m/%d/%y"),"%d-%M-%yy");
+  tbl$START_DATE         <-start_date;
+  tbl$AKFIN_SURVEY_DATE  <-format(as.Date(tbl$date,format="%m/%d/%y"),"%d-%m-%y");
   tbl$START_HOUR         <-tbl$time;
   tbl$MID_LATITUDE       <-as.numeric(tbl$midtowlatitude);
   tbl$MID_LONGITUDE      <-as.numeric(tbl$midtowlongitude);

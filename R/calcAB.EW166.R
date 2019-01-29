@@ -52,7 +52,7 @@ calcAB.EW166<-function(tbl=NULL,
     in.csv<-NULL;
     if (!is.data.frame(tbl)){
         if (!is.character(tbl)) {
-            in.csv<-selectFile(ext="csv",caption="Select csv file with biomas-by-stratum info");
+            in.csv<-selectFile(ext="csv",caption="Select csv file with biomass-by-stratum info");
             if (is.null(in.csv)|(in.csv=='')) return(NULL);
         } else {
             in.csv<-tbl;#tbl is a filename
@@ -66,14 +66,13 @@ calcAB.EW166<-function(tbl=NULL,
         out.dir<-dirname(file.path('.'));
         if (!is.null(in.csv)) {out.dir<-dirname(file.path(in.csv));}
     }
-    if (verbosity>0) cat("Output directory for calcBiomass.EW166 will be '",out.dir,"'\n",sep='');
+    if (verbosity>0) cat("Output directory for calcAB.EW166 will be '",out.dir,"'\n",sep='');
 
-    #determine columns of biomass by stratum table
+    #determine factor column names in tbl
     cols<-names(tbl);
-    nc<-length(cols);
-    nc0f<-13;
-    if (nc==nc0f){facs<-'';} else
-    {facs<-cols[4:(3+nc-nc0f)];}#extract factor columns
+    nonFacs<-c("YEAR","STRATUM","STRATUM_AREA","numStations","numHauls","numNonZeroHauls","numIndivs",
+               "totABUNDANCE","stdABUNDANCE","cvABUNDANCE","totBIOMASS","stdBIOMASS","cvBIOMASS");
+    facs<-cols[!(cols %in% nonFacs)]; #extract factor column names
 
     qry<-"select
             t.YEAR,
@@ -95,7 +94,7 @@ calcAB.EW166<-function(tbl=NULL,
             t.STRATUM=s.orig
           order by
             t.YEAR,s.revd,t.STRATUM&&facs;"
-    if (nc==13) {
+    if (length(facs)==0) {
         qry<-gsub("&&facs",'',qry);
     } else {
         qry<-gsub("&&facs",paste(',t.',facs,collapse="",sep=''),qry);
@@ -123,7 +122,7 @@ calcAB.EW166<-function(tbl=NULL,
             YEAR,newSTRATUM&&facs
           order by
             YEAR,newSTRATUM&&facs;"
-    if (nc==nc0f) {
+    if (length(facs)==0) {
         qry<-gsub("&&facs",'',qry);
     } else {
         qry<-gsub("&&facs",paste(',',facs,collapse="",sep=''),qry);
@@ -156,9 +155,6 @@ calcAB.EW166<-function(tbl=NULL,
         write.csv(tbl1,out.csv,na='',row.names=FALSE);
     }
 
-    if (verbosity>1) cat("finished calcBiomass.EW166\n");
+    if (verbosity>1) cat("finished calcAB.EW166\n");
     return(tbl1)
 }
-
-#bio.EW166.frOS.byH<-calcBiomass.EW166(bio.frOS.byH);
-#bio.EW166.frRS.byS<-calcBiomass.EW166(bio.frRS.byS);

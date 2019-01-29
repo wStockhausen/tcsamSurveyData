@@ -69,12 +69,11 @@ calcAB.EBS<-function(tbl=NULL,
     }
     if (verbosity>0) cat("Output directory for calcAB.EBS will be '",out.dir,"'\n",sep='');
 
-    #determine columns of biomass by stratum table
+    #determine factor column names in tbl
     cols<-names(tbl);
-    nc<-length(cols);
-    nc0f<-13;
-    if (nc==nc0f){facs<-'';} else
-    {facs<-cols[4:(3+nc-nc0f)];}#extract factor columns
+    nonFacs<-c("YEAR","STRATUM","STRATUM_AREA","numStations","numHauls","numNonZeroHauls","numIndivs",
+               "totABUNDANCE","stdABUNDANCE","cvABUNDANCE","totBIOMASS","stdBIOMASS","cvBIOMASS");
+    facs<-cols[!(cols %in% nonFacs)]; #extract factor column names
 
     #
     qry<-"select
@@ -97,7 +96,7 @@ calcAB.EBS<-function(tbl=NULL,
             YEAR&&facs
           order by
             YEAR&&facs;"
-    if (nc==nc0f) {
+    if (length(facs)==0) {
         qry<-gsub("&&facs",'',qry);
     } else {
         qry<-gsub("&&facs",paste(',',facs,collapse=""),qry);
@@ -132,6 +131,3 @@ calcAB.EBS<-function(tbl=NULL,
     if (verbosity>1) cat("finished calcAB.EBS\n");
     return(tbl1)
 }
-
-#tbl.totBio.frBBS<-calcBiomass.EBS(tbl.BiomassByStratum)
-#tbl.totBio.frEW<-calcBiomass.EBS(tbl.EW166Biomass)
