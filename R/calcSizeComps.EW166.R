@@ -40,7 +40,7 @@
 #'
 calcSizeComps.EW166<-function(tbl=NULL,
                               strata_toEW166=tcsamSurveyData::Codes.TrawlSurvey()[["strata.EW166"]],
-                              export=TRUE,
+                              export=FALSE,
                               out.csv='SurveySizeComps.EW166.csv',
                               out.dir=NULL,
                               verbosity=0){

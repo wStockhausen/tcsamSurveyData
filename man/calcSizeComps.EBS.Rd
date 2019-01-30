@@ -4,7 +4,7 @@
 \alias{calcSizeComps.EBS}
 \title{Calculate EBS-level size comps (abundance and biomass) from a by-stratum data frame or csv file.}
 \usage{
-calcSizeComps.EBS(tbl = NULL, in.csv = NULL, export = TRUE,
+calcSizeComps.EBS(tbl = NULL, in.csv = NULL, export = FALSE,
   out.csv = "SurveySizeComps.EBS.csv", out.dir = NULL, verbosity = 0)
 }
 \arguments{

@@ -41,7 +41,7 @@
 #######################################################################
 calcSizeComps.EBS<-function(tbl=NULL,
                             in.csv=NULL,
-                            export=TRUE,
+                            export=FALSE,
                             out.csv='SurveySizeComps.EBS.csv',
                             out.dir=NULL,
                             verbosity=0){

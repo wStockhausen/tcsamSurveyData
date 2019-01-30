@@ -6,7 +6,7 @@
 \usage{
 calcSizeComps.EW166(tbl = NULL,
   strata_toEW166 = tcsamSurveyData::Codes.TrawlSurvey()[["strata.EW166"]],
-  export = TRUE, out.csv = "SurveySizeComps.EW166.csv",
+  export = FALSE, out.csv = "SurveySizeComps.EW166.csv",
   out.dir = NULL, verbosity = 0)
 }
 \arguments{
