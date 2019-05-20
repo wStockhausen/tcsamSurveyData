@@ -79,7 +79,7 @@ calcAB.ByStratum<-function(tbl_strata,
     #determine factor column names in cpue table
     cols<-names(tbl_cpue);
     nonFacs<-c("YEAR","STRATUM","GIS_STATION","LONGITUDE","LATITUDE",
-               "numHauls","numNonZeroHauls","numIndivs","numCPUE","wgtCPUE");
+               "numHauls","numNonZeroHauls","numIndivs","SAMPLING_FACTOR","AREA_SWEPT_VARIABLE","numCPUE","wgtCPUE");
     facs<-cols[!(cols %in% nonFacs)];
 
     #determine query substitutions that depend on whether calculations are by haul or by station

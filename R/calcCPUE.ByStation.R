@@ -35,6 +35,8 @@
 #'\item   numHauls
 #'\item   numNonZeroHauls
 #'\item   numIndivs
+#'\item   SAMPLING_FACTOR
+#'\item   AREA_SWEPT_VARIABLE
 #'\item   numCPUE
 #'\item   wgtCPUE
 #'}
@@ -80,16 +82,19 @@ calcCPUE.ByStation<-function(tbl_strata=NULL,
 
     #determine names of factor columns (if any) in cpue table
     cols<-names(tbl_cpue);
-    nc<-length(cols);
-    nc0f<-9;#number of col.s w/ no factors for cpue by haul
-    ci1f<-7;#column index of 1st factor (if any) [cols are YEAR,STRATUM,GIS_STATION,HAULJOIN,1st factor,...]
-    if (nc==nc0f) {
-        cols<-NULL;
-        colstr<-'';#no factors
-    } else {
-        cols<-cols[ci1f:(nc-3)];#drop first 6 cols, last 3 column names (YEAR,STRATUM,GIS_STATION,HAULJOIN,HAUL_LONGITUDE,HAUL_LATITUDE,numIndivs,numCPUE,wgtCPUE)
-        colstr<-paste(',',cols,sep='',collapse='');
-    }
+    nonFacs<-c("YEAR","STRATUM","GIS_STATION","HAULJOIN","LONGITUDE","LATITUDE",
+               "numIndivs","SAMPLING_FACTOR","AREA_SWEPT_VARIABLE","numCPUE","wgtCPUE");
+    facs<-cols[!(cols %in% nonFacs)];
+    # nc<-length(cols);
+    # nc0f<-9;#number of col.s w/ no factors for cpue by haul
+    # ci1f<-7;#column index of 1st factor (if any) [cols are YEAR,STRATUM,GIS_STATION,HAULJOIN,1st factor,...]
+    # if (nc==nc0f) {
+    #     cols<-NULL;
+    #     colstr<-'';#no factors
+    # } else {
+    #     cols<-cols[ci1f:(nc-3)];#drop first 6 cols, last 3 column names (YEAR,STRATUM,GIS_STATION,HAULJOIN,HAUL_LONGITUDE,HAUL_LATITUDE,numIndivs,numCPUE,wgtCPUE)
+    #     colstr<-paste(',',cols,sep='',collapse='');
+    # }
 
     #retain strata only for years in tbl_cpue
     qry<-"select
@@ -106,29 +111,34 @@ calcCPUE.ByStation<-function(tbl_strata=NULL,
     #Calculate and average cpue by year, station and factor levels
     #(e.g., sex, shell condition) over hauls.
     qry<-"select
-            YEAR,STRATUM,GIS_STATION,
-            SEX,MATURITY,SHELL_CONDITION,SIZE,
+            YEAR,STRATUM,GIS_STATION&&facs,
             count(distinct HAULJOIN) as numHauls,
             sum(numIndivs>0) as numNonZeroHauls,
             sum(numIndivs) as numIndivs,
+            CASE WHEN sum(numIndivs)>0 THEN sum(numIndivs*SAMPLING_FACTOR)/sum(numIndivs) ELSE avg(SAMPLING_FACTOR)     END as SAMPLING_FACTOR,
+            CASE WHEN avg(numCPUE)>0   THEN sum(numIndivs)/avg(numCPUE)                   ELSE avg(AREA_SWEPT_VARIABLE) END as AREA_SWEPT_VARIABLE,
             avg(numCPUE)   as numCPUE,
             avg(wgtCPUE)   as wgtCPUE
           from
             tbl_cpue
           group by
-            YEAR,STRATUM,GIS_STATION,SEX,MATURITY,SHELL_CONDITION,SIZE
+            YEAR,STRATUM,GIS_STATION&&facs
           order by
-            YEAR,STRATUM,GIS_STATION,SEX,MATURITY,SHELL_CONDITION,SIZE;";
-    # qry<-gsub("&&cols",colstr,qry)
-    # if (verbosity>1) cat("\nquery is:\n",qry,"\n");
+            YEAR,STRATUM,GIS_STATION&&facs;";
+    if (length(facs)==0){
+        qry<-gsub("&&facs",'',qry,fixed=TRUE);#no factors
+    } else {
+        qry<-gsub("&&facs",paste(",",paste(facs,sep='',collapse=","),sep=''),qry,fixed=TRUE);
+    }
+    if (verbosity>1) cat("\nquery is:\n",qry,"\n");
     tbl_cpue<-sqldf::sqldf(qry);
 
     #add in latitude, longitude corresponding to GIS_STATION
     qry<-"select
-            c.YEAR,c.STRATUM,c.GIS_STATION,s.LONGITUDE,s.LATITUDE,
-            c.SEX,c.MATURITY,c.SHELL_CONDITION,c.SIZE,
+            c.YEAR,c.STRATUM,c.GIS_STATION,s.LONGITUDE,s.LATITUDE&&facs,
             c.numHauls,c.numNonZeroHauls,
-            c.numIndivs,c.numCPUE,c.wgtCPUE
+            c.numIndivs,c.SAMPLING_FACTOR,c.AREA_SWEPT_VARIABLE,
+            c.numCPUE,c.wgtCPUE
           from
             tbl_cpue c, tbl_strata s
           where
@@ -136,66 +146,14 @@ calcCPUE.ByStation<-function(tbl_strata=NULL,
             c.STRATUM=s.STRATUM and
             c.GIS_STATION=s.GIS_STATION
           order by
-            c.YEAR,c.STRATUM,c.GIS_STATION,SEX,MATURITY,SHELL_CONDITION,SIZE;";
-    # qry<-gsub("&&cols",colstr,qry)
-    # if (verbosity>1) cat("\nquery is:\n",qry,"\n");
+            c.YEAR,c.STRATUM,c.GIS_STATION&&facs;";
+    if (length(facs)==0){
+        qry<-gsub("&&facs",'',qry,fixed=TRUE);#no factors
+    } else {
+        qry<-gsub("&&facs",paste(",",paste("c.",facs,sep='',collapse=","),sep=''),qry);
+    }
+    if (verbosity>1) cat("\nquery is:\n",qry,"\n");
     tbl_cpue<-sqldf::sqldf(qry);
-
-    #get unique combination of factor levels
-    # strata_cols<-c('LONGITUDE','LATITUDE','YEAR','STRATUM','GIS_STATION');
-    # if (is.null(cols)){
-    #     qry<-"select distinct &&stratacols from tbl_strata;";
-    #     qry<-gsub("&&stratacols",paste(strata_cols,collapse=','),qry)
-    # } else {
-    #     qry<-"select * from
-    #             (select distinct &&stratacols from tbl_strata),
-    #             (select distinct &&cols from tbl_cpue);";
-    #     qry<-gsub("&&stratacols",paste(strata_cols,collapse=','),qry)
-    #     qry<-gsub("&&cols",paste(cols,collapse=','),qry)
-    # }
-    # if (verbosity>1) cat("\nquery is:\n",qry,"\n");
-    # tbl_ufs<-sqldf::sqldf(qry);
-    # ucols<-names(tbl_ufs);
-    # nufs<-length(ucols)
-
-
-
-    # qry<-"select
-    #         &&ucols,
-    #         numHauls,
-    #         numNonZeroHauls,
-    #         numIndivs,
-    #         numCPUE,
-    #         wgtCPUE
-    #       from
-    #         tbl_ufs u left join
-    #         tbl_cpue c
-    #       on
-    #         &&joinstr;";
-    # qry<-gsub("&&cols",colstr,qry)
-    # qry<-gsub("&&ucols",paste('u.',ucols,sep='',collapse=','),qry)
-    # qry<-gsub("&&joinstr",paste(paste('u.',ucols[3:nufs],sep=''),"=",paste('c.',ucols[3:nufs],sep=''),sep='',collapse=' and \n'),qry)
-    # if (verbosity>1) cat("\nquery is:\n",qry,"\n");
-    # tbl_cpues<-sqldf::sqldf(qry);
-    #
-    # idx<-is.na(tbl_cpues$numHauls);
-    # tbl_cpues$numHauls[idx]<-0;
-    # tbl_cpues$numHauls[idx]<-0;
-    # tbl_cpues$numNonZeroHauls[idx]<-0;
-    # tbl_cpues$numCPUE[idx]<-0;
-    # tbl_cpues$wgtCPUE[idx]<-0;
-    #
-    # #re-order rows/columns for output
-    # qry<-"select
-    #         YEAR,STRATUM,GIS_STATION,LONGITUDE,LATITUDE&&cols,
-    #         numHauls,numNonZeroHauls,numIndivs,numCPUE,wgtCPUE
-    #       from
-    #         tbl_cpues
-    #       order by
-    #         YEAR,STRATUM,GIS_STATION&&cols;"
-    # qry<-gsub("&&cols",colstr,qry)
-    # if (verbosity>1) cat("\nquery is:\n",qry,"\n");
-    # tbl_cpues<-sqldf::sqldf(qry);
 
     if (export){
         if (!is.null(out.dir)){

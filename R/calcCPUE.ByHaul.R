@@ -12,6 +12,7 @@
 #'@param  cutpts        : vector of cutpoints to create size bins from
 #'@param  truncate.low  : flag (T/F) to exclude individuals smaller than minSize
 #'@param  truncate.high : flag (T/F) to exclude individuals larger than maxSize
+#'@param checksSFs : flag to check consistency of scale factors
 #'@param export  : boolean flag to write results to csv file
 #'@param out.csv : output file name
 #'@param out.dir : output file directory
@@ -34,11 +35,14 @@
 #'\item   SHELL_CONDITION
 #'\item   SIZE
 #'\item   numIndivs
+#'\item   SAMPLING_FACTOR
+#'\item   AREA_SWEPT_VARIABLE
 #'\item   numCPUE
 #'\item   wgtCPUE
 #'}
 #'\cr Other notes: \cr
 #'\itemize{
+#'\item   AREA_SWEPT_VARIABLE is in sq. nm.
 #'\item   CPUE in numbers is in no/(sq. nm.)
 #'\item   CPUE in weight  is in mt/(sq. nm.)
 #'} \cr
@@ -59,6 +63,7 @@ calcCPUE.ByHaul<-function(tbl_hauls,
                           cutpts=seq(from=25,to=185,by=5),
                           truncate.low=TRUE,
                           truncate.high=FALSE,
+                          checkSFs=FALSE,
                           export=FALSE,
                           out.csv='cpue.ByHaul.csv',
                           out.dir=NULL,
@@ -95,18 +100,6 @@ calcCPUE.ByHaul<-function(tbl_hauls,
     #make some shorter variables
     byX<-bySex;byS<-byShellCondition;byM<-byMaturity;byZ<-bySize;
 
-    # #define a function for substituting query conditions
-    # subst.cond<-function(qry,byCond,col,lbl){
-    #     if (byCond) {
-    #         qry<-gsub(paste("&&",lbl,sep=''),paste(col,",",sep=''),qry);
-    #         qry<-gsub(paste("&&by",lbl,sep=''),paste(",",col,sep=''),qry);
-    #     } else {
-    #         qry<-gsub(paste("&&",lbl,sep=''),'',qry);
-    #         qry<-gsub(paste("&&by",lbl,sep=''),'',qry);
-    #     }
-    #     return(qry);
-    # }
-
     if (!byX){tbl_indivs$SEX            <-"ALL";}
     if (!byS){tbl_indivs$SHELL_CONDITION<-"ALL";}
     if (!byM){tbl_indivs$MATURITY       <-"ALL";}
@@ -123,7 +116,8 @@ calcCPUE.ByHaul<-function(tbl_hauls,
       tbl_uzs<-data.frame(SIZE=cutpts[1:(nCtPts-1)]);
     }
 
-    #Calculate and sum cpue by hauljoin, area swept, sex, maturity,shell condition,size
+    #Calculate numbers and weights expanded by sampling factors and sum by
+    #hauljoin and sex/maturity/shell condition/size categories
     #over individuals for hauls w/ nonzero catches.
     #Note that this DOES NOT average over hauls, as calcCPUE.ByStation(...) does.
     qry<-"select
@@ -133,6 +127,7 @@ calcCPUE.ByHaul<-function(tbl_hauls,
             SHELL_CONDITION,
             SIZE,
             sum(numIndivs) as numIndivs,
+            sum(SAMPLING_FACTOR*numIndivs)/sum(numIndivs) as SAMPLING_FACTOR,
             sum(SAMPLING_FACTOR*numIndivs) as expNUM,
             sum(SAMPLING_FACTOR*CALCULATED_WEIGHT) as expWGT
           from
@@ -141,20 +136,18 @@ calcCPUE.ByHaul<-function(tbl_hauls,
             HAULJOIN,SEX,MATURITY,SHELL_CONDITION,SIZE
           order by
             HAULJOIN,SEX,MATURITY,SHELL_CONDITION,SIZE;";
-    # qry<-subst.cond(qry,bySx,"SEX",            'Sx');
-    # qry<-subst.cond(qry,bySC,"SHELL_CONDITION",'SC');
-    # qry<-subst.cond(qry,byMt,"MATURITY",       'Mt');
-    # qry<-subst.cond(qry,bySz,"SIZE",           'Sz');
     # if (verbosity>1) cat("\nquery is:\n",qry,"\n");
     tbl_sums<-sqldf::sqldf(qry);
 
-    #create table of years,strata,stations,hauls x uniq "factors" (e.g., sex, shell condition,...)
-    # if (bySx|bySC|byMt|bySz){
-    #     cols<-paste(subst.cond("&&col",bySx,"SEX","col"),
-    #                 subst.cond("&&col",bySC,"SHELL_CONDITION","col"),
-    #                 subst.cond("&&col",byMt,"MATURITY","col"),
-    #                 subst.cond("&&col",bySz,"SIZE","col"),
-    #                 sep='');
+    #create table of the sampling factor for each haul by sex averaged over maturity, shell condition and size
+    #to fill in sampling factors for categories with no observed crab
+    qry<-"select
+            HAULJOIN, SEX, avg(SAMPLING_FACTOR) as SAMPLING_FACTOR
+          from tbl_sums
+          group by HAULJOIN, SEX;";
+    tbl_sfs<-sqldf::sqldf(qry);
+
+    #create table of years,strata,stations,hauls x uniq "factors" (i.e., sex, maturity, shell condition, size)
         qry<-"select *
               from
                (select distinct
@@ -162,7 +155,6 @@ calcCPUE.ByHaul<-function(tbl_hauls,
                 from tbl_sums as s), tbl_uzs
               order by
                 SEX,MATURITY,SHELL_CONDITION,SIZE;";
-        # qry<-gsub("&&cols",cols,qry);
         # if (verbosity>1) cat("\nquery is:\n",qry,"\n");
         tbl_ufctrs<-sqldf::sqldf(qry);
 
@@ -176,59 +168,82 @@ calcCPUE.ByHaul<-function(tbl_hauls,
                  from tbl_hauls),
                 tbl_ufctrs;"
         tbl_uhfs<-sqldf::sqldf(qry);
-    # } else {
-    #     qry<-"select
-    #              YEAR,STRATUM,GIS_STATION,HAULJOIN,
-    #              1*MID_LONGITUDE as LONGITUDE,
-    #              1*MID_LATITUDE as LATITUDE,
-    #              AREA_SWEPT_VARIABLE from tbl_hauls;"
-    #     tbl_uhfs<-sqldf(qry);
-    # }
 
     #expand sums to hauls w/ zero catches and calculate cpue
-    # cols<-'u.YEAR,
-    #        u.STRATUM,
-    #        u.GIS_STATION,
-    #        u.HAULJOIN,
-    #        u.LONGITUDE,
-    #        u.LATITUDE';
-    # if (bySx) cols<-paste(cols,',u.SEX',            sep='')
-    # if (bySC) cols<-paste(cols,',u.SHELL_CONDITION',sep='')
-    # if (byMt) cols<-paste(cols,',u.MATURITY',       sep='')
-    # if (bySz) cols<-paste(cols,',u.SIZE',           sep='')
     qry<-"select
             u.YEAR,u.STRATUM,u.GIS_STATION,u.HAULJOIN,u.LONGITUDE,u.LATITUDE,
             u.SEX,u.MATURITY,u.SHELL_CONDITION,u.SIZE,
-            numIndivs,
-            expNum/AREA_SWEPT_VARIABLE as numCPUE,
-            expWgt/AREA_SWEPT_VARIABLE as wgtCPUE
+            s.numIndivs,
+            s.SAMPLING_FACTOR,
+            u.AREA_SWEPT_VARIABLE,
+            s.expNum/u.AREA_SWEPT_VARIABLE as numCPUE,
+            s.expWgt/u.AREA_SWEPT_VARIABLE as wgtCPUE
           from
             tbl_uhfs as u left join
             tbl_sums as s
           on
-            u.HAULJOIN=s.HAULJOIN and
-            u.SEX=s.SEX and
-            u.MATURITY=s.MATURITY and
+            u.HAULJOIN       =s.HAULJOIN and
+            u.SEX            =s.SEX and
+            u.MATURITY       =s.MATURITY and
             u.SHELL_CONDITION=s.SHELL_CONDITION and
-            u.SIZE=s.SIZE
+            u.SIZE           =s.SIZE
           order by
             u.YEAR,u.STRATUM,u.GIS_STATION,u.HAULJOIN,u.LONGITUDE,u.LATITUDE,
             u.SEX,u.MATURITY,u.SHELL_CONDITION,u.SIZE;";
-    # if (!bySx){qry<-gsub('&&bySx','',qry);} else {qry<-gsub('&&bySx','and u.SEX            =s.SEX',qry);}
-    # if (!bySC){qry<-gsub('&&bySC','',qry);} else {qry<-gsub('&&bySC','and u.SHELL_CONDITION=s.SHELL_CONDITION',qry);}
-    # if (!byMt){qry<-gsub('&&byMt','',qry);} else {qry<-gsub('&&byMt','and u.MATURITY       =s.MATURITY',qry);}
-    # if (!bySz){qry<-gsub('&&bySz','',qry);} else {qry<-gsub('&&bySz','and u.SIZE           =s.SIZE',qry);}
-    # qry<-gsub("&&cols",cols,qry)
     # if (verbosity>1) cat("\nquery is:\n",qry,"\n");
     tbl_cpue<-sqldf::sqldf(qry);
 
-    #replace NA's with 0's. Have to convert to numeric as NA in first row converts remainder to character.
+    #update rows with no observed individuals
+    #--identify rows based on missing numIndivs
     idx<-which(is.na(tbl_cpue$numIndivs));
+    #--replace NA's with 0's for numIndivs, numCPUE, wgtCPUE.
+    #--Have to make sure column is numeric as NA in first row converts remainder to character.
     tbl_cpue$numIndivs<-as.numeric(tbl_cpue$numIndivs); tbl_cpue$numIndivs[idx]<-0;
     tbl_cpue$numCPUE  <-as.numeric(tbl_cpue$numCPUE);   tbl_cpue$numCPUE[idx]  <-0;
     tbl_cpue$wgtCPUE  <-as.numeric(tbl_cpue$wgtCPUE);   tbl_cpue$wgtCPUE[idx]  <-0;
+    #--replace NA's in SAMPLING_FACTOR with average by sex in haul
+    #--Have to make sure column is numeric as NA in first row converts remainder to character.
+    tbl_cpue$SAMPLING_FACTOR<-as.numeric(tbl_cpue$SAMPLING_FACTOR);
+    qry<-"select
+            c.YEAR,c.STRATUM,c.GIS_STATION,c.HAULJOIN,c.LONGITUDE,c.LATITUDE,
+            c.SEX,c.MATURITY,c.SHELL_CONDITION,c.SIZE,
+            c.numIndivs,
+            &&checkSFs
+            CASE WHEN (c.SAMPLING_FACTOR IS NOT NULL) THEN c.SAMPLING_FACTOR ELSE s.SAMPLING_FACTOR END as SAMPLING_FACTOR,
+            c.AREA_SWEPT_VARIABLE,
+            c.numCPUE,
+            c.wgtCPUE
+          from
+            tbl_cpue as c left join tbl_sfs as s
+          on
+             c.HAULJOIN = s.HAULJOIN and
+             c.SEX      = s.SEX;";
+    str<-"";
+    if (checkSFs) str<-"CASE WHEN (c.SAMPLING_FACTOR IS NOT NULL) THEN c.SAMPLING_FACTOR ELSE -1 END                as origSAMPLING_FACTOR,";
+    qry<-gsub("&&checkSFs",str,qry,fixed=TRUE);
+    tbl_cpue<-sqldf::sqldf(qry);
+    #--might have haul/sex combinations that had no observed crab, so SAMPLING_FACTOR would still be missing
+    #----For these, use sex-averaged SAMPLING_FACTOR by haul from tbl_sfs to fill in tbl_cpue
+    qry<-"select HAULJOIN, avg(SAMPLING_FACTOR) as SAMPLING_FACTOR from tbl_sfs group by HAULJOIN;";
+    tbl_sfs1<-sqldf::sqldf(qry);
+    qry<-"select
+            c.YEAR,c.STRATUM,c.GIS_STATION,c.HAULJOIN,c.LONGITUDE,c.LATITUDE,
+            c.SEX,c.MATURITY,c.SHELL_CONDITION,c.SIZE,
+            c.numIndivs,
+            CASE WHEN (c.SAMPLING_FACTOR IS NOT NULL) THEN c.SAMPLING_FACTOR ELSE s.SAMPLING_FACTOR END as SAMPLING_FACTOR,
+            c.AREA_SWEPT_VARIABLE,
+            c.numCPUE,
+            c.wgtCPUE
+          from
+            tbl_cpue as c left join tbl_sfs1 as s
+          on
+             c.HAULJOIN = s.HAULJOIN;";
+    tbl_cpue<-sqldf::sqldf(qry);
 
-    tbl_cpue$wgtCPUE<-tbl_cpue$wgtCPUE/1.0E6;#convert cpue in weight from g/(sq nm) to t/(sq nm)
+
+
+    #convert cpue in weight from g/(sq nm) to t/(sq nm)
+    tbl_cpue$wgtCPUE<-tbl_cpue$wgtCPUE/1.0E6;
 
     if (export){
         if (!is.null(out.dir)){

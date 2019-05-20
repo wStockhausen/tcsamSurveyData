@@ -80,22 +80,25 @@ calcCPUE.ByStratum<-function(tbl_strata,
 
     #determine columns of cpue table
     cols<-names(tbl_cpue);
-    nc<-length(cols);
     byHaul<-any(cols=="HAULJOIN");
+    nonFacs<-c("YEAR","STRATUM","GIS_STATION","LONGITUDE","LATITUDE",
+               "numHauls","numNonZeroHauls","numIndivs","SAMPLING_FACTOR","AREA_SWEPT_VARIABLE","numCPUE","wgtCPUE");
+    facs<-cols[!(cols %in% nonFacs)];
+#    nc<-length(cols);
     if (byHaul){
-        nc0f<-9;#number of col.s w/ no factors if cpue is by haul
-        facs<-'';
-        if (nc>nc0f){
-            facs<-cols[7:(nc-3)];#drop the 1st 6 (YEAR,STRATUM,GIS_STATION,HAULJOIN,LONGITUDE,LATITUDE) and last 3 column names (numIndivs,numCPUE,wgtCPUE)
-        }
+        # nc0f<-9;#number of col.s w/ no factors if cpue is by haul
+        # facs<-'';
+        # if (nc>nc0f){
+        #     facs<-cols[7:(nc-3)];#drop the 1st 6 (YEAR,STRATUM,GIS_STATION,HAULJOIN,LONGITUDE,LATITUDE) and last 3 column names (numIndivs,numCPUE,wgtCPUE)
+        # }
         byHaulSub<-"c.HAULJOIN,";
         numHaulSub<-"1 as numHauls, 1*(numIndivs>0) as numNonZeroHauls,";#number of hauls/haul (=1, of course)
     } else {
-        nc0f<-10;#number of col.s w/ no factors if cpue is by station
-        facs<-'';
-        if (nc>nc0f){
-            facs<-cols[6:(nc-5)];#drop the 1st 5 (YEAR,STRATUM,GIS_STATION,LONGITUDE,LATITUDE) and last 5 column names (numHauls,numNonZeroHauls,numIndivs,numCPUE,wgtCPUE)
-        }
+        # nc0f<-10;#number of col.s w/ no factors if cpue is by station
+        # facs<-'';
+        # if (nc>nc0f){
+        #     facs<-cols[6:(nc-5)];#drop the 1st 5 (YEAR,STRATUM,GIS_STATION,LONGITUDE,LATITUDE) and last 5 column names (numHauls,numNonZeroHauls,numIndivs,numCPUE,wgtCPUE)
+        # }
         byHaulSub<-"";
         numHaulSub<-"c.numHauls,c.numNonZeroHauls,";#number of hauls/station
     }
@@ -120,7 +123,7 @@ calcCPUE.ByStratum<-function(tbl_strata,
             c.GIS_STATION=s.GIS_STATION;";
     qry<-gsub("&&byHaulSub",byHaulSub,qry);
     qry<-gsub("&&numHaulSub",numHaulSub,qry);
-    if (nc==nc0f){
+    if (length(facs)==0){
         qry<-gsub("&&facs",'',qry);#no factors
     } else {
         qry<-gsub("&&facs",paste(paste("c.",facs,sep='',collapse=","),",",sep=''),qry);
@@ -146,7 +149,7 @@ calcCPUE.ByStratum<-function(tbl_strata,
             YEAR,STRATUM,STRATUM_AREA&&facs
           order by
             YEAR,STRATUM&&facs;";
-    if (nc==nc0f) {
+    if (length(facs)==0) {
         qry<-gsub("&&facs",'',qry);#no factors
     } else {
         qry<-gsub("&&facs",paste(',',facs,sep='',collapse=''),qry);
@@ -183,7 +186,7 @@ calcCPUE.ByStratum<-function(tbl_strata,
             a.YEAR,a.STRATUM,a.STRATUM_AREA,a.numStations,a.numHauls,a.numIndivs,avgNumCPUE,avgWgtCPUE&&bycols
           order by
             a.YEAR,a.STRATUM&&bycols;";
-    if (nc==nc0f) {
+    if (length(facs)==0) {
         qry<-gsub("&&facs",   '',qry);
         qry<-gsub("&&whrcols",'',qry);
         qry<-gsub("&&bycols", '',qry);

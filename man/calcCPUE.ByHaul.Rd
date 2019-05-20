@@ -7,8 +7,8 @@
 calcCPUE.ByHaul(tbl_hauls, tbl_indivs = NULL, bySex = FALSE,
   byShellCondition = FALSE, byMaturity = FALSE, bySize = FALSE,
   cutpts = seq(from = 25, to = 185, by = 5), truncate.low = TRUE,
-  truncate.high = FALSE, export = FALSE, out.csv = "cpue.ByHaul.csv",
-  out.dir = NULL, verbosity = 0)
+  truncate.high = FALSE, checkSFs = FALSE, export = FALSE,
+  out.csv = "cpue.ByHaul.csv", out.dir = NULL, verbosity = 0)
 }
 \arguments{
 \item{tbl_hauls}{: dataframe from call to \code{\link{selectHauls.TrawlSurvey}} [required]}
@@ -36,6 +36,8 @@ calcCPUE.ByHaul(tbl_hauls, tbl_indivs = NULL, bySex = FALSE,
 \item{out.dir}{: output file directory}
 
 \item{verbosity}{: integer flag indicating level of printed output (0=off,1=minimal,2=full)}
+
+\item{checksSFs}{: flag to check consistency of scale factors}
 }
 \value{
 A dataframe of cpue (numbers and weight) by haul. See Details.
@@ -60,11 +62,14 @@ The returned dataframe has the following columns: \cr
 \item   SHELL_CONDITION
 \item   SIZE
 \item   numIndivs
+\item   SAMPLING_FACTOR
+\item   AREA_SWEPT_VARIABLE
 \item   numCPUE
 \item   wgtCPUE
 }
 \cr Other notes: \cr
 \itemize{
+\item   AREA_SWEPT_VARIABLE is in sq. nm.
 \item   CPUE in numbers is in no/(sq. nm.)
 \item   CPUE in weight  is in mt/(sq. nm.)
 } \cr

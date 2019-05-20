@@ -50,6 +50,8 @@ The returned dataframe has the following columns: \cr
 \item   numHauls
 \item   numNonZeroHauls
 \item   numIndivs
+\item   SAMPLING_FACTOR
+\item   AREA_SWEPT_VARIABLE
 \item   numCPUE
 \item   wgtCPUE
 }
