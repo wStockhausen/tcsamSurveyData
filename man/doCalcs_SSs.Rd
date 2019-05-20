@@ -52,5 +52,5 @@ a list with elements \code{ss.EBS} and \code{relSS.EBS}. \code{ss.EBS} is a data
 Function to calculate sample sizes from station, haul and individual crab info.
 }
 \details{
-
+None.
 }

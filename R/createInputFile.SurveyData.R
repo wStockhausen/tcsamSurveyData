@@ -8,11 +8,11 @@
 #' @param fn - output file name
 #' @param survey_name - name to use for survey
 #' @param acdInfo - list with sublists for abundance and biomass specifying fitType, likeType, and likeWgt
-#' @param acdInfo - list for size compositions specifying fitType, likeType, and likeWgt
+#' @param zcsInfo - list for size compositions specifying fitType, likeType, and likeWgt
 #' @param cutpts - vector of cutpoints for the input size compositions
 #' @param dfrACD - dataframe of aggregated catch data
+#' @param dfrSSs - dataframe with relative sample sizes to use with size comps
 #' @param dfrZCs - dataframe of size comps
-#' @param inpSS - nominal sample size for scaling size compositions
 #' @param verbose - flag to print debugging info
 #'
 #' @export
@@ -23,15 +23,15 @@ createInputFile.SurveyData<-function(fn,
                                                                   likeType="LOGNORMAL",
                                                                   likeWgt=0.0),
                                                    biomass=list(fitType="BY_X_MAT_ONLY",
-                                                                  likeType="LOGNORMAL",
-                                                                  likeWgt=1.0)),
+                                                                likeType="LOGNORMAL",
+                                                                likeWgt=1.0)),
                                       zcsInfo=list(fitType="BY_XME",
                                                    likeType="MULTINOMIAL",
                                                    likeWgt=1.0),
                                       cutpts,
                                       dfrACD,
+                                      dfrSSs,
                                       dfrZCs,
-                                      inpSS=200,
                                       verbose=FALSE){
   #--define some character constants
   yr  <- "YEAR"
@@ -43,7 +43,8 @@ createInputFile.SurveyData<-function(fn,
   cvA <- "cvABUNDANCE";
   bio <- "totBIOMASS";
   cvB <- "cvBIOMASS";
-  ss  <- "ss";
+#  ss  <- "ss";
+  ss  <- "relSS";
 
   #--write output to assessment data file
     if (!file.exists(fn)) {
@@ -138,14 +139,14 @@ createInputFile.SurveyData<-function(fn,
       cat("uFCs:\n")
       print(uFCs);
     }
-    dfrSS<-reshape2::dcast(tmp,
-                           paste0(paste(yr,sx,mt,sc,sep="+"),"~."),
-                           fun.aggregate=wtsUtilities::Sum,value.var="numIndivs");
-    names(dfrSS)[5]<-"ss";#numbers of crab measured by factor combination
-    ssT <- reshape2::dcast(dfrZCs,
-                           paste0(yr,"~."),
-                           fun.aggregate=wtsUtilities::Sum,value.var="numIndivs");
-    names(ssT)[2]<-"ss";#total number of crab measured
+    # dfrSS<-reshape2::dcast(tmp,
+    #                        paste0(paste(yr,sx,mt,sc,sep="+"),"~."),
+    #                        fun.aggregate=wtsUtilities::Sum,value.var="numIndivs");
+    # names(dfrSS)[5]<-"ss";#numbers of crab measured by factor combination
+    # ssT <- reshape2::dcast(dfrZCs,
+    #                        paste0(yr,"~."),
+    #                        fun.aggregate=wtsUtilities::Sum,value.var="numIndivs");
+    # names(ssT)[2]<-"ss";#total number of crab measured
     cat("#------------NUMBERS-AT-SIZE DATA-----------\n",file=con);
     cat("SIZE_FREQUENCY_DATA  #required keyword\n",file=con);
     cat(zcsInfo$fitType, "               #objective function fitting option\n",file=con);
@@ -167,16 +168,21 @@ createInputFile.SurveyData<-function(fn,
           toupper(subForTCSAM(fc[[sc]],"ALL_SHELL")),"\n",file=con);
           cat("#year    ss    ",bins,"\n",file=con);
           for (y in uYs){
-            ids<-(dfrSS[[yr]]==y)&
-                  (dfrSS[[sx]]==fc[[sx]])&
-                  (dfrSS[[mt]]==fc[[mt]])&
-                  (dfrSS[[sc]]==fc[[sc]]);
+            # ids<-(dfrSS[[yr]]==y)&
+            #       (dfrSS[[sx]]==fc[[sx]])&
+            #       (dfrSS[[mt]]==fc[[mt]])&
+            #       (dfrSS[[sc]]==fc[[sc]]);
+            ids<-(dfrSSs[[yr]]==y)&
+                  (dfrSSs[[sx]]==fc[[sx]])&
+                  (dfrSSs[[mt]]==fc[[mt]])&
+                  (dfrSSs[[sc]]==fc[[sc]]);
             idz<-(tmp[[yr]]==y)&
                   (tmp[[sx]]==fc[[sx]])&
                   (tmp[[mt]]==fc[[mt]])&
                   (tmp[[sc]]==fc[[sc]]);
             rw<-paste(tmp[idz,abd],collapse=" ");
-            cat(y,inpSS*dfrSS[ids,"ss"]/ssT[ssT[[yr]]==y,"ss"],rw,"\n",sep="    ",file=con);
+            # cat(y,inpSS*dfrSS[ids,"ss"]/ssT[ssT[[yr]]==y,"ss"],rw,"\n",sep="    ",file=con);
+            cat(y,dfrSSs[ids,ss],rw,"\n",sep="    ",file=con);
           }#--y
     }#--iFC
 

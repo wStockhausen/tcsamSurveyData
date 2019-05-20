@@ -29,7 +29,7 @@
 #' \item {relSS}            {relative sample size}
 #'}
 #'
-#'@details
+#'@details None.
 #'
 #' @export
 #'
