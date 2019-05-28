@@ -129,7 +129,7 @@ calcCPUE.ByHaul<-function(tbl_hauls,
             sum(numIndivs) as numIndivs,
             sum(SAMPLING_FACTOR*numIndivs)/sum(numIndivs) as SAMPLING_FACTOR,
             sum(SAMPLING_FACTOR*numIndivs) as expNUM,
-            sum(SAMPLING_FACTOR*CALCULATED_WEIGHT) as expWGT
+            sum(SAMPLING_FACTOR*numIndivs*CALCULATED_WEIGHT) as expWGT
           from
             tbl_indivs
           group by

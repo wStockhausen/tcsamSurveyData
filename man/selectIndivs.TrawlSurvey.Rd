@@ -8,8 +8,9 @@ selectIndivs.TrawlSurvey(tbl_hauls, tbl = NULL, col.Size = "WIDTH",
   sex = c("MALE", "FEMALE", "ALL", "MISSING", "HERMAPHRODITE"),
   shell_condition = c("NEW_SHELL", "OLD_SHELL", "ALL"),
   maturity = c("IMMATURE", "MATURE", "ALL"), calcMaleMaturity = FALSE,
-  minSize = -Inf, maxSize = Inf, export = FALSE,
-  out.csv = "SelectedIndivs.csv", out.dir = NULL, verbosity = 0)
+  noImmOldShell = TRUE, dropLevels = NULL, minSize = -Inf,
+  maxSize = Inf, export = FALSE, out.csv = "SelectedIndivs.csv",
+  out.dir = NULL, verbosity = 0)
 }
 \arguments{
 \item{tbl_hauls}{: hauls table (dataframe) from call to selectHauls.TrawlSurvey(...) [required]}
@@ -24,7 +25,11 @@ selectIndivs.TrawlSurvey(tbl_hauls, tbl = NULL, col.Size = "WIDTH",
 
 \item{maturity}{: one of 'IMMATURE','MATURE' or 'ALL' for narrowing selection of individuals}
 
-\item{calcMaleMaturity}{: flag (T/F) to calculate pr(mature|size) for males based on an ogive}
+\item{calcMaleMaturity}{: flag (T/F) to calculate pr(mature|size) for males based on an ogive (default=F)}
+
+\item{noImmOldShell}{: flag (T/F) to reclassify all immature, old shell crab to immature, new shell crab (default=F)}
+
+\item{dropLevels}{: NULL (default) or list of levels to drop, by factor}
 
 \item{minSize}{: minimum size (width) of individuals to select}
 
@@ -48,7 +53,7 @@ Function to extract crab data on individuals w/ selected characteristics from tr
 If neither tbl or in.csv is given, the user will be prompted for a survey data csv file via a file dialog box.\cr
 Returned dataframe will have columns:
 \itemize{\item {HAULJOIN}
-         \item {numIndivs}
+         \item {numIndivs}         {number of "effective" individuals}
          \item {SEX}
          \item {SHELL_CONDITION}
          \item {MATURITY}
@@ -58,11 +63,14 @@ Returned dataframe will have columns:
          \item {EGG_COLOR}
          \item {EGG_CONDITION}
          \item {CLUTCH_SIZE}
-         \item {CHERLA_HEIGHT}
-         \item {SAMPLING_FACTOR}
-         \item {WEIGHT}
-         \item {CALCULATED_WEIGHT}
+         \item {CHELA_HEIGHT}
+         \item {SAMPLING_FACTOR}   {sub-sampling ratio (>= 1)}
+         \item {WEIGHT}            {measured weight of an individual crab, in grams}
+         \item {CALCULATED_WEIGHT} {weight of an individual crab, in grams}
         } \cr
 Notes:
-\itemize{\item Weights are in grams.}
+\itemize{
+  \item "effective" number of individuals is < 1 when male maturity
+  \item Weights are in grams.
+}
 }

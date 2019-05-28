@@ -9,7 +9,9 @@
 #'@param sex             : one of 'MALE','FEMALE','MISSING', 'HERMAPHRODITE', or 'ALL' for narrowing selection of individuals
 #'@param shell_condition : one of 'NEW_SHELL','OLD_SHELL' or 'ALL' for narrowing selection of individuals
 #'@param maturity        : one of 'IMMATURE','MATURE' or 'ALL' for narrowing selection of individuals
-#'@param calcMaleMaturity : flag (T/F) to calculate pr(mature|size) for males based on an ogive
+#'@param calcMaleMaturity : flag (T/F) to calculate pr(mature|size) for males based on an ogive (default=F)
+#'@param noImmOldShell : flag (T/F) to reclassify all immature, old shell crab to immature, new shell crab (default=F)
+#'@param dropLevels : NULL (default) or list of levels to drop, by factor
 #'@param minSize : minimum size (width) of individuals to select
 #'@param maxSize : maximum size (width) of individuals to select
 #'@param export  - boolean flag to export results to csv file
@@ -22,7 +24,7 @@
 #'@details If neither tbl or in.csv is given, the user will be prompted for a survey data csv file via a file dialog box.\cr
 #' Returned dataframe will have columns:
 #' \itemize{\item {HAULJOIN}
-#'          \item {numIndivs}
+#'          \item {numIndivs}         {number of "effective" individuals}
 #'          \item {SEX}
 #'          \item {SHELL_CONDITION}
 #'          \item {MATURITY}
@@ -32,13 +34,16 @@
 #'          \item {EGG_COLOR}
 #'          \item {EGG_CONDITION}
 #'          \item {CLUTCH_SIZE}
-#'          \item {CHERLA_HEIGHT}
-#'          \item {SAMPLING_FACTOR}
-#'          \item {WEIGHT}
-#'          \item {CALCULATED_WEIGHT}
+#'          \item {CHELA_HEIGHT}
+#'          \item {SAMPLING_FACTOR}   {sub-sampling ratio (>= 1)}
+#'          \item {WEIGHT}            {measured weight of an individual crab, in grams}
+#'          \item {CALCULATED_WEIGHT} {weight of an individual crab, in grams}
 #'         } \cr
 #' Notes:
-#' \itemize{\item Weights are in grams.}
+#' \itemize{
+#'   \item "effective" number of individuals is < 1 when male maturity
+#'   \item Weights are in grams.
+#' }
 #'
 #' @import tcsamFunctions
 #'
@@ -57,13 +62,15 @@ selectIndivs.TrawlSurvey<-function(tbl_hauls,
                                    shell_condition=c('NEW_SHELL','OLD_SHELL','ALL'),
                                    maturity=c('IMMATURE','MATURE','ALL'),
                                    calcMaleMaturity=FALSE,
+                                   noImmOldShell=TRUE,
+                                   dropLevels=NULL,
                                    minSize=-Inf,
                                    maxSize=Inf,
                                    export=FALSE,
                                    out.csv="SelectedIndivs.csv",
                                    out.dir=NULL,
                                    verbosity=0){
-    if (verbosity>0) cat("starting selectIndivs.TrawlSurvey.\n");
+    if (verbosity>0) message("starting selectIndivs.TrawlSurvey.\n");
 
     if (!is.data.frame(tbl_hauls)) {
         cat("Error in selectIndivs.TrawlSurvey:",
@@ -80,16 +87,16 @@ selectIndivs.TrawlSurvey<-function(tbl_hauls,
         } else {
             in.csv<-tbl;#tbl is a filename
         }
-        if (verbosity>1) cat("Reading AFSC crab trawl survey csv file for individual crab info.\n",sep='')
+        if (verbosity>1) message("Reading AFSC crab trawl survey csv file for individual crab info.");
         tbl<-read.csv(in.csv,stringsAsFactors=FALSE);
-        if (verbosity>1) cat("Done reading input csv file.\n")
+        if (verbosity>1) message("Done reading input csv file.")
     }
 
     if (is.null(out.dir)) {
         out.dir<-dirname(file.path('.'));
         if (!is.null(in.csv)) {out.dir<-dirname(file.path(in.csv));}
     }
-    if (verbosity>0) cat("Output directory for selectIndivs.TrawlSurvey will be '",out.dir,"'\n",sep='');
+    if (verbosity>0) message(paste0("Output directory for selectIndivs.TrawlSurvey will be '",out.dir,"'."));
 
     #identify size column (WIDTH, LENGTH) and standardize name to SIZE
     nms<-names(tbl);
@@ -114,7 +121,7 @@ selectIndivs.TrawlSurvey<-function(tbl_hauls,
           where
             t.HAULJOIN=h.HAULJOIN;";
     qry<-gsub("&&cols",paste("t.",cols,sep='',collapse=","),qry);
-    if (verbosity>1) cat("\nquery is:\n",qry,"\n");
+    if (verbosity>1) message(paste0("\nquery is:\n",qry,"\n"));
     tbl<-sqldf::sqldf(qry);
 
     #assign -1 to NA's in column CLUTCH_SIZE (i.e., males) to simplify SQL code
@@ -126,7 +133,7 @@ selectIndivs.TrawlSurvey<-function(tbl_hauls,
     #sex
     sex<-sex[1];
     sex_codes<-codes[["sex"]];
-    sq.sex<-"(select * from sex_codes &&sex.cri) as x"
+    sq.sex<-"(select * from sex_codes &&sex.cri) as x";
     if (sex=='MALE')          {sq.sex<-gsub("&&sex.cri",'where value="MALE"',  sq.sex)} else
     if (sex=='FEMALE')        {sq.sex<-gsub("&&sex.cri",'where value="FEMALE"',sq.sex)} else
     if (sex=='MISSING')       {sq.sex<-gsub("&&sex.cri",'where value="MISSING"',sq.sex)} else
@@ -190,7 +197,7 @@ selectIndivs.TrawlSurvey<-function(tbl_hauls,
     qry<-gsub("&&sq.sex",sq.sex,qry)
     qry<-gsub("&&sq.sc", sq.sc, qry)
     qry<-gsub("&&sq.mat",sq.mat,qry)
-    if (verbosity>1) cat("\nquery is:\n",qry,"\n");
+    if (verbosity>1) message(paste0("\nquery is:\n",qry,"\n"));
 
     tbl<-sqldf::sqldf(qry);
 
@@ -210,19 +217,15 @@ selectIndivs.TrawlSurvey<-function(tbl_hauls,
         tbl.NM<-tbl[!idx,];
         frac.mat<-calc.prMat.Males(tbl.M$SIZE,tbl.M$SHELL_CONDITION);
         tbl.ImmM<-tbl.M;
-        tbl.ImmM$numIndivs      <-(1-frac.mat)*tbl.ImmM$numIndivs;
-        tbl.ImmM$SAMPLING_FACTOR<-(1-frac.mat)*tbl.ImmM$SAMPLING_FACTOR;
+        tbl.ImmM$numIndivs      <-(1-frac.mat)*tbl.ImmM$numIndivs;#"effective" number of immmature males
+        #tbl.ImmM$SAMPLING_FACTOR<-(1-frac.mat)*tbl.ImmM$SAMPLING_FACTOR; <-NOTE: no need to adjust sampling factor
         tbl.ImmM$MATURITY<-'IMMATURE';
         tbl.MatM<-tbl.M;
-        tbl.MatM$numIndivs      <-frac.mat*tbl.MatM$numIndivs;
-        tbl.MatM$SAMPLING_FACTOR<-frac.mat*tbl.MatM$SAMPLING_FACTOR;
+        tbl.MatM$numIndivs      <-frac.mat*tbl.MatM$numIndivs;#"effective" number of mmature males
+        #tbl.MatM$SAMPLING_FACTOR<-frac.mat*tbl.MatM$SAMPLING_FACTOR; <-NOTE: no need to adjust sampling factor
         tbl.MatM$MATURITY<-'MATURE';
 
         tbl<-rbind(tbl.NM,tbl.ImmM,tbl.MatM);
-
-        qry<-"select * from tbl
-              order by
-                HAULJOIN,SIZE,SEX,MATURITY,SHELL_CONDITION,CLUTCH_SIZE;"
     }
 
     #calculate weight, if not already done so
@@ -231,6 +234,20 @@ selectIndivs.TrawlSurvey<-function(tbl_hauls,
       cw <- tcsamFunctions::calc.WatZ(tbl$SIZE[idx_ncw],tbl$SEX[idx_ncw],tbl$MATURITY[idx_ncw]);
       tbl$CALCULATED_WEIGHT[idx_ncw] <- cw;
     }
+
+    if (noImmOldShell){
+      #reclassify all immature, old shell crab as immature, new shell
+      idx<-(tbl$MATURITY=="IMMATURE");
+      tbl$SHELL_CONDITION[idx]<-"NEW_SHELL";
+    }
+
+    if (!is.null(dropLevels)) tbl<-wtsUtilities::dropLevels(tbl,dropLevels);
+
+    #re-order for consistency
+    qry<-"select * from tbl
+          order by
+            HAULJOIN,SEX,MATURITY,SHELL_CONDITION,SIZE,CLUTCH_SIZE;"
+    tbl<-sqldf::sqldf(qry);
 
     if (export){
         if (!is.null(out.dir)){
@@ -246,7 +263,7 @@ selectIndivs.TrawlSurvey<-function(tbl_hauls,
         write.csv(tbl,out.csv,na='',row.names=FALSE);
     }
 
-    if (verbosity>1) cat("finished selectIndivs.TrawlSurvey.\n");
+    if (verbosity>1) message("finished selectIndivs.TrawlSurvey.");
     return(tbl)
 }
 
