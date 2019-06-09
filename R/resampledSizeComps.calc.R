@@ -62,10 +62,11 @@ resampledSizeComps.calc<-function(tbl_strata,
                                   truncate.low=TRUE,
                                   truncate.high=FALSE,
                                   verbosity=0){
-  if (verbosity>0) cat("starting calcResampledSizeComps\n");
+  message("#--starting calcResampledSizeComps");
 
   dfr.zcs<-NULL;
   #calculate observed size comps
+  message("#----calculating observed size comps");
   zcs <- calcSizeComps.ByStratum(tbl_strata=tbl_strata,
                                  tbl_hauls=tbl_hauls,
                                  tbl_indivs=tbl_indivs,
@@ -84,6 +85,10 @@ resampledSizeComps.calc<-function(tbl_strata,
   if (N>0){
     #only do for years in tbl_hauls
     uY<-sort(unique(tbl_hauls$YEAR));
+    nY<-length(uY);#number of years
+    nTBs<-nY*N;   #total number of bootstraps
+    bctr<-0;      #bootstrap counter
+    start_time<-Sys.time();
     for (y in uY){
       ytbl_strata<-tbl_strata[tbl_strata$YEAR==y,];
       #find unique strata for current year
@@ -140,19 +145,36 @@ resampledSizeComps.calc<-function(tbl_strata,
             dfr.zcs.byStrat<-rbind(dfr.zcs.byStrat,zcs);
             rm(zcs);
           } else {
-            cat("no indivs selected for year",y,",stratum",s,",sample",i,"\n");
+            message("#----no indivs selected for year ",y,", stratum ",s,", sample ",i);
           }
         }#s-loop
         if (!is.null(dfr.zcs.byStrat)){
-          cat("calculating size comps for year",y,"sample",i,"\n");
+          message("calculating size comps for year ",y,", sample ",i);
           zcs<-dfr.zcs.byStrat;
           if (byEW166|byEBS){
-            zcs<-calcSizeComps.EW166(tbl=dfr,export=FALSE);
+            zcs<-calcSizeComps.EW166(tbl=zcs,export=FALSE);
             if (byEBS) zcs<-calcSizeComps.EBS(tbl=zcs,export=FALSE);
           }
           dfr.zcs<-rbind(dfr.zcs,cbind(i=i,zcs));
         } else {
-          cat("no size comps for year",y,",sample",i,"\n");
+          message("#----no size comps for year ",y,", sample",i);
+        }
+        curr_time<-Sys.time();
+        el_time  <-curr_time - start_time;
+        elt <- as.numeric(el_time,units="days");
+        if (elt > 1) {message("#----elapsed time: ",elt," days.");} else {
+          elt<-as.numeric(el_time,units="hours");
+          if (elt > 1) {message("#----elapsed time: ",elt," hours.");} else {
+            message("#----elapsed time: ",as.numeric(el_time,units="mins")," minutes.");
+          }
+        }
+        bctr<-bctr+1;
+        rm_time<-as.numeric(nTBs*(el_time/bctr)-el_time,units="days");
+        if (rm_time > 1) {message("#----remaining time: ",rm_time," days.");} else {
+          rm_time<-as.numeric(nTBs*(el_time/bctr)-el_time,units="hours");
+          if (rm_time > 1) {message("#----remaining time: ",rm_time," hours.");} else {
+            message("#----remaining time: ",as.numeric(nTBs*(el_time/bctr)-el_time,units="mins")," minutes.");
+          }
         }
       }#i-loop
     }#y-loop
@@ -161,6 +183,16 @@ resampledSizeComps.calc<-function(tbl_strata,
   if (!("SEX" %in% names(dfr.zcs)))             dfr.zcs$SEX<-"all";
   if (!("MATURITY" %in% names(dfr.zcs)))        dfr.zcs$MATURITY<-"all";
   if (!("SHELL_CONDITION" %in% names(dfr.zcs))) dfr.zcs$SHELL_CONDITION<-"all";
+  curr_time - Sys.time();
+  el_time  <-curr_time - start_time;
+  elt <- as.numeric(el_time,units="days");
+  if (elt > 1) {message("#----bootstrapping complete. total elapsed time: ",elt," days.");} else {
+    elt<-as.numeric(el_time,units="hours");
+    if (elt > 1) {message("#----bootstrapping complete. total elapsed time: ",elt," hours.");} else {
+      message("#----bootstrapping complete. total elapsed time: ",as.numeric(el_time,units="mins")," minutes.");
+    }
+  }
+
   return(dfr.zcs)
 }
 
