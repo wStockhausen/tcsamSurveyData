@@ -5,10 +5,11 @@
 \title{Resample haul data to bootstrap size compositions by year/stratum from AFSC trawl survey data}
 \usage{
 resampledSizeComps.calc(tbl_strata, tbl_hauls = NULL,
-  tbl_indivs = NULL, N = 100, byEW166 = FALSE, byEBS = TRUE,
-  bySex = FALSE, byShellCondition = FALSE, byMaturity = FALSE,
-  cutpts = seq(from = 25, to = 185, by = 5), truncate.low = TRUE,
-  truncate.high = FALSE, verbosity = 0)
+  tbl_indivs = NULL, avgHaulsByStation = TRUE, N = 100,
+  byEW166 = FALSE, byEBS = TRUE, bySex = FALSE,
+  byShellCondition = FALSE, byMaturity = FALSE, cutpts = seq(from =
+  25, to = 185, by = 5), truncate.low = TRUE, truncate.high = FALSE,
+  verbosity = 0)
 }
 \arguments{
 \item{tbl_strata}{: data frame from call to \code{\link{selectStrata.TrawlSurvey}} [required]}
@@ -16,6 +17,8 @@ resampledSizeComps.calc(tbl_strata, tbl_hauls = NULL,
 \item{tbl_hauls}{: dataframe from call to \code{\link{selectHauls.TrawlSurvey}} [required only if tbl_cpue not given]}
 
 \item{tbl_indivs}{: dataframe from call to \code{\link{selectIndivs.TrawlSurvey}} (or crab survey filename, or NULL) [required only if tbl_cpue not given]}
+
+\item{avgHaulsByStation}{: flag (T/F) to average hauls by station before calc'ing size comps}
 
 \item{N}{: number of resamples/year}
 

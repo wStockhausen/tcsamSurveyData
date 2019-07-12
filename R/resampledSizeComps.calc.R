@@ -5,6 +5,7 @@
 #'@param tbl_strata : data frame from call to \code{\link{selectStrata.TrawlSurvey}} [required]
 #'@param tbl_hauls  : dataframe from call to \code{\link{selectHauls.TrawlSurvey}} [required only if tbl_cpue not given]
 #'@param tbl_indivs : dataframe from call to \code{\link{selectIndivs.TrawlSurvey}} (or crab survey filename, or NULL) [required only if tbl_cpue not given]
+#'@param avgHaulsByStation : flag (T/F) to average hauls by station before calc'ing size comps
 #'@param byEW166           : flag (T/F) to aggregate size comps to EW166
 #'@param byEBS             : flag (T/F) to aggregate size comps to the EBS
 #'@param bySex             : flag (T/F) to calc by sex
@@ -52,6 +53,7 @@
 resampledSizeComps.calc<-function(tbl_strata,
                                   tbl_hauls=NULL,
                                   tbl_indivs=NULL,
+                                  avgHaulsByStation=TRUE,
                                   N=100,
                                   byEW166=FALSE,
                                   byEBS=TRUE,
@@ -70,15 +72,17 @@ resampledSizeComps.calc<-function(tbl_strata,
   zcs <- calcSizeComps.ByStratum(tbl_strata=tbl_strata,
                                  tbl_hauls=tbl_hauls,
                                  tbl_indivs=tbl_indivs,
+                                 avgHaulsByStation=avgHaulsByStation,
                                  bySex=bySex,
                                  byShellCondition=byShellCondition,
                                  byMaturity=byMaturity,
                                  cutpts=cutpts,
                                  truncate.low=truncate.low,
-                                 truncate.high=truncate.high);
+                                 truncate.high=truncate.high,
+                                 verbosity=verbosity);
   if (byEW166|byEBS){
-    zcs<-calcSizeComps.EW166(tbl=zcs,export=FALSE);
-    if (byEBS) zcs<-calcSizeComps.EBS(tbl=zcs,export=FALSE);
+    zcs<-calcSizeComps.EW166(tbl=zcs,export=FALSE,verbosity=verbosity);
+    if (byEBS) zcs<-calcSizeComps.EBS(tbl=zcs,export=FALSE,verbosity=verbosity);
   }
   dfr.zcs<-rbind(dfr.zcs,cbind(i=0,zcs));
 
@@ -136,6 +140,7 @@ resampledSizeComps.calc<-function(tbl_strata,
             zcs <- calcSizeComps.ByStratum(tbl_strata=rtbl_strata,
                                            tbl_hauls=rtbl_hauls,
                                            tbl_indivs=rtbl_indivs,
+                                           avgHaulsByStation=avgHaulsByStation,
                                            bySex=bySex,
                                            byShellCondition=byShellCondition,
                                            byMaturity=byMaturity,

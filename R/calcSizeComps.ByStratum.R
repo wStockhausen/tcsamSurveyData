@@ -152,7 +152,7 @@ calcSizeComps.ByStratum<-function(tbl_strata,
                                                      sex=sex,
                                                      shell_condition=shell_condition,
                                                      maturity=maturity,
-                                                     calcMaleMaturity=calcMaturity,
+                                                     calcMaleMaturity=calcMaleMaturity,
                                                      minSize=minSize,
                                                      maxSize=maxSize,
                                                      verbosity=verbosity)
@@ -175,13 +175,13 @@ calcSizeComps.ByStratum<-function(tbl_strata,
                                       verbosity=verbosity);
             if (avgHaulsByStation) {
                 if (verbosity>1) cat("averaging cpue by station\n")
-                tbl_cpue<-calcCPUE.ByStation(tbl_strata,tbl_cpue);
+                tbl_cpue<-calcCPUE.ByStation(tbl_strata,tbl_cpue,verbosity=verbosity);
             }
         }#creating tbl_cpue
     }#read in or created tbl_cpue
 
     #Now calculate size comps
-    tbl_zcs<-calcAB.ByStratum(tbl_strata,tbl_cpue=tbl_cpue,export=FALSE,verbosity=0);
+    tbl_zcs<-calcAB.ByStratum(tbl_strata,tbl_cpue=tbl_cpue,export=FALSE,verbosity=verbosity);
     #Drop lots of columns
     tbl_zcs<-subset(tbl_zcs,select=-c(stdABUNDANCE,cvABUNDANCE,stdBIOMASS,cvBIOMASS))
 

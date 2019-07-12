@@ -78,7 +78,7 @@ calcAB.ByStratum<-function(tbl_strata,
 
     #determine factor column names in cpue table
     cols<-names(tbl_cpue);
-    nonFacs<-c("YEAR","STRATUM","GIS_STATION","LONGITUDE","LATITUDE",
+    nonFacs<-c("YEAR","STRATUM","HAULJOIN","GIS_STATION","LONGITUDE","LATITUDE",
                "numHauls","numNonZeroHauls","numIndivs","SAMPLING_FACTOR","AREA_SWEPT_VARIABLE","numCPUE","wgtCPUE");
     facs<-cols[!(cols %in% nonFacs)];
 
@@ -168,7 +168,7 @@ calcAB.ByStratum<-function(tbl_strata,
             &&whrcols
             1=1
           group by
-            a.YEAR,a.STRATUM,a.STRATUM_AREA,a.numStations,a.numHauls,a.numIndivs,avgNUMCPUE,avgWGTCPUE&&bycols
+            a.YEAR,a.STRATUM,a.STRATUM_AREA,a.numStations,a.numHauls,a.numNonZeroHauls,a.numIndivs,avgNUMCPUE,avgWGTCPUE&&bycols
           order by
             a.YEAR,a.STRATUM&&bycols;";
     if (length(facs)==0) {
