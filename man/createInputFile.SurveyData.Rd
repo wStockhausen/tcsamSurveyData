@@ -8,8 +8,8 @@ createInputFile.SurveyData(fn, survey_name = "NMFS_trawl_survey",
   acdInfo = list(abundance = list(fitType = "BY_XM", likeType =
   "LOGNORMAL", likeWgt = 0), biomass = list(fitType = "BY_X_MAT_ONLY",
   likeType = "LOGNORMAL", likeWgt = 1)), zcsInfo = list(fitType =
-  "BY_XME", likeType = "MULTINOMIAL", likeWgt = 1), cutpts, dfrACD, dfrSSs,
-  dfrZCs, verbose = FALSE)
+  "BY_XME", likeType = "MULTINOMIAL", likeWgt = 1), cutpts, dfrACD, dfrZCs,
+  dfrSSs, ssCol = "numIndivs", verbose = FALSE)
 }
 \arguments{
 \item{fn}{- output file name}
@@ -24,11 +24,13 @@ createInputFile.SurveyData(fn, survey_name = "NMFS_trawl_survey",
 
 \item{dfrACD}{- dataframe of aggregated catch data}
 
-\item{dfrSSs}{- dataframe with relative sample sizes to use with size comps}
-
 \item{dfrZCs}{- dataframe of size comps}
 
+\item{dfrSSs}{- dataframe with relative sample sizes to use with size comps}
+
 \item{verbose}{- flag to print debugging info}
+
+\item{colSS}{- sample size column name in dfrSSs (default="numIndivs")}
 }
 \description{
 This function that creates a survey input file for TCSAM02.

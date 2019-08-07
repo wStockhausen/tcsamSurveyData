@@ -54,8 +54,8 @@ knitr::opts_chunk$set(echo=FALSE, error=FALSE, message=FALSE, warning=FALSE, con
   ##determine crab type
   if (tolower(params$species)=="tanner crab") {species<-"BTC"; crabType<-"Tanner crab";}    else
   if (tolower(params$species)=="snow crab")   {species<-"OTC"; crabType<-"snow crab";}      else
-  if (tolower(params$species)=="BKC") {species<-"BKC"; crabType<-"blue king crab";} else
-  if (tolower(params$species)=="RKC") {species<-"RKC"; crabType<-"red king crab";}
+  if (tolower(params$species)=="BKC")         {species<-"BKC"; crabType<-"blue king crab";} else
+  if (tolower(params$species)=="RKC")         {species<-"RKC"; crabType<-"red king crab";}
 
   verbosity<-params$verbosity;##0=off,1=minimal,2=full
   
@@ -73,28 +73,28 @@ knitr::opts_chunk$set(echo=FALSE, error=FALSE, message=FALSE, warning=FALSE, con
     }
     ##read strata definitions
     csvStrata<-read.csv(fn.SD,check.names=FALSE,stringsAsFactors=FALSE)[,1:8];
-		#load crabhaul files
-		csvCrabhauls<-NULL;
-		for (f in fn.CH){
-			tmp<-read.csv(file=f,check.names=FALSE,stringsAsFactors=FALSE);
-			csvCrabhauls<-rbind(csvCrabhauls,tmp);
-			rm(tmp);
-		}
+    #load crabhaul files
+    csvCrabhauls<-NULL;
+    for (f in fn.CH){
+      tmp<-read.csv(file=f,check.names=FALSE,stringsAsFactors=FALSE);
+      csvCrabhauls<-rbind(csvCrabhauls,tmp);
+      rm(tmp);
+    }
     rm(f);
 ```
 
 ```{r getStrata.CalcCPUE.Surveys.NMFS}
     dfr.SD<-selectStrata.TrawlSurvey(csvStrata,
-    																 species=species,
-    																 strataType=params$strataType,
+                                     species=species,
+                                     strataType=params$strataType,
                                      export=FALSE,
-    																 verbosity=verbosity);
+                                     verbosity=verbosity);
 ```
 
 ```{r getHauls.CalcCPUE.Surveys.NMFS}
     ##select haul data
     dfr.HD<-selectHauls.TrawlSurvey(dfr.SD,
-    								                tbl=csvCrabhauls,
+                                    tbl=csvCrabhauls,
                                     YearRange=c(params$minYr,params$maxYr),
                                     export=FALSE,
                                     verbosity=verbosity);
@@ -103,15 +103,15 @@ knitr::opts_chunk$set(echo=FALSE, error=FALSE, message=FALSE, warning=FALSE, con
 ```{r getIndivs.CalcCPUE.Surveys.NMFS}
     #select individuals
     dfr.ID<-selectIndivs.TrawlSurvey(dfr.HD,
-    								                 tbl=csvCrabhauls,
+                                     tbl=csvCrabhauls,
                                      sex=params$sex,
-    								                 shell_condition=params$shell_condition,
+                                     shell_condition=params$shell_condition,
                                      maturity=params$maturity,
-    								                 calcMaleMaturity=params$calcMaleMaturity,
+                                     calcMaleMaturity=params$calcMaleMaturity,
                                      minSize=params$minSize,
-    								                 maxSize=params$maxSize,
+                                     maxSize=params$maxSize,
                                      export=FALSE,
-    								                 verbosity=verbosity);
+                                     verbosity=verbosity);
 ```
 
 ```{r cleanupInputCSVs.CalcCPUE.Surveys.NMFS}
@@ -121,25 +121,25 @@ knitr::opts_chunk$set(echo=FALSE, error=FALSE, message=FALSE, warning=FALSE, con
 ```{r calc.CalcCPUE.Surveys.NMFS}
     ##calculate CPUE by haul
     dfrCPUE.ByXMS<-calcCPUE.ByHaul(dfr.HD,
-  															  dfr.ID,
+                                  dfr.ID,
                                   bySex=!params$aggBySex,
                                   byMaturity=!params$aggByMaturity,
                                   byShellCondition=!params$aggByShellCondition,
                                   bySize=FALSE,
                                   export=FALSE,
-  															  verbosity=verbosity);
+                                  verbosity=verbosity);
 
     ##calculate CPUE by station
     dfrCPUE.ByXMS<-calcCPUE.ByStation(dfr.SD,
-  																     dfrCPUE.ByXMS,
+                                       dfrCPUE.ByXMS,
                                        export=FALSE,
-  																     verbosity=verbosity);
+                                       verbosity=verbosity);
 
 		##drop levels
 		dfrCPUE.ByXMS<-wtsUtilities::dropLevels(
-		                 dfrCPUE.ByXMS,
-										 list(SEX=c('MISSING',"HERMAPHRODITIC"))
-									 );
+                     dfrCPUE.ByXMS,
+                     list(SEX=c('MISSING',"HERMAPHRODITIC"))
+                   );
 
     ##aggregate to requested levels
     if (params$aggBySex)            dfrCPUE.ByXMS$SEX            <-"ALL";

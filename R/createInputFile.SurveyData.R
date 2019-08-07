@@ -11,8 +11,9 @@
 #' @param zcsInfo - list for size compositions specifying fitType, likeType, and likeWgt
 #' @param cutpts - vector of cutpoints for the input size compositions
 #' @param dfrACD - dataframe of aggregated catch data
-#' @param dfrSSs - dataframe with relative sample sizes to use with size comps
 #' @param dfrZCs - dataframe of size comps
+#' @param dfrSSs - dataframe with relative sample sizes to use with size comps
+#' @param colSS - sample size column name in dfrSSs (default="numIndivs")
 #' @param verbose - flag to print debugging info
 #'
 #' @export
@@ -30,8 +31,9 @@ createInputFile.SurveyData<-function(fn,
                                                    likeWgt=1.0),
                                       cutpts,
                                       dfrACD,
-                                      dfrSSs,
                                       dfrZCs,
+                                      dfrSSs,
+                                      ssCol="numIndivs",
                                       verbose=FALSE){
   #--define some character constants
   yr  <- "YEAR"
@@ -43,8 +45,7 @@ createInputFile.SurveyData<-function(fn,
   cvA <- "cvABUNDANCE";
   bio <- "totBIOMASS";
   cvB <- "cvBIOMASS";
-#  ss  <- "ss";
-  ss  <- "relSS";
+  ss  <- ssCol;
 
   #--write output to assessment data file
     if (!file.exists(fn)) {
@@ -139,14 +140,12 @@ createInputFile.SurveyData<-function(fn,
       cat("uFCs:\n")
       print(uFCs);
     }
-    # dfrSS<-reshape2::dcast(tmp,
-    #                        paste0(paste(yr,sx,mt,sc,sep="+"),"~."),
-    #                        fun.aggregate=wtsUtilities::Sum,value.var="numIndivs");
-    # names(dfrSS)[5]<-"ss";#numbers of crab measured by factor combination
-    # ssT <- reshape2::dcast(dfrZCs,
-    #                        paste0(yr,"~."),
-    #                        fun.aggregate=wtsUtilities::Sum,value.var="numIndivs");
-    # names(ssT)[2]<-"ss";#total number of crab measured
+
+    tmpSS<-dfrSSs;
+    tmpSS[[sx]][tmpSS[[sx]]=="ALL"]<-"UNDETERMINED";
+    tmpSS[[mt]][tmpSS[[mt]]=="ALL"]<-"UNDETERMINED";
+    tmpSS[[sc]][tmpSS[[sc]]=="ALL"]<-"UNDETERMINED";
+
     cat("#------------NUMBERS-AT-SIZE DATA-----------\n",file=con);
     cat("SIZE_FREQUENCY_DATA  #required keyword\n",file=con);
     cat(zcsInfo$fitType, "               #objective function fitting option\n",file=con);
@@ -172,17 +171,17 @@ createInputFile.SurveyData<-function(fn,
             #       (dfrSS[[sx]]==fc[[sx]])&
             #       (dfrSS[[mt]]==fc[[mt]])&
             #       (dfrSS[[sc]]==fc[[sc]]);
-            ids<-(dfrSSs[[yr]]==y)&
-                  (dfrSSs[[sx]]==fc[[sx]])&
-                  (dfrSSs[[mt]]==fc[[mt]])&
-                  (dfrSSs[[sc]]==fc[[sc]]);
+            ids<-(tmpSS[[yr]]==y)&
+                  (tmpSS[[sx]]==fc[[sx]])&
+                  (tmpSS[[mt]]==fc[[mt]])&
+                  (tmpSS[[sc]]==fc[[sc]]);
             idz<-(tmp[[yr]]==y)&
                   (tmp[[sx]]==fc[[sx]])&
                   (tmp[[mt]]==fc[[mt]])&
                   (tmp[[sc]]==fc[[sc]]);
             rw<-paste(tmp[idz,abd],collapse=" ");
             # cat(y,inpSS*dfrSS[ids,"ss"]/ssT[ssT[[yr]]==y,"ss"],rw,"\n",sep="    ",file=con);
-            cat(y,dfrSSs[ids,ss],rw,"\n",sep="    ",file=con);
+            cat(y,ifelse(is.null(tmpSS[ids,ss]),"missing!",tmpSS[ids,ss]),rw,"\n",sep="    ",file=con);
           }#--y
     }#--iFC
 

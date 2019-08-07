@@ -18,10 +18,20 @@ params:
   loadRZCs: "`r NULL`"
   outDir: "./OutputFiles"
   title: "Effective N for NMFS Survey Size Compositions"
+  outPath: "./"
+  dataPath: "./"
+  strataFile: ""
+  haulFiles: ""
+  strataType: "2015"
   species: "BTC"
   bootN: 100
   minYr: 1975
   maxYr: 2017
+  HaulTypes: NULL
+  sex: "ALL"
+  maturity: "ALL"
+  shell_condition: "ALL"
+  calcMaleMaturity: FALSE
   minSize: 25
   maxSize: 185
   binSize: 5
@@ -34,13 +44,12 @@ fontsize: 11pt
 ---
 
 ```{r setup,echo=FALSE, error=FALSE, message=FALSE, warning=FALSE,results='hide'}
-  ##dir.top<-"Y:"; ##Windows
-  dir.top<-"~";    ##Mac
-  dir.TS<-"StockAssessments-Crab/Data/Survey.NMFS.EBS/Current";##could be an input
-	path<-file.path(dir.top,dir.TS);
-  fn.SD<-"TannerCrab_SurveyStrata.csv";
-  fn.CH<-"TannerCrab_HaulData.csv";
-  outDir<-params$outDir;
+  outDir<-params$outPath;
+  if (!dir.exists(outDir)) dir.create(outDir);
+
+  verbosity<-params$verbosity;##0=off,1=minimal,2=full
+  
+  outDir<-params$outPath;
   if (!dir.exists(outDir)) dir.create(outDir);
 
   figno<-1;
@@ -70,14 +79,23 @@ This report estimates the effective N associated with size compositions from NMF
   if (!is.null(params$loadRZCs)){
     load(params$loadRZCs);#restore saved variables
   } else {
-    ##
-    species<-params$species;
-    strataType<-'2015';
+    ##determine input files
+    fn.SD<-file.path(params$dataPath,params$strataFile);
+    fn.CH<-file.path(params$dataPath,params$haulFiles);
+    ##determine crab type
+    if (tolower(params$species)=="tanner crab") {species<-"BTC"; crabType<-"Tanner crab";}    else
+    if (tolower(params$species)=="snow crab")   {species<-"OTC"; crabType<-"snow crab";}      else
+    if (tolower(params$species)=="BKC")         {species<-"BKC"; crabType<-"blue king crab";} else
+    if (tolower(params$species)=="RKC")         {species<-"RKC"; crabType<-"red king crab";}
+    ##extract other parameters
+    strataType<-params$strataType;
     minYr<-params$minYr;
     maxYr<-params$maxYr;
-  	haulTypes<-NULL;#get ALL haul types for new time series
+  	haulTypes<-params$HaulTypes;
   	minSize<-params$minSize;#minimum size of individuals to extract
-  	cutpts<-seq(from=minSize,to=params$maxSize,by=5);
+    maxSize<-params$maxSize;
+    binSize<-params$binSize;
+  	cutpts<-seq(from=minSize,to=maxSize,by=binSize);
   
     lglZ<-params$lglZ;#industry-preferred male size
   }
@@ -108,17 +126,17 @@ The survey data were processed using the following parameters:
 ```{r readDataFiles}
   if (is.null(params$loadRZCs)){
       ##select strata definitions
-      tmp0<-read.csv(file.path(path,fn.SD),check.names=FALSE,stringsAsFactors=FALSE)[,1:8];
+      tmp0<-read.csv(fn.SD,check.names=FALSE,stringsAsFactors=FALSE)[,1:8];
       names(tmp0)[8]<-"TOTAL_AREA";
       dfr.SD<-selectStrata.TrawlSurvey(tmp0,
-      																 species=species,
-      																 strataType=strataType,
+                                       species=species,
+                                       strataType=strataType,
                                        export=FALSE,
-      																 verbosity=verbosity);
+                                       verbosity=verbosity);
   		#load crabhaul files
   		dfr.crabhauls<-NULL;
   		for (f in fn.CH){
-  			tmp1<-read.csv(file=file.path(path,f));
+  			tmp1<-read.csv(file=f,check.names=FALSE,stringsAsFactors=FALSE);
   			dfr.crabhauls<-rbind(dfr.crabhauls,tmp1);
   		}
   
@@ -130,21 +148,21 @@ The survey data were processed using the following parameters:
   if (is.null(params$loadRZCs)){
       ##select haul data
       dfr.HD<-selectHauls.TrawlSurvey(dfr.SD,
-      								                tbl=dfr.crabhauls,
+                                      tbl=dfr.crabhauls,
                                       YearRange=c(minYr,maxYr),
                                       export=FALSE,
                                       verbosity=verbosity);
       #select individuals
       dfr.ID<-selectIndivs.TrawlSurvey(dfr.HD,
-      								                 tbl=dfr.crabhauls,
-                                       sex='ALL',
-      								                 shell_condition='ALL',
-                                       maturity='ALL',
-      								                 calcMaleMaturity=TRUE,
+                                       tbl=dfr.crabhauls,
+                                       sex=params$sex,
+                                       shell_condition=params$shell_condition,
+                                       maturity=params$maturity,
+                                       calcMaleMaturity=params$calcMaleMaturity,
                                        minSize=minSize,
-      								                 maxSize=Inf,
+                                       maxSize=Inf,
                                        export=FALSE,
-      								                 verbosity=verbosity);
+                                       verbosity=verbosity);
     rm(dfr.crabhauls);
   }
 ```
