@@ -69,6 +69,17 @@ selectHauls.TrawlSurvey<-function(tbl_strata,
     }
     if (verbosity>0) cat("Output directory for selectHauls.TrawlSurvey will be '",out.dir,"'\n",sep='');
 
+    req_cols<-c("HAUL_TYPE","START_DATE","GIS_STATION","HAULJOIN",
+                "MID_LATITUDE","MID_LONGITUDE","BOTTOM_DEPTH",
+                "GEAR_TEMPERATURE","AREA_SWEPT_VARIABLE");
+    if (any(!(req_cols %in% names(tbl)))){
+      msg<-paste0("\n#--ERROR in selectHauls.TrawlSurvey:\n",
+                  "Required column(s) ",paste0("'",req_cols[!(req_cols %in% names(tbl))],"'",collapse=", "),"\n",
+                  "were not found in the input crab haul dataframe or csv file (tbl).\n",
+                  "It's column names were: ",paste0(names(tbl),collapse=", "),"\n");
+      stop(msg);
+    }
+
     yrs<-tbl$START_DATE%%10000;
     tbl$YEAR<-yrs;
     uniq.yrs<-unique(yrs);

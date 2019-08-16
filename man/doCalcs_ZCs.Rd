@@ -8,8 +8,8 @@ doCalcs_ZCs(tbl_strata, tbl_hauls, tbl_indivs, calcByEW166 = TRUE,
   aggBySex = FALSE, aggByMaturity = FALSE,
   aggByShellCondition = FALSE, cutpts = seq(from = 0, to = 185, by =
   5), truncate.low = TRUE, truncate.high = FALSE,
-  dropLevels = list(SEX = c("MISSING", "HERMAPHRODITIC")),
-  verbosity = 0)
+  recodeOldShellImmature = FALSE, dropLevels = list(SEX = c("MISSING",
+  "HERMAPHRODITIC")), verbosity = 0)
 }
 \arguments{
 \item{tbl_strata}{: dataframe with survey strata info (output from \code{\link{selectStrata.TrawlSurvey}})}
@@ -29,6 +29,8 @@ doCalcs_ZCs(tbl_strata, tbl_hauls, tbl_indivs, calcByEW166 = TRUE,
 \item{truncate.low}{: TRUE}
 
 \item{truncate.high}{: FALSE}
+
+\item{recodeOldShellImmature}{: recode old shell, immature crab as new shell immature crab}
 
 \item{dropLevels}{- NULL, or list (by factor name) of vectors of factor values to drop (see help for \code{wtsUtilities::dropLevels})}
 

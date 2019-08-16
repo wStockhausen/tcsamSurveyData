@@ -13,6 +13,7 @@
 #' @param cutpts : seq(from=0,to=185,by=5)
 #' @param truncate.low : TRUE
 #' @param truncate.high : FALSE
+#' @param recodeOldShellImmature : recode old shell, immature crab as new shell immature crab
 #' @param dropLevels - NULL, or list (by factor name) of vectors of factor values to drop (see help for \code{wtsUtilities::dropLevels})
 #' @param verbosity : integer flag indicating level of printed output (0=off,1=minimal,2=full)
 #'
@@ -40,6 +41,7 @@ doCalcs_ZCs<-function(tbl_strata,
                       cutpts=seq(from=0,to=185,by=5),
                       truncate.low=TRUE,
                       truncate.high=FALSE,
+                      recodeOldShellImmature=FALSE,
                       dropLevels=list(SEX=c('MISSING',"HERMAPHRODITIC")),
                       verbosity=0){
 
@@ -64,6 +66,13 @@ doCalcs_ZCs<-function(tbl_strata,
       message(paste0("dropping levels"));
       dfrZCs.ByS<-wtsUtilities::dropLevels(dfrZCs.ByS,
                                               dropLevels=dropLevels);
+    }
+
+    if (recodeOldShellImmature){
+      #assume immature, old shell crab are really immature, new shell crab
+      ids<-(dfrZCs.ByS$MATURITY=="IMMATURE") &
+           (dfrZCs.ByS$SHELL_CONDITION=="OLD_SHELL");
+      dfrZCs.ByS$SHELL_CONDITION[ids]<-"NEW_SHELL";
     }
 
     ##recode if aggregated
