@@ -63,7 +63,7 @@ knitr::opts_chunk$set(echo=FALSE, error=FALSE, message=FALSE, warning=FALSE, con
   require(ggpubr);
 ```
 
-#Basemap
+# Basemap
 
 The following figure illustrates the base map for subsequent maps of bottom temperature and survey CPUE.
 
@@ -114,7 +114,7 @@ The following figure illustrates the base map for subsequent maps of bottom temp
   rm(strWGS84,crsWGS84,yr,yrs,idx,spdfr);
 ```
 
-#Survey CPUE
+# Survey CPUE
 
 The following maps present survey CPUE (in biomass) for components of the `r crabType` stock superimposed on bottom temperature at the time of the survey for each year of the NMFS bottom trawl survey.
 
@@ -174,10 +174,20 @@ The following maps present survey CPUE (in biomass) for components of the `r cra
       tmp<-pntsCPUE[idy&idx&idm&ids,];
       if (verbosity>0) cat("Creating map",iXMS,"for",uX,uM,uS,"using",nrow(tmp),"points\n");
       if (nrow(tmp)>0){
-        map <- tmap.CreateSurveyMap.CPUE(basemap=basemap,cpue=tmp,raster=evs.grds[[as.character(yr)]],
-                                         cpueCol="value",cpueLabel="CPUE",cpueColor="blue",cpueAlpha=0.6,maxCPUE=mx,
-                                         rasterCol="z",rasterLabel="T (degC)",rasterPalette=pal,rasterAlpha=0.6,rasterBreaks=brks,
-                                         rasterLegend=(cntr==min(c(2,ngpp))),panelLabel=label);
+        map <- tmap.CreateSurveyMap.CPUE(basemap=basemap,
+                                         cpue=tmp,raster=evs.grds[[as.character(yr)]],
+                                         cpueCol="value",
+                                         cpueLabel="CPUE",
+                                         cpueColor="blue",
+                                         cpueAlpha=0.6,
+                                         maxCPUE=mx,
+                                         rasterCol="z",
+                                         rasterLabel="T (degC)",
+                                         rasterPalette=pal,
+                                         rasterAlpha=0.6,
+                                         rasterBreaks=brks,
+                                         rasterLegend=(cntr==min(c(2,ngpp))),
+                                         panelLabel=label);
         mapsXMS[[paste(uX,uM,uS)]]<-map;
         cntr<-cntr+1;#increment counter for including legend on map
         rm(map);

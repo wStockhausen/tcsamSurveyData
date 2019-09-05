@@ -40,5 +40,7 @@ Returned dataframe has columns:
         \item {GIS_STATION}
         \item {STATION_LONGITUDE}
         \item {STATION_LATITUDE}
+        \item {STATION_AREA}
         }
+Area is in square nautical miles.
 }

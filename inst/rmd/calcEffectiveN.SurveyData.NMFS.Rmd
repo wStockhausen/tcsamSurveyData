@@ -71,7 +71,7 @@ fontsize: 11pt
 
 \clearpage
 
-#Introduction
+# Introduction
 
 This report estimates the effective N associated with size compositions from NMFS survey data.
 
@@ -186,7 +186,7 @@ The survey data were processed using the following parameters:
   }
 ```
 
-#Resampled size compositions
+# Resampled size compositions
 The resampled size compositions are presented in this section. 
 
 ```{r plotResampledSizeCompositions,results="asis",out.width="6.5in",fig.cap=captions,eval.after="fig.cap",fig.pos="H"}
@@ -199,7 +199,7 @@ The resampled size compositions are presented in this section.
 
 \clearpage
 
-#Effective sample sizes
+# Effective sample sizes
 The resulting effective sample sizes are presented in the following figure and table.
 
 ```{r plotEffectiveNs,results="asis",out.height="3.0in",fig.cap=captions,eval.after="fig.cap",fig.pos="H"}

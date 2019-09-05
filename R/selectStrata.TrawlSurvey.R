@@ -20,7 +20,9 @@
 #'         \item {GIS_STATION}
 #'         \item {STATION_LONGITUDE}
 #'         \item {STATION_LATITUDE}
+#'         \item {STATION_AREA}
 #'         }
+#' Area is in square nautical miles.
 #'
 #' @return a dataframe with strata/stations info.
 #'
@@ -120,6 +122,9 @@ selectStrata.TrawlSurvey<-function(tbl=NULL,
 
     if (verbosity>1) cat("\nquery is:\n",qry,"\n");
     tbl<-sqldf::sqldf(qry)
+
+    #--add STATION_AREA to table
+    tbl<-addStationAreasToStrataDataframe(tbl);
 
     if (export){
         if (!is.null(out.dir)){

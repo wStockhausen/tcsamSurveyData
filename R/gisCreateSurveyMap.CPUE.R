@@ -50,6 +50,7 @@ gisCreateSurveyMap.CPUE<-function(basemap,
                    tmap::tm_raster(col=rasterCol,alpha=rasterAlpha,showNA=FALSE,legend.show=rasterLegend,title=rasterLabel,
                                    style="cont",breaks=rasterBreaks,palette=rasterPalette,auto.palette.mapping=FALSE);
 
+    cpue[[cpueCol]]<-ifelse(cpue[[cpueCol]]<maxCPUE,cpue[[cpueCol]],maxCPUE);
     map <- map + tmap::tm_shape(cpue) +
                  tmap::tm_bubbles(size=cpueCol,col=cpueColor,alpha=cpueAlpha,showNA=FALSE,legend.size.is.portrait=TRUE,
                                   size.max=maxCPUE,legend.size.show=cpueLegend,title.shape=cpueLabel) +

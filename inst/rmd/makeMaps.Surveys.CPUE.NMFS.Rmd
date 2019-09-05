@@ -17,7 +17,6 @@ params:
   species: "Snow crab"
   cpueType: "biomass"
   title: "&&species spatial patterns in the NMFS trawl survey" 
-  outPath: "./"
   dataPath: "./"
   strataFile: ""
   haulFiles: ""
@@ -35,36 +34,34 @@ params:
   aggByShellCondition: FALSE
   minSize: 0
   maxSize: '`r Inf`'
+  maxCPUE: NULL
+  cpueAlpha: 1.0
+  rasterAlpha: 0.5
+  rasterNX: 500
+  rasterNY: 500
   verbosity: 0
 title: '`r gsub("&&species",params$species,params$title,fixed=TRUE)`'
 fontsize: 11pt
 ---
 
 ```{r init.MakeMaps.Surveys.CPUE.NMFS,echo=FALSE,results='hide'}
-##set knitr options for subsequent chunks
-knitr::opts_chunk$set(echo=FALSE, error=FALSE, message=FALSE, warning=FALSE, concordance=TRUE, fig.width=6.5, fig.height=7, dpi=300)
-##set options
-options(stringsAsFactors=FALSE);
+  ##set knitr options for subsequent chunks
+  knitr::opts_chunk$set(echo=FALSE, error=FALSE, message=FALSE, warning=FALSE, concordance=TRUE, fig.width=6.5, fig.height=7, dpi=300)
+  ##set options
+  options(stringsAsFactors=FALSE);
 ```
 
 ```{r inputs.MakeMaps.Surveys.CPUE.NMFS}
-  fn.SD<-file.path(params$dataPath,params$strataFile);
-  fn.CH<-file.path(params$dataPath,params$haulFiles);
-    
-  gisDir<-params$gisPath;
-
-  outDir<-params$outPath;
-  if (!dir.exists(outDir)) dir.create(outDir);
-
-  ##determine crab type
-  if (tolower(params$species)=="tanner crab") {species<-"BTC"; crabType<-"Tanner crab";}    else
-  if (tolower(params$species)=="snow crab")   {species<-"OTC"; crabType<-"snow crab";}      else
-  if (tolower(params$species)=="BKC") {species<-"BKC"; crabType<-"blue king crab";} else
-  if (tolower(params$species)=="RKC") {species<-"RKC"; crabType<-"red king crab";}
-
+  crabType<-NULL;
+  cpueType<-NULL;
+  if (exists("inputs")){
+    crabType<-inputs$crabType;
+    cpueType<-inputs$cpueType;
+  }
   verbosity<-params$verbosity;##0=off,1=minimal,2=full
   
   ##required packages
+  require(wtsGIS);
   require(tcsamSurveyData);
   require(ggpubr);
 
@@ -72,18 +69,18 @@ options(stringsAsFactors=FALSE);
   codes.TS<-Codes.TrawlSurvey();
 ```
 
-#Introduction
+# Introduction
 
 This report creates a time series of maps of `r crabType` CPUE and bottom temperature from the NMFS EBS bottom trawl survey.
 
 The following figure illustrates the base map for subsequent maps of bottom temperature and survey CPUE.
 
-```{r child=system.file("rmd/makeMaps.Surveys.Basemap.Rmd",package="tcsamSurveyData")}
-  ##create the basemap for future maps
+```{r getBasemap, child=system.file("rmd/makeMaps.Surveys.Basemap.Rmd",package="tcsamSurveyData")}
+  ##create the basemap for future maps (basemap)
 ```
 
-```{r child=system.file("rmd/calcCPUE.Surveys.NMFS.Rmd",package="tcsamSurveyData")}
-  ##calculate survey CPUE and environmental data (dfrCPUE.ByXMS and evs.csv)
+```{r calcCPUE, child=system.file("rmd/calcCPUE.Surveys.NMFS.Rmd",package="tcsamSurveyData")}
+  ##calculate survey CPUE (dfrCPUE.ByXMS)
 ```
 
 
@@ -92,14 +89,20 @@ The following figure illustrates the base map for subsequent maps of bottom temp
   stns.pnts<-surveyGridLayers$stations;
   #join annual evs to stns.polys by station
   evs.polys<-wtsGIS::mergeDataframeWithLayer(
-                                     evs.csv,stns.polys,
-                                     dataID="GIS_STATION",geomsID="STATION_ID",
-                                     allData=FALSE,duplicateGeoms=TRUE);
+                                     evs.csv,
+                                     stns.polys,
+                                     dataID="GIS_STATION",
+                                     geomsID="STATION_ID",
+                                     allData=FALSE,
+                                     duplicateGeoms=TRUE);
   #join annual evs to stns.pnts by station
   evs.pnts<-wtsGIS::mergeDataframeWithLayer(
-                                     evs.csv,stns.pnts,
-                                     dataID="GIS_STATION",geomsID="ID",
-                                     allData=FALSE,duplicateGeoms=TRUE);
+                                     evs.csv,
+                                     stns.pnts,
+                                     dataID="GIS_STATION",
+                                     geomsID="ID",
+                                     allData=FALSE,
+                                     duplicateGeoms=TRUE);
   rm(evs.csv,stns.polys);
 ```
 
@@ -115,20 +118,21 @@ The following figure illustrates the base map for subsequent maps of bottom temp
     evs.grds[[as.character(yr)]]<-wtsGIS::createRasterLayer(spdfr,
                                                             "BOTTOM_TEMP",
                                                             bbext,
-                                                            nx=500,ny=500,
+                                                            nx=params$rasterNX,
+                                                            ny=params$rasterNY,
                                                             strCRS=strWGS84);
   }
   rm(strWGS84,yr,yrs,idx,spdfr);
 ```
 
-#Survey CPUE
+# Survey CPUE
 
 The following maps present survey CPUE (in biomass) for components of the `r crabType` stock superimposed on bottom temperature at the time of the survey for each year of the NMFS bottom trawl survey.
 
 ```{r createPtsCPUE}
     options(stringsAsFactors=FALSE);
     uXMSs<-unique(dfrCPUE.ByXMS[,c("SEX","MATURITY","SHELL_CONDITION")]);
-    if (tolower(params$cpueType)=="abundance"){
+    if (tolower(cpueType)=="abundance"){
       value.var<-"numCPUE";
     } else {
       value.var<-"wgtCPUE";
@@ -167,7 +171,9 @@ The following maps present survey CPUE (in biomass) for components of the `r cra
   maps<-list();
   for (yr in yrs){
     idy<-pntsCPUE$YEAR==yr;
-    mx<-max(pntsCPUE$value[idy],na.rm=TRUE);
+    if (is.null(params$maxCPUE)){
+      mx<-max(pntsCPUE$value[idy],na.rm=TRUE);
+    } else {mx<-params$maxCPUE;}
     cntr<-1;
     mapsXMS<-list();
     for (iXMS in 1:nrow(uXMSs)){
@@ -194,12 +200,12 @@ The following maps present survey CPUE (in biomass) for components of the `r cra
                                        cpueCol="value",
                                        cpueLabel="CPUE",
                                        cpueColor="blue",
-                                       cpueAlpha=0.6,
+                                       cpueAlpha=params$cpueAlpha,
                                        maxCPUE=mx,
                                        rasterCol="z",
                                        rasterLabel="T (degC)",
                                        rasterPalette=pal,
-                                       rasterAlpha=0.6,
+                                       rasterAlpha=params$rasterAlpha,
                                        rasterBreaks=brks,
                                        rasterLegend=(cntr==min(c(2,ngpp))),
                                        panelLabel=label);
@@ -234,7 +240,7 @@ The following maps present survey CPUE (in biomass) for components of the `r cra
     #str.expr<-paste0("tmap::tmap_arrange(maps[[cyr]]$mapIM,maps[[cyr]]$mapIF,maps[[cyr]]$mapMM,maps[[cyr]]$mapMF,ncol=2,nrow=2,outer.margins=0)");
     eval(parse(text=str.expr)[[1]])
     print(p,knit=TRUE);
-    cap<-paste0(crabType," CPUE (",params$cpueType,") from the ",yr," NMFS EBS bottom trawl survey.");
+    cap<-paste0(crabType," CPUE (",cpueType,") from the ",yr," NMFS EBS bottom trawl survey.");
     captions<-c(captions,cap);
   }
 ```

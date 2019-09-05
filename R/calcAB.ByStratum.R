@@ -98,6 +98,7 @@ calcAB.ByStratum<-function(tbl_strata,
             s.STRATUM,
             s.STRATUM_AREA,
             c.GIS_STATION,
+            s.STATION_AREA,
             &&byHaulSub
             &&facs
             &&numHaulSub
@@ -125,7 +126,7 @@ calcAB.ByStratum<-function(tbl_strata,
     qry<-"select
             YEAR,
             STRATUM,
-            STRATUM_AREA&&facs,
+            SUM(STATION_AREA) as STRATUM_AREA&&facs,
             count(DISTINCT GIS_STATION) as numStations,
             sum(numHauls)  as numHauls,
             sum(numNonZeroHauls) as numNonZeroHauls,
@@ -135,7 +136,7 @@ calcAB.ByStratum<-function(tbl_strata,
           from
             tbl1
           group by
-            YEAR,STRATUM,STRATUM_AREA&&facs
+            YEAR,STRATUM&&facs
           order by
             YEAR,STRATUM&&facs;";
     if (length(facs)==0) {
@@ -222,5 +223,3 @@ calcAB.ByStratum<-function(tbl_strata,
     if (verbosity>1) cat("finished calcAB.ByStratum\n");
     return(tbl3);
 }
-
-#tbl.BTC.MAA.BiomassByStratum<-calcBiomass.ByStratum(tbl.BTC.stns,tbl.BTC.MAA.cpue,export=FALSE);
