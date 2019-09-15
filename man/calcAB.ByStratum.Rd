@@ -4,14 +4,16 @@
 \alias{calcAB.ByStratum}
 \title{Calculate abundance, and biomass by stratum from AFSC trawl survey data.}
 \usage{
-calcAB.ByStratum(tbl_strata, tbl_cpue = NULL, export = FALSE,
-  out.csv = "SurveyBiomass.ByStratum.csv", out.dir = NULL,
-  verbosity = 0)
+calcAB.ByStratum(tbl_strata, tbl_cpue = NULL, useStratumArea = TRUE,
+  export = FALSE, out.csv = "SurveyBiomass.ByStratum.csv",
+  out.dir = NULL, verbosity = 0)
 }
 \arguments{
 \item{tbl_strata}{: data frame w/ stations/strata from call to selectStrata.TrawlSurvey(...)}
 
 \item{tbl_cpue}{: data frame w/ cpue by year, station, other factor levels (or csv filename or NULL)}
+
+\item{useStratumArea}{: flag (T/F) to use STRATUM_AREA to expand average CPUE to stratum abundance/biomass (default is T)}
 
 \item{export}{: boolean flag to write results to csv file}
 
@@ -51,4 +53,8 @@ If tbl_cpue is NULL, the user is prompted to enter a csv file with cpue info. \c
   \item Abundance is in 10^6 indivs
   \item Biomass   is in 10^3 mt
 }
+\cr If \code{useStratumArea} is true, the stratum area is used to expand mean cpue to stratum abundance/biomass.
+If it is false, the sum of STATION_AREAs associated with the stations included in the stratum is used for
+the expansion (the sum of STATION_AREA across all standard stations in a stratum is close, but not exactly
+equal to the STRATUM_AREA for that stratum).
 }

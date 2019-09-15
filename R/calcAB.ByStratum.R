@@ -3,6 +3,7 @@
 #'
 #'@param   tbl_strata : data frame w/ stations/strata from call to selectStrata.TrawlSurvey(...)
 #'@param   tbl_cpue   : data frame w/ cpue by year, station, other factor levels (or csv filename or NULL)
+#'@param   useStratumArea : flag (T/F) to use STRATUM_AREA to expand average CPUE to stratum abundance/biomass (default is T)
 #'@param   export  : boolean flag to write results to csv file
 #'@param   out.csv : output file name
 #'@param   out.dir : output file directory
@@ -17,6 +18,10 @@
 #'   \item Abundance is in 10^6 indivs
 #'   \item Biomass   is in 10^3 mt
 #'}
+#'\cr If \code{useStratumArea} is true, the stratum area is used to expand mean cpue to stratum abundance/biomass.
+#'If it is false, the sum of STATION_AREAs associated with the stations included in the stratum is used for
+#'the expansion (the sum of STATION_AREA across all standard stations in a stratum is close, but not exactly
+#'equal to the STRATUM_AREA for that stratum).
 #'
 #'@return data frame with average cpue (numbers, weight), abundance and biomass by stratum. Columns are \cr
 #'\itemize{
@@ -43,8 +48,9 @@
 #'
 #######################################################################
 calcAB.ByStratum<-function(tbl_strata,
-                            tbl_cpue=NULL,
-                            export=FALSE,
+                           tbl_cpue=NULL,
+                           useStratumArea=TRUE,
+                           export=FALSE,
                             out.csv='SurveyBiomass.ByStratum.csv',
                             out.dir=NULL,
                             verbosity=0){
@@ -123,10 +129,12 @@ calcAB.ByStratum<-function(tbl_strata,
 
     #calculate number of unique stations
     #calculate average cpues over strata
+    stratum_area_str<-"STRATUM_AREA";
+    if (!useStratumArea) straum_area_str<-"SUM(STATION_AREA) as STRATUM_AREA";
     qry<-"select
             YEAR,
             STRATUM,
-            SUM(STATION_AREA) as STRATUM_AREA&&facs,
+            &&stratum_area&&facs,
             count(DISTINCT GIS_STATION) as numStations,
             sum(numHauls)  as numHauls,
             sum(numNonZeroHauls) as numNonZeroHauls,
@@ -139,6 +147,7 @@ calcAB.ByStratum<-function(tbl_strata,
             YEAR,STRATUM&&facs
           order by
             YEAR,STRATUM&&facs;";
+    qry<-gsub("&&stratum_area",stratum_area_str,qry);
     if (length(facs)==0) {
         qry<-gsub("&&facs",'',qry);#no factors
     } else {

@@ -5,17 +5,17 @@
 \title{Calculate size compositions by stratum from NMFS trawl survey data}
 \usage{
 calcSizeComps.ByStratum(tbl_strata, tbl_cpue = NULL, tbl_hauls = NULL,
-  tbl_indivs = NULL, avgHaulsByStation = FALSE, bySex = FALSE,
-  byShellCondition = FALSE, byMaturity = FALSE, cutpts = seq(from =
-  25, to = 185, by = 5), truncate.low = TRUE, truncate.high = FALSE,
-  Years = NULL, HaulTypes = NULL, YearRange = NULL,
-  DepthRange = NULL, LatRange = NULL, LonRange = NULL,
-  col.Size = "WIDTH", sex = c("MALE", "FEMALE", "ALL"),
-  shell_condition = c("NEW_SHELL", "OLD_SHELL", "ALL"),
-  maturity = c("IMMATURE", "MATURE", "ALL"), calcMaleMaturity = FALSE,
-  minSize = -Inf, maxSize = Inf, export = FALSE,
-  out.csv = "SurveySizeComps.ByStratum.csv", out.dir = NULL,
-  verbosity = 0)
+  tbl_indivs = NULL, avgHaulsByStation = FALSE,
+  useStratumArea = TRUE, bySex = FALSE, byShellCondition = FALSE,
+  byMaturity = FALSE, cutpts = seq(from = 25, to = 185, by = 5),
+  truncate.low = TRUE, truncate.high = FALSE, Years = NULL,
+  HaulTypes = NULL, YearRange = NULL, DepthRange = NULL,
+  LatRange = NULL, LonRange = NULL, col.Size = "WIDTH",
+  sex = c("MALE", "FEMALE", "ALL"), shell_condition = c("NEW_SHELL",
+  "OLD_SHELL", "ALL"), maturity = c("IMMATURE", "MATURE", "ALL"),
+  calcMaleMaturity = FALSE, minSize = -Inf, maxSize = Inf,
+  export = FALSE, out.csv = "SurveySizeComps.ByStratum.csv",
+  out.dir = NULL, verbosity = 0)
 }
 \arguments{
 \item{tbl_strata}{: data frame from call to \code{\link{selectStrata.TrawlSurvey}} [required]}
@@ -27,6 +27,8 @@ calcSizeComps.ByStratum(tbl_strata, tbl_cpue = NULL, tbl_hauls = NULL,
 \item{tbl_indivs}{: dataframe from call to \code{\link{selectIndivs.TrawlSurvey}} (or crab survey filename, or NULL) [required only if tbl_cpue not given]}
 
 \item{avgHaulsByStation}{: flag (T/F) to average hauls by station before calc'ing size comps}
+
+\item{useStratumArea}{: flag (T/F) to use STRATUM_AREA to expand average CPUE to stratum abundance/biomass (default is T)}
 
 \item{bySex}{: flag (T/F) to calc by sex}
 
@@ -105,4 +107,8 @@ Other notes: \cr
   \item{Abundance is in 10^6 indivs}
   \item{Biomass   is in 10^3 mt}
 }
+\cr If \code{useStratumArea} is true, the stratum area is used to expand mean cpue to stratum abundance/biomass.
+If it is false, the sum of STATION_AREAs associated with the stations included in the stratum is used for
+the expansion (the sum of STATION_AREA across all standard stations in a stratum is close, but not exactly
+equal to the STRATUM_AREA for that stratum).
 }

@@ -6,6 +6,7 @@
 #'@param tbl_hauls  : dataframe from call to \code{\link{selectHauls.TrawlSurvey}} [required only if tbl_cpue not given]
 #'@param tbl_indivs : dataframe from call to \code{\link{selectIndivs.TrawlSurvey}} (or crab survey filename, or NULL) [required only if tbl_cpue not given]
 #'@param avgHaulsByStation : flag (T/F) to average hauls by station before calc'ing size comps
+#'@param useStratumArea : flag (T/F) to use STRATUM_AREA to expand average CPUE to stratum abundance/biomass (default is T)
 #'@param bySex            : flag (T/F) to calc by sex
 #'@param byShellCondition : flag (T/F) to calc by shell condition
 #'@param byMaturity       : flag (T/F) to calc by maturity state
@@ -43,6 +44,10 @@
 #'   \item{Abundance is in 10^6 indivs}
 #'   \item{Biomass   is in 10^3 mt}
 #'}
+#'\cr If \code{useStratumArea} is true, the stratum area is used to expand mean cpue to stratum abundance/biomass.
+#'If it is false, the sum of STATION_AREAs associated with the stations included in the stratum is used for
+#'the expansion (the sum of STATION_AREA across all standard stations in a stratum is close, but not exactly
+#'equal to the STRATUM_AREA for that stratum).
 #'
 #'@return data frame with size comps by stratum. Columns are \cr
 #'\itemize{
@@ -70,6 +75,7 @@ calcSizeComps.ByStratum<-function(tbl_strata,
                                   tbl_hauls=NULL,
                                   tbl_indivs=NULL,
                                   avgHaulsByStation=FALSE,
+                                  useStratumArea=TRUE,
                                   bySex=FALSE,
                                   byShellCondition=FALSE,
                                   byMaturity=FALSE,
@@ -181,7 +187,11 @@ calcSizeComps.ByStratum<-function(tbl_strata,
     }#read in or created tbl_cpue
 
     #Now calculate size comps
-    tbl_zcs<-calcAB.ByStratum(tbl_strata,tbl_cpue=tbl_cpue,export=FALSE,verbosity=verbosity);
+    tbl_zcs<-calcAB.ByStratum(tbl_strata,
+                              tbl_cpue=tbl_cpue,
+                              useStratumArea=useStratumArea,
+                              export=FALSE,
+                              verbosity=verbosity);
     #Drop lots of columns
     tbl_zcs<-subset(tbl_zcs,select=-c(stdABUNDANCE,cvABUNDANCE,stdBIOMASS,cvBIOMASS))
 
