@@ -4,12 +4,20 @@
 \alias{doCalcs_CPUEbyStation}
 \title{Calculate cpue by survey station and other factors from strata and haul files}
 \usage{
-doCalcs_CPUEbyStation(tbl_strata, tbl_hauls, tbl_indivs,
-  aggBySex = FALSE, aggByMaturity = FALSE,
-  aggByShellCondition = FALSE, aggBySize = FALSE, cutpts = seq(from =
-  25, to = 185, by = 5), truncate.low = TRUE, truncate.high = FALSE,
+doCalcs_CPUEbyStation(
+  tbl_strata,
+  tbl_hauls,
+  tbl_indivs,
+  aggBySex = FALSE,
+  aggByMaturity = FALSE,
+  aggByShellCondition = FALSE,
+  aggBySize = FALSE,
+  cutpts = seq(from = 25, to = 185, by = 5),
+  truncate.low = TRUE,
+  truncate.high = FALSE,
   dropLevels = list(SEX = c("MISSING", "HERMAPHRODITIC")),
-  verbosity = 0)
+  verbosity = 0
+)
 }
 \arguments{
 \item{tbl_strata}{- dataframe with survey strata info (output from \code{\link{selectStrata.TrawlSurvey}})}

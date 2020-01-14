@@ -4,8 +4,7 @@
 \alias{convertFormat.BSFRF2NMFS}
 \title{Convert BSFRF data to (almost) NMFS CRABHAUL_DATA format}
 \usage{
-convertFormat.BSFRF2NMFS(tbl, types = c("SBS", "IDX"),
-  verbosity = TRUE)
+convertFormat.BSFRF2NMFS(tbl, types = c("SBS", "IDX"), verbosity = TRUE)
 }
 \arguments{
 \item{tbl}{- filename for BSFRF  csv file to read or dataframe from reading csv file}

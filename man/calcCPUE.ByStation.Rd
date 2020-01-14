@@ -4,9 +4,14 @@
 \alias{calcCPUE.ByStation}
 \title{Function to calculate cpue by survey station, averaging over cpue by haul.}
 \usage{
-calcCPUE.ByStation(tbl_strata = NULL, tbl_cpue = NULL,
-  export = FALSE, out.csv = "cpue.ByStation.csv", out.dir = NULL,
-  verbosity = 0)
+calcCPUE.ByStation(
+  tbl_strata = NULL,
+  tbl_cpue = NULL,
+  export = FALSE,
+  out.csv = "cpue.ByStation.csv",
+  out.dir = NULL,
+  verbosity = 0
+)
 }
 \arguments{
 \item{tbl_strata}{: dataframe w/ station info}

@@ -4,10 +4,21 @@
 \alias{plotChelaHeights}
 \title{Plot chela height data}
 \usage{
-plotChelaHeights(dfrp, ratio = 0.18, discrim = NULL,
-  byShellCondition = TRUE, facet_grid = NULL, plotRatio = FALSE,
-  plotLMs = TRUE, useLnScales = FALSE, aggYears = 5, rng = NULL,
-  ncol = 2, title = NULL, showPlot = FALSE)
+plotChelaHeights(
+  dfrp,
+  ratio = 0.18,
+  discrim = NULL,
+  byShellCondition = TRUE,
+  facet_grid = NULL,
+  plotRatio = FALSE,
+  plotLMs = TRUE,
+  useLnScales = FALSE,
+  aggYears = 5,
+  rng = NULL,
+  ncol = 2,
+  title = NULL,
+  showPlot = FALSE
+)
 }
 \arguments{
 \item{dfrp}{- dataframe of chela height data from call to getChelaHeights(...)}

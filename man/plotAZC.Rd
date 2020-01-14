@@ -4,10 +4,20 @@
 \alias{plotAZC}
 \title{Plot aggregated size comps from survey data as bars}
 \usage{
-plotAZC(zcs, byStratum = TRUE, multipliers = NULL,
-  zlab = "Abundance (millions)", zlims = NULL, xlims = NULL,
-  ylims = NULL, ggtheme = theme_grey(), ncol = 2, nrow = 5,
-  showPlots = TRUE, verbosity = 0)
+plotAZC(
+  zcs,
+  byStratum = TRUE,
+  multipliers = NULL,
+  zlab = "Abundance (millions)",
+  zlims = NULL,
+  xlims = NULL,
+  ylims = NULL,
+  ggtheme = theme_grey(),
+  ncol = 2,
+  nrow = 5,
+  showPlots = TRUE,
+  verbosity = 0
+)
 }
 \arguments{
 \item{zcs}{- dataframe from call to aggregateSizeComps(...)}

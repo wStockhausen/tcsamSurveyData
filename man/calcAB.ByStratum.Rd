@@ -4,9 +4,15 @@
 \alias{calcAB.ByStratum}
 \title{Calculate abundance, and biomass by stratum from AFSC trawl survey data.}
 \usage{
-calcAB.ByStratum(tbl_strata, tbl_cpue = NULL, useStratumArea = TRUE,
-  export = FALSE, out.csv = "SurveyBiomass.ByStratum.csv",
-  out.dir = NULL, verbosity = 0)
+calcAB.ByStratum(
+  tbl_strata,
+  tbl_cpue = NULL,
+  useStratumArea = TRUE,
+  export = FALSE,
+  out.csv = "SurveyBiomass.ByStratum.csv",
+  out.dir = NULL,
+  verbosity = 0
+)
 }
 \arguments{
 \item{tbl_strata}{: data frame w/ stations/strata from call to selectStrata.TrawlSurvey(...)}

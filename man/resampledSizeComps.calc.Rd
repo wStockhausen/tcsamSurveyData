@@ -4,12 +4,22 @@
 \alias{resampledSizeComps.calc}
 \title{Resample haul data to bootstrap size compositions by year/stratum from AFSC trawl survey data}
 \usage{
-resampledSizeComps.calc(tbl_strata, tbl_hauls = NULL,
-  tbl_indivs = NULL, avgHaulsByStation = TRUE, N = 100,
-  byEW166 = FALSE, byEBS = TRUE, bySex = FALSE,
-  byShellCondition = FALSE, byMaturity = FALSE, cutpts = seq(from =
-  25, to = 185, by = 5), truncate.low = TRUE, truncate.high = FALSE,
-  verbosity = 0)
+resampledSizeComps.calc(
+  tbl_strata,
+  tbl_hauls = NULL,
+  tbl_indivs = NULL,
+  avgHaulsByStation = TRUE,
+  N = 100,
+  byEW166 = FALSE,
+  byEBS = TRUE,
+  bySex = FALSE,
+  byShellCondition = FALSE,
+  byMaturity = FALSE,
+  cutpts = seq(from = 25, to = 185, by = 5),
+  truncate.low = TRUE,
+  truncate.high = FALSE,
+  verbosity = 0
+)
 }
 \arguments{
 \item{tbl_strata}{: data frame from call to \code{\link{selectStrata.TrawlSurvey}} [required]}

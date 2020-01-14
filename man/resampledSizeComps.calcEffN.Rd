@@ -4,10 +4,15 @@
 \alias{resampledSizeComps.calcEffN}
 \title{Calculate and plot effective N from resampled size compositions}
 \usage{
-resampledSizeComps.calcEffN(dfr, byFacs = "", nDefault = 200,
-  nStations = 375, dropLevels = list(SEX = c("HERMAPHRODITE",
-  "HERMAPHRODITIC", "UNDETERMINED"), MATURITY = "UNDETERMINED"),
-  convertImmOS = TRUE)
+resampledSizeComps.calcEffN(
+  dfr,
+  byFacs = "",
+  nDefault = 200,
+  nStations = 375,
+  dropLevels = list(SEX = c("HERMAPHRODITE", "HERMAPHRODITIC", "UNDETERMINED"), MATURITY
+    = "UNDETERMINED"),
+  convertImmOS = TRUE
+)
 }
 \arguments{
 \item{dfr}{- dataframe with resampled size compositions}

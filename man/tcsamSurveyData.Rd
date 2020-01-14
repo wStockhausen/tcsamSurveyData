@@ -3,7 +3,6 @@
 \docType{package}
 \name{tcsamSurveyData}
 \alias{tcsamSurveyData}
-\alias{tcsamSurveyData-package}
 \title{tcsamSurveyData: a package for processing NMFS and BSFRF survey data}
 \description{
 The tcsamSurveyData package provides functions to process NMFS and

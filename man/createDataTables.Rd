@@ -4,13 +4,25 @@
 \alias{createDataTables}
 \title{Create strata, haul and individual data tables (i.e., dataframes) from strata and crabhaul files}
 \usage{
-createDataTables(species = c("Tanner crab", "Snow crab", "BKC", "RKC"),
-  surveyType = c("NMFS", "BSFRF"), bsfrfTypes = c("SBS", "IDX"),
-  strataTbl = NULL, strataFile = "", strataType = "2015",
-  haulFiles = "", HaulTypes = NULL, minYr = 2016, maxYr = 2017,
-  sex = "ALL", maturity = "ALL", shell_condition = "ALL",
-  minSize = 0, maxSize = Inf, calcMaleMaturity = FALSE,
-  verbosity = 0)
+createDataTables(
+  species = c("Tanner crab", "Snow crab", "BKC", "RKC"),
+  surveyType = c("NMFS", "BSFRF"),
+  bsfrfTypes = c("SBS", "IDX"),
+  strataTbl = NULL,
+  strataFile = "",
+  strataType = "2015",
+  haulFiles = "",
+  HaulTypes = NULL,
+  minYr = 2016,
+  maxYr = 2017,
+  sex = "ALL",
+  maturity = "ALL",
+  shell_condition = "ALL",
+  minSize = 0,
+  maxSize = Inf,
+  calcMaleMaturity = FALSE,
+  verbosity = 0
+)
 }
 \arguments{
 \item{species}{: character string indicating species (i.e., "Tanner crab","Snow crab","BKC", or "RKC")}
@@ -57,7 +69,4 @@ A list with three dataframes. See Details.
 }
 \description{
 Function to create strata, haul and individual data tables (i.e., dataframes) from strata and crabhaul files.
-}
-\details{
-
 }

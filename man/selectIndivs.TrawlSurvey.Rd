@@ -4,13 +4,23 @@
 \alias{selectIndivs.TrawlSurvey}
 \title{Function to extract crab data on individuals w/ selected characteristics from trawl survey data in NMFS csv format}
 \usage{
-selectIndivs.TrawlSurvey(tbl_hauls, tbl = NULL, col.Size = "WIDTH",
+selectIndivs.TrawlSurvey(
+  tbl_hauls,
+  tbl = NULL,
+  col.Size = "WIDTH",
   sex = c("MALE", "FEMALE", "ALL", "MISSING", "HERMAPHRODITE"),
   shell_condition = c("NEW_SHELL", "OLD_SHELL", "ALL"),
-  maturity = c("IMMATURE", "MATURE", "ALL"), calcMaleMaturity = FALSE,
-  noImmOldShell = TRUE, dropLevels = NULL, minSize = -Inf,
-  maxSize = Inf, export = FALSE, out.csv = "SelectedIndivs.csv",
-  out.dir = NULL, verbosity = 0)
+  maturity = c("IMMATURE", "MATURE", "ALL"),
+  calcMaleMaturity = FALSE,
+  noImmOldShell = TRUE,
+  dropLevels = NULL,
+  minSize = -Inf,
+  maxSize = Inf,
+  export = FALSE,
+  out.csv = "SelectedIndivs.csv",
+  out.dir = NULL,
+  verbosity = 0
+)
 }
 \arguments{
 \item{tbl_hauls}{: hauls table (dataframe) from call to selectHauls.TrawlSurvey(...) [required]}

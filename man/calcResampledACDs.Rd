@@ -4,10 +4,21 @@
 \alias{calcResampledACDs}
 \title{Resample haul data to bootstrap aggregated catch data by year/stratum from AFSC trawl survey data}
 \usage{
-calcResampledACDs(tbl_strata, tbl_hauls = NULL, tbl_indivs = NULL,
-  N = 100, byEW166 = FALSE, byEBS = TRUE, bySex = FALSE,
-  byShellCondition = FALSE, byMaturity = FALSE, minSize = 25,
-  truncate.low = TRUE, truncate.high = FALSE, verbosity = 0)
+calcResampledACDs(
+  tbl_strata,
+  tbl_hauls = NULL,
+  tbl_indivs = NULL,
+  N = 100,
+  byEW166 = FALSE,
+  byEBS = TRUE,
+  bySex = FALSE,
+  byShellCondition = FALSE,
+  byMaturity = FALSE,
+  minSize = 25,
+  truncate.low = TRUE,
+  truncate.high = FALSE,
+  verbosity = 0
+)
 }
 \arguments{
 \item{tbl_strata}{: data frame from call to \code{\link{selectStrata.TrawlSurvey}} [required]}

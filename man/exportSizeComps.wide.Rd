@@ -4,10 +4,16 @@
 \alias{exportSizeComps.wide}
 \title{Export survey size comps dataframe in wide format for the stock assessment.}
 \usage{
-exportSizeComps.wide(dfr, facs = "", var = c("ABUNDANCE", "BIOMASS"),
-  dropLevels = NULL, export = FALSE,
+exportSizeComps.wide(
+  dfr,
+  facs = "",
+  var = c("ABUNDANCE", "BIOMASS"),
+  dropLevels = NULL,
+  export = FALSE,
   out.csv = paste("SurveySizeComps", var[1], "wide.csv", sep = "."),
-  out.dir = NULL, verbosity = 0)
+  out.dir = NULL,
+  verbosity = 0
+)
 }
 \arguments{
 \item{dfr}{- dataframe with survey size comps from call to \code{\link{calcSizeComps.ByStratum}} or  \code{\link{calcSizeComps.EW166}} or  \code{\link{calcSizeComps.EBS}}}

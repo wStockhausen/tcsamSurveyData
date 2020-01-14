@@ -4,8 +4,11 @@
 \alias{plotResampledACDs}
 \title{Plot resampled aggregated catch data}
 \usage{
-plotResampledACDs(dfr, col = c("totBIOMASS", "totABUNDANCE"),
-  scales = "free_y")
+plotResampledACDs(
+  dfr,
+  col = c("totBIOMASS", "totABUNDANCE"),
+  scales = "free_y"
+)
 }
 \arguments{
 \item{dfr}{- dataframe with resampled aggregated catch data}

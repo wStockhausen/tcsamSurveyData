@@ -4,12 +4,21 @@
 \alias{doCalcs_ZCs}
 \title{Function to calculate size compositions from station, haul and individual crab info.}
 \usage{
-doCalcs_ZCs(tbl_strata, tbl_hauls, tbl_indivs, calcByEW166 = TRUE,
-  aggBySex = FALSE, aggByMaturity = FALSE,
-  aggByShellCondition = FALSE, cutpts = seq(from = 0, to = 185, by =
-  5), truncate.low = TRUE, truncate.high = FALSE,
-  recodeOldShellImmature = FALSE, dropLevels = list(SEX = c("MISSING",
-  "HERMAPHRODITIC")), verbosity = 0)
+doCalcs_ZCs(
+  tbl_strata,
+  tbl_hauls,
+  tbl_indivs,
+  calcByEW166 = TRUE,
+  aggBySex = FALSE,
+  aggByMaturity = FALSE,
+  aggByShellCondition = FALSE,
+  cutpts = seq(from = 0, to = 185, by = 5),
+  truncate.low = TRUE,
+  truncate.high = FALSE,
+  recodeOldShellImmature = FALSE,
+  dropLevels = list(SEX = c("MISSING", "HERMAPHRODITIC")),
+  verbosity = 0
+)
 }
 \arguments{
 \item{tbl_strata}{: dataframe with survey strata info (output from \code{\link{selectStrata.TrawlSurvey}})}

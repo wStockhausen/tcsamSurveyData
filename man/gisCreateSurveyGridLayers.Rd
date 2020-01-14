@@ -4,9 +4,12 @@
 \alias{gisCreateSurveyGridLayers}
 \title{Create the polygon and point geometry tmap layers from polygon and point shapefiles for a survey grid}
 \usage{
-gisCreateSurveyGridLayers(gisPath = NULL, shapeFiles = list(grid =
-  NULL, stations = NULL), strCRS = wtsGIS::getCRS("WGS84"),
-  as.sf = TRUE)
+gisCreateSurveyGridLayers(
+  gisPath = NULL,
+  shapeFiles = list(grid = NULL, stations = NULL),
+  strCRS = wtsGIS::getCRS("WGS84"),
+  as.sf = TRUE
+)
 }
 \arguments{
 \item{gisPath}{- path to common toplevel folder for files}

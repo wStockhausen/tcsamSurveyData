@@ -4,10 +4,16 @@
 \alias{extractSizeComps.fromCPUEbyStation}
 \title{Extract size compositions from size-specific CPUE data by station}
 \usage{
-extractSizeComps.fromCPUEbyStation(tbl_cpue = NULL, cutpts = seq(from =
-  25, to = 185, by = 5), truncate.low = TRUE, truncate.high = FALSE,
-  export = FALSE, out.csv = "SurveySizeComps.CPUE.ByStratum.csv",
-  out.dir = NULL, verbosity = 0)
+extractSizeComps.fromCPUEbyStation(
+  tbl_cpue = NULL,
+  cutpts = seq(from = 25, to = 185, by = 5),
+  truncate.low = TRUE,
+  truncate.high = FALSE,
+  export = FALSE,
+  out.csv = "SurveySizeComps.CPUE.ByStratum.csv",
+  out.dir = NULL,
+  verbosity = 0
+)
 }
 \arguments{
 \item{tbl_cpue}{: data frame from call to \code{\link{calcCPUE.ByStation}} or filename for csv file}

@@ -4,11 +4,19 @@
 \alias{doCalcs_SSs}
 \title{Function to calculate sample sizes at various levels of spatial aggregation from station, haul and individual crab info.}
 \usage{
-doCalcs_SSs(tbl_strata, tbl_hauls, tbl_indivs,
-  averageHaulsByStation = TRUE, aggBySex = FALSE,
-  aggByMaturity = FALSE, aggByShellCondition = FALSE,
+doCalcs_SSs(
+  tbl_strata,
+  tbl_hauls,
+  tbl_indivs,
+  averageHaulsByStation = TRUE,
+  aggBySex = FALSE,
+  aggByMaturity = FALSE,
+  aggByShellCondition = FALSE,
   dropLevels = list(SEX = c("MISSING", "HERMAPHRODITIC")),
-  colName = "numIndivs", totVal = 200, verbosity = verbosity)
+  colName = "numIndivs",
+  totVal = 200,
+  verbosity = verbosity
+)
 }
 \arguments{
 \item{tbl_strata}{- dataframe with survey strata info (output from \code{\link{selectStrata.TrawlSurvey}})}

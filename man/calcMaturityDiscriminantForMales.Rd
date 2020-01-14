@@ -4,8 +4,13 @@
 \alias{calcMaturityDiscriminantForMales}
 \title{Calculate a discriminant value on CH/CW to classify immature vs mature males}
 \usage{
-calcMaturityDiscriminantForMales(dfr, col = 1, min = 0,
-  max = max(dfr[[col]], na.rm = TRUE), binwidth = 0.005)
+calcMaturityDiscriminantForMales(
+  dfr,
+  col = 1,
+  min = 0,
+  max = max(dfr[[col]], na.rm = TRUE),
+  binwidth = 0.005
+)
 }
 \arguments{
 \item{dfr}{- dataframe with data to analyse for  discriminant}

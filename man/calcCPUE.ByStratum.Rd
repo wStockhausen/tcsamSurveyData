@@ -4,9 +4,14 @@
 \alias{calcCPUE.ByStratum}
 \title{Calculate average cpue, numbers and biomass by stratum from AFSC trawl survey data.}
 \usage{
-calcCPUE.ByStratum(tbl_strata, tbl_cpue = NULL, export = FALSE,
-  out.csv = "SurveyCPUE.ByStratum.csv", out.dir = NULL,
-  verbosity = 0)
+calcCPUE.ByStratum(
+  tbl_strata,
+  tbl_cpue = NULL,
+  export = FALSE,
+  out.csv = "SurveyCPUE.ByStratum.csv",
+  out.dir = NULL,
+  verbosity = 0
+)
 }
 \arguments{
 \item{tbl_strata}{: data frame w/ stations/strata from call to selectStrata.TrawlSurvey(...)}

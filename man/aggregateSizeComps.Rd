@@ -4,10 +4,16 @@
 \alias{aggregateSizeComps}
 \title{Aggregate size comps from survey data over factors}
 \usage{
-aggregateSizeComps(zcs, facs = "", dropLevels = NULL,
-  var = c("ABUNDANCE", "BIOMASS"), export = FALSE,
+aggregateSizeComps(
+  zcs,
+  facs = "",
+  dropLevels = NULL,
+  var = c("ABUNDANCE", "BIOMASS"),
+  export = FALSE,
   out.csv = paste("SurveyACD", var[1], "csv", sep = "."),
-  out.dir = NULL, verbosity = 0)
+  out.dir = NULL,
+  verbosity = 0
+)
 }
 \arguments{
 \item{zcs}{- dataframe from call to one of the calcSizeComps... functions}

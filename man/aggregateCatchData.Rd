@@ -4,10 +4,16 @@
 \alias{aggregateCatchData}
 \title{Export aggregated catch data to stock assessment format}
 \usage{
-aggregateCatchData(tbl, facs = "", dropLevels = NULL,
-  var = c("ABUNDANCE", "BIOMASS"), export = FALSE,
+aggregateCatchData(
+  tbl,
+  facs = "",
+  dropLevels = NULL,
+  var = c("ABUNDANCE", "BIOMASS"),
+  export = FALSE,
   out.csv = paste("SurveyACD", var[1], "csv", sep = "."),
-  out.dir = NULL, verbosity = 0)
+  out.dir = NULL,
+  verbosity = 0
+)
 }
 \arguments{
 \item{tbl}{- dataframe from call to one of the calcBiomass... functions}

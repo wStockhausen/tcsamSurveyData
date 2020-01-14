@@ -4,11 +4,18 @@
 \alias{getMaturityOgives.Males}
 \title{Function to extract male maturity ogives from a dataframe}
 \usage{
-getMaturityOgives.Males(fn = NULL, tbl_strata = NULL,
-  cutpts = seq(from = 25, to = 185, by = 5), byEBS = TRUE,
-  showPlot = TRUE, export = FALSE,
-  out.csv = "MaturityOgives.Males.csv", out.dir = NULL,
-  verbosity = 0, ...)
+getMaturityOgives.Males(
+  fn = NULL,
+  tbl_strata = NULL,
+  cutpts = seq(from = 25, to = 185, by = 5),
+  byEBS = TRUE,
+  showPlot = TRUE,
+  export = FALSE,
+  out.csv = "MaturityOgives.Males.csv",
+  out.dir = NULL,
+  verbosity = 0,
+  ...
+)
 }
 \arguments{
 \item{fn}{- filename for maturity-classified chela height dataset}

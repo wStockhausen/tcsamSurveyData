@@ -4,12 +4,24 @@
 \alias{gisCreateSurveyMap.CPUE}
 \title{Create a tmap-style map of survey cpue as bubbles}
 \usage{
-gisCreateSurveyMap.CPUE(basemap, cpue, raster = NULL, cpueCol = "CPUE",
-  cpueColor = "blue", cpueAlpha = 0.6, maxCPUE = NULL,
-  cpueLabel = "CPUE", cpueLegend = TRUE, rasterCol = "z",
-  rasterPalette = NULL, rasterAlpha = 0.8, rasterLabel = "",
-  rasterBreaks = NULL, rasterLegend = TRUE,
-  panelLabel = "Survey CPUE")
+gisCreateSurveyMap.CPUE(
+  basemap,
+  cpue,
+  raster = NULL,
+  cpueCol = "CPUE",
+  cpueColor = "blue",
+  cpueAlpha = 0.6,
+  maxCPUE = NULL,
+  cpueLabel = "CPUE",
+  cpueLegend = TRUE,
+  rasterCol = "z",
+  rasterPalette = NULL,
+  rasterAlpha = 0.8,
+  rasterLabel = "",
+  rasterBreaks = NULL,
+  rasterLegend = TRUE,
+  panelLabel = "Survey CPUE"
+)
 }
 \arguments{
 \item{basemap}{- tmap-style basemap}

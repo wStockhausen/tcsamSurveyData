@@ -4,8 +4,14 @@
 \alias{calcAB.EBS}
 \title{Calculate total abundance and biomass from a by-stratum data frame or csv file.}
 \usage{
-calcAB.EBS(tbl = NULL, in.csv = NULL, export = TRUE,
-  out.csv = "SurveyBiomass.EBS.csv", out.dir = NULL, verbosity = 0)
+calcAB.EBS(
+  tbl = NULL,
+  in.csv = NULL,
+  export = TRUE,
+  out.csv = "SurveyBiomass.EBS.csv",
+  out.dir = NULL,
+  verbosity = 0
+)
 }
 \arguments{
 \item{tbl}{: data frame with abundance/biomass by stratum info from call to \code{\link{calcAB.ByStratum} or \link{calcAB.EW166}}, or a csv file from such a call, or NULL}

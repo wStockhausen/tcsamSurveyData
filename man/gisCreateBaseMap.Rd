@@ -4,13 +4,21 @@
 \alias{gisCreateBaseMap}
 \title{Create a basemap layer for maps based on the tmap package}
 \usage{
-gisCreateBaseMap(layer.land = NULL, layer.bathym = NULL,
-  layers.survey = NULL, gisPath = NULL, shapeFile.bathymetry = NULL,
-  shapeFile.land = NULL, shapeFiles.survey = list(grid = NULL, stations
-  = NULL), strCRS = wtsGIS::getCRS("WGS84"),
-  boundingbox = list(bottomleft = list(lon = -179, lat = 54), topright =
-  list(lon = -157, lat = 62.5)), colors.bathym = "darkblue",
-  points.size = 0.01, as.sf = TRUE)
+gisCreateBaseMap(
+  layer.land = NULL,
+  layer.bathym = NULL,
+  layers.survey = NULL,
+  gisPath = NULL,
+  shapeFile.bathymetry = NULL,
+  shapeFile.land = NULL,
+  shapeFiles.survey = list(grid = NULL, stations = NULL),
+  strCRS = wtsGIS::getCRS("WGS84"),
+  boundingbox = list(bottomleft = list(lon = -179, lat = 54), topright = list(lon =
+    -157, lat = 62.5)),
+  colors.bathym = "darkblue",
+  points.size = 0.01,
+  as.sf = TRUE
+)
 }
 \arguments{
 \item{layer.land}{- a tmap layer representing land (or NULL)}

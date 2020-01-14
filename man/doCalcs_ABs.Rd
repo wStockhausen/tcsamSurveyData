@@ -4,12 +4,22 @@
 \alias{doCalcs_ABs}
 \title{Function to calculate CPUE, abundance and biomass at various levels of spatial aggregation from station, haul and individual crab info.}
 \usage{
-doCalcs_ABs(tbl_strata, tbl_hauls, tbl_indivs,
-  averageHaulsByStation = TRUE, calcByEW166 = TRUE, aggBySex = FALSE,
-  aggByMaturity = FALSE, aggByShellCondition = FALSE,
-  aggBySize = FALSE, cutpts = seq(from = 0, to = 185, by = 5),
-  truncate.low = TRUE, truncate.high = FALSE, dropLevels = list(SEX =
-  c("MISSING", "HERMAPHRODITIC")), verbosity = 0)
+doCalcs_ABs(
+  tbl_strata,
+  tbl_hauls,
+  tbl_indivs,
+  averageHaulsByStation = TRUE,
+  calcByEW166 = TRUE,
+  aggBySex = FALSE,
+  aggByMaturity = FALSE,
+  aggByShellCondition = FALSE,
+  aggBySize = FALSE,
+  cutpts = seq(from = 0, to = 185, by = 5),
+  truncate.low = TRUE,
+  truncate.high = FALSE,
+  dropLevels = list(SEX = c("MISSING", "HERMAPHRODITIC")),
+  verbosity = 0
+)
 }
 \arguments{
 \item{tbl_strata}{- dataframe with survey strata info (output from \code{\link{selectStrata.TrawlSurvey}})}

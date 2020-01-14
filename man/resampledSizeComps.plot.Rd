@@ -4,9 +4,12 @@
 \alias{resampledSizeComps.plot}
 \title{Plot resampled size compositions}
 \usage{
-resampledSizeComps.plot(dfr, scales = "free_y", dropLevels = list(SEX =
-  c("HERMAPHRODITE", "HERMAPHRODITIC", "UNDETERMINED")),
-  convertImmOS = TRUE)
+resampledSizeComps.plot(
+  dfr,
+  scales = "free_y",
+  dropLevels = list(SEX = c("HERMAPHRODITE", "HERMAPHRODITIC", "UNDETERMINED")),
+  convertImmOS = TRUE
+)
 }
 \arguments{
 \item{dfr}{- dataframe with resampled size compositions}

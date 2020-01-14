@@ -4,11 +4,22 @@
 \alias{calcCPUE.ByHaul}
 \title{Calculate cpue by survey haul and other factors from station, haul and individual crab info}
 \usage{
-calcCPUE.ByHaul(tbl_hauls, tbl_indivs = NULL, bySex = FALSE,
-  byShellCondition = FALSE, byMaturity = FALSE, bySize = FALSE,
-  cutpts = seq(from = 25, to = 185, by = 5), truncate.low = TRUE,
-  truncate.high = FALSE, checkSFs = FALSE, export = FALSE,
-  out.csv = "cpue.ByHaul.csv", out.dir = NULL, verbosity = 0)
+calcCPUE.ByHaul(
+  tbl_hauls,
+  tbl_indivs = NULL,
+  bySex = FALSE,
+  byShellCondition = FALSE,
+  byMaturity = FALSE,
+  bySize = FALSE,
+  cutpts = seq(from = 25, to = 185, by = 5),
+  truncate.low = TRUE,
+  truncate.high = FALSE,
+  checkSFs = FALSE,
+  export = FALSE,
+  out.csv = "cpue.ByHaul.csv",
+  out.dir = NULL,
+  verbosity = 0
+)
 }
 \arguments{
 \item{tbl_hauls}{: dataframe from call to \code{\link{selectHauls.TrawlSurvey}} [required]}

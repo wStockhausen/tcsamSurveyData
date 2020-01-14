@@ -4,12 +4,19 @@
 \alias{createInputFile.SurveyData}
 \title{Creates a survey input file for TCSAM02}
 \usage{
-createInputFile.SurveyData(fn, survey_name = "NMFS_trawl_survey",
-  acdInfo = list(abundance = list(fitType = "BY_XM", likeType =
-  "LOGNORMAL", likeWgt = 0), biomass = list(fitType = "BY_X_MAT_ONLY",
-  likeType = "LOGNORMAL", likeWgt = 1)), zcsInfo = list(fitType =
-  "BY_XME", likeType = "MULTINOMIAL", likeWgt = 1), cutpts, dfrACD, dfrZCs,
-  dfrSSs, ssCol = "numIndivs", verbose = FALSE)
+createInputFile.SurveyData(
+  fn,
+  survey_name = "NMFS_trawl_survey",
+  acdInfo = list(abundance = list(fitType = "BY_XM", likeType = "LOGNORMAL", likeWgt =
+    0), biomass = list(fitType = "BY_X_MAT_ONLY", likeType = "LOGNORMAL", likeWgt = 1)),
+  zcsInfo = list(fitType = "BY_XME", likeType = "MULTINOMIAL", likeWgt = 1),
+  cutpts,
+  dfrACD,
+  dfrZCs,
+  dfrSSs,
+  ssCol = "numIndivs",
+  verbose = FALSE
+)
 }
 \arguments{
 \item{fn}{- output file name}

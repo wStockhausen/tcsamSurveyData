@@ -4,11 +4,24 @@
 \alias{plotACD}
 \title{Plot time series of aggregated catch data}
 \usage{
-plotACD(acd, type = c("abundance", "biomass"), factors = NULL,
-  faceting = NULL, facetsScale = "fixed", facetsDrop = FALSE,
-  xlab = "year", ylab = NULL, ci = 0.8, ci.type = "normal",
-  xlims = NULL, ylims = NULL, ggtheme = theme_grey(),
-  jitter = TRUE, showPlots = TRUE, verbosity = 0)
+plotACD(
+  acd,
+  type = c("abundance", "biomass"),
+  factors = NULL,
+  faceting = NULL,
+  facetsScale = "fixed",
+  facetsDrop = FALSE,
+  xlab = "year",
+  ylab = NULL,
+  ci = 0.8,
+  ci.type = "normal",
+  xlims = NULL,
+  ylims = NULL,
+  ggtheme = theme_grey(),
+  jitter = TRUE,
+  showPlots = TRUE,
+  verbosity = 0
+)
 }
 \arguments{
 \item{acd}{- dataframe with aggregated catch data (e.g., abundance or biomass)}
