@@ -20,8 +20,7 @@
 #' @param maxSize       : max size (CW) to include
 #' @param verbosity : integer flag indicating level of printed output (0=off,1=minimal,2=full)
 #'
-#'@details
-#'@return   a list with the following elements: \cr
+#'@details Returns a list with the following elements: \cr
 #'\itemize{
 #' \item {dfrStrataData} {- dataframe with stratum information; see \code{\link{selectStrata.TrawlSurvey}}}
 #' \item {dfrHaulData}   {- dataframe with haul information; see \code{\link{selectHauls.TrawlSurvey}}}

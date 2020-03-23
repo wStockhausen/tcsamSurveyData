@@ -28,7 +28,7 @@ calcEffectiveN.SurveyData.NMFS<-function(
                      clean=TRUE,
                      verbosity=0
                      ){
-  require(rmarkdown);
+  requireNamespace(rmarkdown);
   render(system.file("rmd/calcEffectiveN.SurveyData.NMFS.Rmd",package="tcsamSurveyData"),
          params=list(loadRZCs=loadRZCs,
                      outDir=outDir,

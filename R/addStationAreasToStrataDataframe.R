@@ -23,10 +23,11 @@
 #'
 #' @return a dataframe with strata/stations info + (effective) area by individual station.
 #'
+#' @export
 #'
 addStationAreasToStrataDataframe<-function(dfrSD){
   #----get the survey grid layers (grid and stations)
-  surveyGridLayers <- tcsamSurveyData::gisCreateSurveyGridLayers();
+  surveyGridLayers <- tcsamSurveyData::gisGetSurveyGridLayers();
   #merge stations from dfrSD with GIS polygon information
   dfrUniqStns<-unique(dfrSD[,c("YEAR","STRATUM","GIS_STATION")]);
   polysUniqStns <- wtsGIS::mergeDataframeWithLayer(dfrUniqStns,
@@ -36,7 +37,7 @@ addStationAreasToStrataDataframe<-function(dfrSD){
 
   #----calculate the area of each stratum by summing over the area associated with each station
   #-----NOTE: STATION_AREA, STRATUM_AREA_BYSTATION will be in square nautical miles
-  tmp1<-polysUniqStns[,c("YEAR","STRATUM","STATION_ID","AREA"),drop=TRUE];#keep some columns, drop geometry
+  tmp1<-polysUniqStns[,c("YEAR","STRATUM","GIS_STATION","AREA"),drop=TRUE];#keep some columns, drop geometry
   tmp1$STATION_AREA <- tmp1$AREA/(1852*1852);#convert to sq. nm.
   qry<-"select YEAR,STRATUM,
         sum(STATION_AREA) as STRATUM_AREA_BYSTATION
@@ -46,7 +47,7 @@ addStationAreasToStrataDataframe<-function(dfrSD){
   tmp2<-sqldf::sqldf(qry);
   qry<-"select t1.YEAR,
                t1.STRATUM,
-               t1.STATION_ID,
+               t1.GIS_STATION,
                t1.STATION_AREA,
                t2.STRATUM_AREA_BYSTATION
         from tmp1 as t1, tmp2 as t2
@@ -59,7 +60,7 @@ addStationAreasToStrataDataframe<-function(dfrSD){
           s.GIS_STATION,s.STATION_LONGITUDE,s.STATION_LATITUDE,
           t.STATION_AREA as STATION_AREA,t.STRATUM_AREA_BYSTATION as STRATUM_AREA_BYSTATION
         from dfrSD as s, tmp3 as t
-        where s.YEAR=t.YEAR and s.GIS_STATION=t.STATION_ID;";
+        where s.YEAR=t.YEAR and s.GIS_STATION=t.GIS_STATION;";
   dfr<-sqldf::sqldf(qry);
 
   return(dfr)

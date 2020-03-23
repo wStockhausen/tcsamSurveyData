@@ -121,10 +121,10 @@ selectStrata.TrawlSurvey<-function(tbl=NULL,
             t.SURVEY_YEAR,s.STRATUM,t.STATION_ID;"
 
     if (verbosity>1) cat("\nquery is:\n",qry,"\n");
-    tbl<-sqldf::sqldf(qry)
+    tbl1<-sqldf::sqldf(qry)
 
     #--add STATION_AREA to table
-    tbl<-addStationAreasToStrataDataframe(tbl);
+    tbl2<-addStationAreasToStrataDataframe(tbl1);
 
     if (export){
         if (!is.null(out.dir)){
@@ -137,11 +137,11 @@ selectStrata.TrawlSurvey<-function(tbl=NULL,
             }
             out.csv<-file.path(out.dir,out.csv)
         }
-        write.csv(tbl,out.csv,na='',row.names=FALSE);
+        write.csv(tbl2,out.csv,na='',row.names=FALSE);
     }
 
     if (verbosity>1) cat("finished selectStrata.TrawlSurvey.\n");
-    return(tbl)
+    return(tbl2)
 }
 
 #tbl.BTC.stns<-selectStations.TrawlSurvey(species='BTC')

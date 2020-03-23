@@ -58,15 +58,16 @@ createDataTables(
 \item{verbosity}{: integer flag indicating level of printed output (0=off,1=minimal,2=full)}
 }
 \value{
-a list with the following elements: \cr
+A list with three dataframes. See Details.
+}
+\description{
+Function to create strata, haul and individual data tables (i.e., dataframes) from strata and crabhaul files.
+}
+\details{
+Returns a list with the following elements: \cr
 \itemize{
 \item {dfrStrataData} {- dataframe with stratum information; see \code{\link{selectStrata.TrawlSurvey}}}
 \item {dfrHaulData}   {- dataframe with haul information; see \code{\link{selectHauls.TrawlSurvey}}}
 \item {dfrIndivData}  {- dataframe with individual crab data; see \code{\link{selectIndivs.TrawlSurvey}}}
 }
-
-A list with three dataframes. See Details.
-}
-\description{
-Function to create strata, haul and individual data tables (i.e., dataframes) from strata and crabhaul files.
 }

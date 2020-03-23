@@ -5,3 +5,4 @@
 ^.*\.png$
 knitr
 data-raw
+^testing$
