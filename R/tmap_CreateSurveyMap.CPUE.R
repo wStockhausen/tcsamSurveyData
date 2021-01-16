@@ -1,11 +1,11 @@
 #'
-#' @title Create a tmap-style map of survey cpue as bubbles
+#' @title Create a \pkg{tmap}-style map of survey cpue as bubbles
 #'
-#' @description Function to create a tmap-style map of survey cpue as bubbles.
+#' @description Function to create a \pkg{tmap}-style map of survey cpue as bubbles.
 #'
-#' @details Uses the tmap package.
+#' @details Uses the \pkg{tmap} package.
 #'
-#' @param basemap - tmap-style basemap
+#' @param basemap - \pkg{tmap}-style basemap
 #' @param cpue - spatial dataframe with cpue data
 #' @param raster - raster object with environmental data
 #' @param cpueCol - name of column in cpue dataframe to plot as bubbles
@@ -22,27 +22,29 @@
 #' @param rasterLegend - TRUE/FALSE to show raster scale
 #' @param panelLabel - label for map panel
 #'
-#' @return tmap map object
+#' @return \pkg{tmap}-style map object
+#'
+#' @import tmap
 #'
 #' @export
 #'
-gisCreateSurveyMap.CPUE<-function(basemap,
-                                  cpue,
-                                  raster=NULL,
-                                  cpueCol="CPUE",
-                                  cpueColor="blue",
-                                  cpueAlpha=0.6,
-                                  maxCPUE=NULL,
-                                  cpueLabel="CPUE",
-                                  cpueLegend=TRUE,
-                                  rasterCol="z",
-                                  rasterPalette=NULL,
-                                  rasterAlpha=0.8,
-                                  rasterLabel="",
-                                  rasterBreaks=NULL,
-                                  rasterLegend=TRUE,
-                                  panelLabel="Survey CPUE"
-                                  ){
+tmap_CreateSurveyMap.CPUE<-function(basemap,
+                                    cpue,
+                                    raster=NULL,
+                                    cpueCol="CPUE",
+                                    cpueColor="blue",
+                                    cpueAlpha=0.6,
+                                    maxCPUE=NULL,
+                                    cpueLabel="CPUE",
+                                    cpueLegend=TRUE,
+                                    rasterCol="z",
+                                    rasterPalette=NULL,
+                                    rasterAlpha=0.8,
+                                    rasterLabel="",
+                                    rasterBreaks=NULL,
+                                    rasterLegend=TRUE,
+                                    panelLabel="Survey CPUE"
+                                    ){
     map<-basemap;
 
     if (!is.null(raster))

@@ -9,8 +9,8 @@ resampledSizeComps.calcEffN(
   byFacs = "",
   nDefault = 200,
   nStations = 375,
-  dropLevels = list(SEX = c("HERMAPHRODITE", "HERMAPHRODITIC", "UNDETERMINED"), MATURITY
-    = "UNDETERMINED"),
+  dropLevels = list(SEX = c("HERMAPHRODITE", "HERMAPHRODITIC", "UNDETERMINED"),
+    MATURITY = "UNDETERMINED"),
   convertImmOS = TRUE
 )
 }

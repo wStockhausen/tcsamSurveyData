@@ -1,53 +1,40 @@
 #'
-#' @title Create the polygon and point geometry tmap layers from polygon and point shapefiles for a survey grid
+#' @title Create \code{sf} dataframes for a survey grid from polygon and point shapefiles
 #'
-#' @description This function reads shapefile and creates polygon and point tmap layers for a survey grid.
+#' @description This function reads shapefile and creates \pkg{sf} polygon and point dataframes for a survey grid.
 #'
 #' @param gisPath - path to common toplevel folder for files
-#' @param shapeFiles - a list of shapefiles to read ("grid" and "stations"), or NULL to use defaults for the NMFS EBS survey
-#' @param strCRS - string describing the final coordinate reference system (CRS) (or NULL to use default)
-#' @param as.sf - flag to create grid layers using simple features (sf) datasets (TRUE) or sp datasets (FALSE)
+#' @param shapeFiles - a list of shapefiles to read ("grid" and "stations", either can be NULL to skip creation of that layer)
+#' @param final_crs - a \code{sf::crs} object to be used as the final coordinate reference system for the spatial layers
 #'
-#' @return a 2-element list with the grid and stations map layers consistent with the tmap package
+#' @return a 2-element list with the grid and stations spatial layers as \pkg{sf} dataframes.
 #'
-#' @details Uses \code{tmaptools::read_shape()} and \code{sp::spTransform()}.
+#' @details None.
+#'
+#' @importFrom wtsGIS get_crs
+#' @importFrom wtsGIS readShapefile
+#' @importFrom wtsGIS transformCRS
 #'
 #' @export
 #'
 gisCreateSurveyGridLayers<-function(gisPath=NULL,
                                     shapeFiles=list(grid    =NULL,
                                                     stations=NULL),
-                                    strCRS=wtsGIS::getCRS("WGS84"),
-                                    as.sf=TRUE
+                                    final_crs=wtsGIS::get_crs("WGS84")
                                     ){
   stns.polys<-NULL;
   stns.pnts <-NULL;
 
-  if (!is.null(shapeFiles)){
-    if (!is.null(shapeFiles$grid)){
-        stns.polys<-tmaptools::read_shape(
-                  file=file.path(gisPath,shapeFiles$grid),
-                  as.sf=as.sf,
-                  stringsAsFactors=FALSE)
-        stns.polys<-stns.polys[!is.na(stns.polys$STATION_ID),];
-        stns.polys<-sp::spTransform(stns.polys,strCRS);#convert input CRS to strCRS
-    } else {
-      stns.polys<-wtsGIS::getPackagedLayer(layerName="EBS_SurveyBlocks",as.sf=as.sf);
-    }
+  if (!is.null(shapeFiles$grid)){
+    stns.polys<-wtsGIS::readShapefile(file.path(gisPath,shapeFiles$grid));
+    stns.polys<-stns.polys[!is.na(stns.polys$STATION_ID),];
+    stns.polys<-wtsGIS::transformCRS(stns.polys,final_crs);
+  }
 
-    if (!is.null(shapeFiles$stations)){
-        stns.pnts<-tmaptools::read_shape(
-                  file=file.path(gisPath,shapeFiles$stations),
-                  as.sf=as.sf,
-                  stringsAsFactors=FALSE)
-        stns.pnts<-stns.pnts[!is.na(stns.pnts$ID),];
-        stns.pnts<-sp::spTransform(stns.pnts,strCRS);#convert input CRS to strCRS
-    } else {
-      stns.pnts<-wtsGIS::getPackagedLayer(layerName="EBS_SurveyStations",as.sf=as.sf);
-    }
-  } else {
-      stns.polys<-wtsGIS::getPackagedLayer(layerName="EBS_SurveyBlocks",as.sf=as.sf);
-      stns.pnts<-wtsGIS::getPackagedLayer(layerName="EBS_SurveyStations",as.sf=as.sf);
+  if (!is.null(shapeFiles$stations)){
+    stns.pnts<-wtsGIS::readShapefile(file.path(gisPath,shapeFiles$stations));
+    stns.pnts<-stns.pnts[!is.na(stns.pnts$ID),];
+    stns.pnts<-wtsGIS::transformCRS(stns.pnts,final_crs);
   }
 
   return(list(grid=stns.polys,stations=stns.pnts))

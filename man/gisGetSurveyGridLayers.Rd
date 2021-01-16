@@ -2,15 +2,16 @@
 % Please edit documentation in R/gisGetSurveyGridLayers.R
 \name{gisGetSurveyGridLayers}
 \alias{gisGetSurveyGridLayers}
-\title{Retrieve the polygon and point geometry tmap layers from polygon and point shapefiles for a survey grid}
+\title{Retrieve the EBS bottom trawl survey grid as pre-packaged polygon and point \pkg{sf} dataframes}
 \usage{
 gisGetSurveyGridLayers()
 }
 \value{
-a 2-element list with the grid and stations map layers consistent with the tmap package
+a 2-element list with the EBS trawl survey grid and station information as \pkg{sf} dataframes.
 }
 \description{
-This function retrieves the polygon and point tmap layers for a survey grid.
+This function retrieves pre-packaged \pkg{sf} polygon and point dataframes for the
+EBS bottom trawl survey.
 }
 \details{
 None.

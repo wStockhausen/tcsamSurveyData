@@ -1,9 +1,10 @@
 #'
-#' @title Retrieve the polygon and point geometry tmap layers from polygon and point shapefiles for a survey grid
+#' @title Retrieve the EBS bottom trawl survey grid as pre-packaged polygon and point \pkg{sf} dataframes
 #'
-#' @description This function retrieves the polygon and point tmap layers for a survey grid.
+#' @description This function retrieves pre-packaged \pkg{sf} polygon and point dataframes for the
+#' EBS bottom trawl survey.
 #'
-#' @return a 2-element list with the grid and stations map layers consistent with the tmap package
+#' @return a 2-element list with the EBS trawl survey grid and station information as \pkg{sf} dataframes.
 #'
 #' @details None.
 #'

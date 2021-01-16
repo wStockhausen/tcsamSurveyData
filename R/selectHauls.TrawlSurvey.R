@@ -23,6 +23,7 @@
 #'
 #'@details If neither tbl or in.csv is given, the user will be prompted for a csv file via a file dialog box
 #'
+#' @importFrom readr read_csv
 #' @importFrom sqldf sqldf
 #' @importFrom wtsUtilities selectFile
 #'
@@ -58,9 +59,15 @@ selectHauls.TrawlSurvey<-function(tbl_strata,
         } else {
             in.csv<-tbl;#tbl is a filename
         }
-        if (verbosity>1) cat("Reading AFSC crab trawl survey csv file for hauls info.\n",sep='')
-        tbl<-read.csv(in.csv,stringsAsFactors=FALSE);
+        if (verbosity>1) cat("Reading AFSC crab trawl survey csv file for hauls info, skipping first 5 lines.\n",sep='')
+        tbl<-readr::read_csv(in.csv,skip=5,guess_max=Inf);
         if (verbosity>1) cat("Done reading input csv file.\n")
+    }
+
+    #----check for possibly changed column names
+    if (!('AREA_SWEPT_VARIABLE' %in% names(tbl))){
+      idx = which(names(tbl)=="AREA_SWEPT");
+      names(tbl)[idx] = 'AREA_SWEPT_VARIABLE';
     }
 
     if (is.null(out.dir)) {
@@ -80,7 +87,11 @@ selectHauls.TrawlSurvey<-function(tbl_strata,
       stop(msg);
     }
 
-    yrs<-tbl$START_DATE%%10000;
+    if ("AKFIN_SURVEY_YEAR" %in% names(tbl)){
+      yrs<-tbl$AKFIN_SURVEY_YEAR;
+    } else {
+      yrs = as.numeric(tbl$START_DATE) %% 10000;
+    }
     tbl$YEAR<-yrs;
     uniq.yrs<-unique(yrs);
     if (verbosity>1) cat("survey years = {",paste(uniq.yrs,collapse=','),"}\n",sep='');

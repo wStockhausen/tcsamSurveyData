@@ -2,30 +2,27 @@
 % Please edit documentation in R/gisCreateSurveyGridLayers.R
 \name{gisCreateSurveyGridLayers}
 \alias{gisCreateSurveyGridLayers}
-\title{Create the polygon and point geometry tmap layers from polygon and point shapefiles for a survey grid}
+\title{Create \code{sf} dataframes for a survey grid from polygon and point shapefiles}
 \usage{
 gisCreateSurveyGridLayers(
   gisPath = NULL,
   shapeFiles = list(grid = NULL, stations = NULL),
-  strCRS = wtsGIS::getCRS("WGS84"),
-  as.sf = TRUE
+  final_crs = wtsGIS::get_crs("WGS84")
 )
 }
 \arguments{
 \item{gisPath}{- path to common toplevel folder for files}
 
-\item{shapeFiles}{- a list of shapefiles to read ("grid" and "stations"), or NULL to use defaults for the NMFS EBS survey}
+\item{shapeFiles}{- a list of shapefiles to read ("grid" and "stations", either can be NULL to skip creation of that layer)}
 
-\item{strCRS}{- string describing the final coordinate reference system (CRS) (or NULL to use default)}
-
-\item{as.sf}{- flag to create grid layers using simple features (sf) datasets (TRUE) or sp datasets (FALSE)}
+\item{final_crs}{- a \code{sf::crs} object to be used as the final coordinate reference system for the spatial layers}
 }
 \value{
-a 2-element list with the grid and stations map layers consistent with the tmap package
+a 2-element list with the grid and stations spatial layers as \pkg{sf} dataframes.
 }
 \description{
-This function reads shapefile and creates polygon and point tmap layers for a survey grid.
+This function reads shapefile and creates \pkg{sf} polygon and point dataframes for a survey grid.
 }
 \details{
-Uses \code{tmaptools::read_shape()} and \code{sp::spTransform()}.
+None.
 }
