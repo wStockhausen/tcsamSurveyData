@@ -6,3 +6,4 @@
 knitr
 data-raw
 ^testing$
+createExtDataObjects.R

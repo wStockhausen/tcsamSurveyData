@@ -11,6 +11,6 @@
 #' @export
 #'
 gisGetSurveyGridLayers<-function(){
-  load(system.file("extdata/surveyGridLayers.RData",package="tcsamSurveyData"));
-  return(surveyGridLayers);
+  obj = wtsUtilities::getObj(system.file("extdata/surveyGridLayers.RData",package="tcsamSurveyData"));
+  return(obj);
 }

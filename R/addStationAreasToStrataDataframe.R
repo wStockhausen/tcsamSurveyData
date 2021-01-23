@@ -23,20 +23,27 @@
 #'
 #' @return a dataframe with strata/stations info + (effective) area by individual station.
 #'
+#' @importFrom dplyr transmute
+#' @import magrittr
+#' @import wtsGIS
+#'
 #' @export
 #'
 addStationAreasToStrataDataframe<-function(dfrSD){
   #----get the survey grid layers (grid and stations)
-  surveyGridLayers <- tcsamSurveyData::gisGetSurveyGridLayers();
+  grid = tcsamSurveyData::gisGetSurveyGridLayers()$grid %>%
+           dplyr::transmute(AREA=TOTAL_AREA,STATION_ID=STATION_ID);
   #merge stations from dfrSD with GIS polygon information
   dfrUniqStns<-unique(dfrSD[,c("YEAR","STRATUM","GIS_STATION")]);
   polysUniqStns <- wtsGIS::mergeDataframeWithLayer(dfrUniqStns,
-                                                   surveyGridLayers$grid,
+                                                   grid,
                                                    dataID="GIS_STATION",
                                                    geomsID="STATION_ID");
 
   #----calculate the area of each stratum by summing over the area associated with each station
   #-----NOTE: STATION_AREA, STRATUM_AREA_BYSTATION will be in square nautical miles
+  if ("TOTAL_AREA" %in% names(polysUniqStns)) polysUniqStns[["AREA"]] = polysUniqStns[["TOTAL_AREA"]];
+  if ("TOTAL_AREA" %in% names(polysUniqStns)) polysUniqStns[["AREA"]] = polysUniqStns[["TOTAL_AREA"]];
   tmp1<-polysUniqStns[,c("YEAR","STRATUM","GIS_STATION","AREA"),drop=TRUE];#keep some columns, drop geometry
   tmp1$STATION_AREA <- tmp1$AREA/(1852*1852);#convert to sq. nm.
   qry<-"select YEAR,STRATUM,
