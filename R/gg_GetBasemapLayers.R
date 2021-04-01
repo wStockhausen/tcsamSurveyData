@@ -74,9 +74,12 @@ gg_GetBasemapLayers<-function(sf_land=NULL,
   asp=NULL; #--let ggplot2 work it out
   if (!sf::st_is_longlat(final_crs)) asp = (bbx["ymax"]-bbx["ymin"])/(bbx["xmax"]-bbx["xmin"]);
   #----remove axis titles
-  theme = ggplot2::theme(axis.title.x = ggplot2::element_blank(),
-                         axis.title.y = ggplot2::element_blank(),
+  theme = ggplot2::theme(axis.title.x=ggplot2::element_blank(),
+                         axis.title.y=ggplot2::element_blank(),
+                         axis.text=ggplot2::element_blank(),
                          panel.spacing=grid::unit(0.05,"cm"),
+                         plot.margin=ggplot2::margin(t=0.05,r=0.05,b=0.05,l=0.05,unit="cm"),
+                         legend.margin=ggplot2::margin(t=0.05,r=0.05,b=0.05,l=0.05,unit="cm"),
                          aspect.ratio=asp);
   return(list(bathym=lyr_bathym,
               land=lyr_land,

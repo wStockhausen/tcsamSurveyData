@@ -7,11 +7,17 @@
 gg_MapCPUE(
   dfrCPUE,
   type = c("biomass", "abundance"),
+  column = NULL,
+  maxVal = Inf,
+  label = ifelse(!is.null(column), column, type[1]),
   basemap = gg_GetBasemapLayers(),
   plotAsPolys = TRUE,
-  color_scale = ggplot2::scale_colour_viridis_c(option = "plasma"),
-  fill_scale = ggplot2::scale_fill_viridis_c(option = "plasma"),
-  size_scale = ggplot2::scale_size_area(),
+  plotLand = TRUE,
+  plotBathymetry = TRUE,
+  plotSurveyGrid = TRUE,
+  color_scale = ggplot2::scale_colour_viridis_c(name = label, option = "plasma"),
+  fill_scale = ggplot2::scale_fill_viridis_c(name = label, option = "plasma"),
+  size_scale = ggplot2::scale_size_area(name = label),
   facet_grid = NULL,
   facet_wrap = NULL,
   nrow = NULL,
@@ -24,9 +30,19 @@ gg_MapCPUE(
 
 \item{type}{- string indicating cpue type: "biomass" or "abundance"}
 
+\item{column}{- name of column (if not wgtCPUE or numCPUE, which are identified automatically)}
+
+\item{maxVal}{- max value for scales (values > maxVal will be set to maxVal)}
+
+\item{label}{- label for color/fill/size legends}
+
 \item{basemap}{- \pkg{ggplot2} layers for basemap of plots (see \code{\link{gg_GetBasemapLayers}})}
 
 \item{plotAsPolys}{- flag (T/F) to plot as cpue as colored polygons or as colored, scaled points}
+
+\item{plotLand}{- flag (T/F) to include land in plot}
+
+\item{plotSurveyGrid}{- flag (T/F) to include survey grid in plot}
 
 \item{color_scale}{- \pkg{ggplot2} scale_color object to use for colors}
 
@@ -43,13 +59,16 @@ gg_MapCPUE(
 \item{ncol}{- number of columns for wrapped facets}
 
 \item{scales}{- string indicating how to treat scales among facets}
+
+\item{plotBathym}{- flag (T/F) to include bathymetry in plot}
 }
 \value{
-\pkg{ggplot2} plot object
+\pkg{ggplot2} plot object.
 }
 \description{
-Function to create a \pkg{ggplot2} map of survey cpue-by-haul or by-station
+Function to create a \pkg{ggplot2} map of survey cpue-by-haul or by-station.
 }
 \details{
-None.
+If "column" is NULL, column is set to "wgtCPUE" if \code{type="biomass"}
+and column is set to "numCPUE" if \code{type="abundance"}.
 }
