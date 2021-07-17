@@ -44,12 +44,13 @@ tmap_CreateBasemap<-function(layer.land=NULL,
       surveyLayers<-gisGetSurveyGridLayers();
   }
 
-  if (!is.null(surveyLayers$grid))
+  if (!is.null(surveyLayers$grid)){
       lyr<-wtsGIS::transformCRS(surveyLayers$grid,final.crs);
-      basemap <- basemap + tmap::tm_shape(lyr)+tmap::tm_borders()+
-  if (!is.null(surveyLayers$stations))
+      basemap <- basemap + tmap::tm_shape(lyr)+tmap::tm_borders();
+  }
+  if (!is.null(surveyLayers$stations)){
       lyr<-wtsGIS::transformCRS(surveyLayers$stations,final.crs);
-      basemap <- basemap + tmap::tm_shape(lyr)+tmap::tm_squares(size=points.size);
-
+      basemap <- basemap + tmap::tm_shape(lyr)+tmap::tm_squares(size=points.size,col="black");
+  }
   return(basemap);
 }
