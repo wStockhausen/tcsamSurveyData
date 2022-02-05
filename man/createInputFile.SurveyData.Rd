@@ -8,8 +8,10 @@ createInputFile.SurveyData(
   fn,
   survey_name = "NMFS_trawl_survey",
   acdInfo = list(abundance = list(fitType = "BY_XM", likeType = "LOGNORMAL", likeWgt =
-    0), biomass = list(fitType = "BY_X_MAT_ONLY", likeType = "LOGNORMAL", likeWgt = 1)),
-  zcsInfo = list(fitType = "BY_XME", likeType = "MULTINOMIAL", likeWgt = 1),
+    0, unitsIn = "MILLIONS", unitsOut = "MILLIONS"), biomass = list(fitType = "BY_XM",
+    likeType = "LOGNORMAL", likeWgt = 1), unitsIn = "MILLIONS", unitsOut = "MILLIONS"),
+  zcsInfo = list(fitType = "BY_XM", likeType = "MULTINOMIAL", likeWgt = 1,
+    tail_compression = c(0, 0), unitsIn = "MILLIONS", unitsOut = "MILLIONS"),
   cutpts,
   dfrACD,
   dfrZCs,
@@ -35,13 +37,44 @@ createInputFile.SurveyData(
 
 \item{dfrSSs}{- dataframe with relative sample sizes to use with size comps}
 
-\item{verbose}{- flag to print debugging info}
+\item{ssCol}{- sample size column name in dfrSSs (default="numIndivs")}
 
-\item{colSS}{- sample size column name in dfrSSs (default="numIndivs")}
+\item{verbose}{- flag to print debugging info}
 }
 \description{
-This function that creates a survey input file for TCSAM02.
+This function creates a survey input file for TCSAM02.
 }
 \details{
-This function that creates a survey input file for TCSAM02.
+This function that creates a survey input file for TCSAM02. It utilizes
+functions from the [tcsamFunctions] package to organize the inputs and write the file,
+with the survey data treated as index catch data.
+
+\code{acdInfo} list has elements \code{abundance} and \code{biomass}, each of which
+is a list with elements (consistent with the output from
+[tcsamFunctions::inputList_AggregateCatchData]):
+\itemize{
+\item{dfr - dataframe}
+\item{cv - default cv (e.g., for fishery data)}
+\item{minErr - minimum assumed error in catch data (in 1's)}
+\item{optFit - objective function fitting option}
+\item{likeType - likelihood type}
+\item{likeWgt - likelihood multiplier}
+\item{unitsIn - input units}
+\item{unitsOut - output units}
+}
+
+\code{zcsInfo} is a list (consistent with output from
+[tcsamFunctions::inputList_SizeCompsData]) with elements:
+
+\itemize{
+\item{dfrZCs - size comps dataframe}
+\item{dfrSSs - sample sizes dataframe}
+\item{cutpts - cutpoints for size comps}
+\item{tail_compression - 2-element vector giving tail compression factors}
+\item{optFit - objective function fitting option}
+\item{likeType - likelihood type}
+\item{likeWgt - likelihood multiplier}
+\item{unitsIn - input units}
+\item{unitsOut - output units}
+}
 }

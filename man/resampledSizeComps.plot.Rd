@@ -4,21 +4,12 @@
 \alias{resampledSizeComps.plot}
 \title{Plot resampled size compositions}
 \usage{
-resampledSizeComps.plot(
-  dfr,
-  scales = "free_y",
-  dropLevels = list(SEX = c("HERMAPHRODITE", "HERMAPHRODITIC", "UNDETERMINED")),
-  convertImmOS = TRUE
-)
+resampledSizeComps.plot(dfr, scales = "free_y")
 }
 \arguments{
 \item{dfr}{- dataframe with resampled size compositions}
 
 \item{scales}{- 'scales' parameter passed to facet_grid ("fixed" or "free_y")}
-
-\item{dropLevels}{- list of factor levels to remove from dfr}
-
-\item{convertImmOS}{- flag to convert immature, old shell crab to immature, new shell crab}
 }
 \description{
 Function to plot resampled size compositions.

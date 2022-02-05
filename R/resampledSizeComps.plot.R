@@ -5,24 +5,13 @@
 #'
 #' @param dfr - dataframe with resampled size compositions
 #' @param scales - 'scales' parameter passed to facet_grid ("fixed" or "free_y")
-#' @param dropLevels - list of factor levels to remove from dfr
-#' @param convertImmOS - flag to convert immature, old shell crab to immature, new shell crab
 #'
 #' @details dfr should be an output from \code{\link{resampledSizeComps.calc}}.
 #'
 #' @export
 #'
 resampledSizeComps.plot<-function(dfr,
-                                  scales="free_y",
-                                  dropLevels=list(SEX=c("HERMAPHRODITE","HERMAPHRODITIC","UNDETERMINED")),
-                                  convertImmOS=TRUE){
-  #drop unnecessary levels
-  dfr<-wtsUtilities::dropLevels(
-                            dfr,
-                            dropLevels=dropLevels
-                          );
-  if (convertImmOS) dfr<-convertImmOS(dfr);
-
+                                  scales="free_y"){
   #convert to lower case and replace "_"'s with spaces
   dfr$SEX            <-tolower(dfr$SEX);
   dfr$MATURITY       <-tolower(dfr$MATURITY);

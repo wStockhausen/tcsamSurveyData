@@ -4,26 +4,16 @@
 \alias{resampledSizeComps.calcEffN}
 \title{Calculate and plot effective N from resampled size compositions}
 \usage{
-resampledSizeComps.calcEffN(
-  dfr,
-  byFacs = "",
-  nDefault = 200,
-  nStations = 375,
-  dropLevels = list(SEX = c("HERMAPHRODITE", "HERMAPHRODITIC", "UNDETERMINED"),
-    MATURITY = "UNDETERMINED"),
-  convertImmOS = TRUE
-)
+resampledSizeComps.calcEffN(dfr, byFacs = "", nDefault = 200, nStations = 375)
 }
 \arguments{
 \item{dfr}{- dataframe with resampled size compositions}
 
+\item{byFacs}{- vector of column names for factors other than YEAR and STRATUM}
+
 \item{nDefault}{- assumed effective sample size (for plotting)}
 
 \item{nStations}{- typical number of survey stations (for plotting)}
-
-\item{dropLevels}{- list of factor levels to remove from dfr}
-
-\item{removeImmOS}{- flag to remove immature, old shell crab}
 }
 \description{
 Function to calculate and plot effective N from resampled size compositions.

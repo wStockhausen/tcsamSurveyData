@@ -3,7 +3,7 @@
 #'
 #' @description This function creates basemap layers for maps based on the \pkg{ggplot2} package
 #'
-#' @details Uses \code{wtsGIS::tmap_CreateBasemap} and \code{wtsGIS::transformCRS}.
+#' @details Uses functions from package [wtsGIS].
 #'
 #' @param sf_land - a spatial layer representing land (or NULL)
 #' @param sf_bathym - a spatial layer representing bathymetry (or NULL)

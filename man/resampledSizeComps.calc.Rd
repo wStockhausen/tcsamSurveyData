@@ -5,16 +5,16 @@
 \title{Resample haul data to bootstrap size compositions by year/stratum from AFSC trawl survey data}
 \usage{
 resampledSizeComps.calc(
+  N = 100,
   tbl_strata,
   tbl_hauls = NULL,
   tbl_indivs = NULL,
   avgHaulsByStation = TRUE,
-  N = 100,
   byEW166 = FALSE,
   byEBS = TRUE,
   bySex = FALSE,
-  byShellCondition = FALSE,
   byMaturity = FALSE,
+  byShellCondition = FALSE,
   cutpts = seq(from = 25, to = 185, by = 5),
   truncate.low = TRUE,
   truncate.high = FALSE,
@@ -22,15 +22,15 @@ resampledSizeComps.calc(
 )
 }
 \arguments{
+\item{N}{: number of resamples/year}
+
 \item{tbl_strata}{: data frame from call to \code{\link{selectStrata.TrawlSurvey}} [required]}
 
-\item{tbl_hauls}{: dataframe from call to \code{\link{selectHauls.TrawlSurvey}} [required only if tbl_cpue not given]}
+\item{tbl_hauls}{: dataframe from call to \code{\link{selectHauls.TrawlSurvey}} [required]}
 
-\item{tbl_indivs}{: dataframe from call to \code{\link{selectIndivs.TrawlSurvey}} (or crab survey filename, or NULL) [required only if tbl_cpue not given]}
+\item{tbl_indivs}{: dataframe from call to \code{\link{selectIndivs.TrawlSurvey}} (or crab survey filename)}
 
 \item{avgHaulsByStation}{: flag (T/F) to average hauls by station before calc'ing size comps}
-
-\item{N}{: number of resamples/year}
 
 \item{byEW166}{: flag (T/F) to aggregate size comps to EW166}
 
@@ -38,9 +38,9 @@ resampledSizeComps.calc(
 
 \item{bySex}{: flag (T/F) to calc by sex}
 
-\item{byShellCondition}{: flag (T/F) to calc by shell condition}
-
 \item{byMaturity}{: flag (T/F) to calc by maturity state}
+
+\item{byShellCondition}{: flag (T/F) to calc by shell condition}
 
 \item{cutpts}{: vector of cutpoints to create size bins from}
 

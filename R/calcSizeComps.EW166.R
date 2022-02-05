@@ -67,7 +67,7 @@ calcSizeComps.EW166<-function(tbl=NULL,
 
 
     #determine columns of size comps by stratum table
-    nc0f<-9;#number of coulmns if SIZE is the only 'factor' in the table
+    nc0f<-9;#number of columns if SIZE is the only 'factor' in the table
     cols<-names(tbl);
     nc<-length(cols);
     if (nc==nc0f){cols<-'';} else
@@ -105,7 +105,7 @@ calcSizeComps.EW166<-function(tbl=NULL,
             sum(STRATUM_AREA) as STRATUM_AREA&&cols,
             sum(numStations) as numStations,
             sum(numHauls) as numHauls,
-            -1 as numNonZeroHauls,
+            sum(numNonZeroHauls) as numNonZeroHauls,
             sum(numIndivs) as numIndivs,
             sum(totABUNDANCE) as totABUNDANCE,
             sum(totBIOMASS) as totBIOMASS
@@ -122,6 +122,9 @@ calcSizeComps.EW166<-function(tbl=NULL,
     }
     if (verbosity>1) cat("\nquery is:\n",qry,"\n");
     tbl1<-sqldf::sqldf(qry);
+
+    idx = tbl1$numNonZeroHauls<0;
+    tbl1$numNonZeroHauls[idx] = -1;
 
     if (export){
         if (!is.null(out.dir)){

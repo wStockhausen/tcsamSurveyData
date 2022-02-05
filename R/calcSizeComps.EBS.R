@@ -80,7 +80,7 @@ calcSizeComps.EBS<-function(tbl=NULL,
             sum(STRATUM_AREA) as STRATUM_AREA&&cols,
             sum(numStations) as numStations,
             sum(numHauls) as numHauls,
-            -1 as numNonZeroHauls,
+            sum(numNonZeroHauls) as numNonZeroHauls,
             sum(numIndivs) as numIndivs,
             sum(totABUNDANCE) as totABUNDANCE,
             sum(totBIOMASS) as totBIOMASS
@@ -96,7 +96,10 @@ calcSizeComps.EBS<-function(tbl=NULL,
         qry<-gsub("&&cols",paste(',',cols,collapse=""),qry);
     }
     if (verbosity>1) cat("\nquery is:\n",qry,"\n");
-    tbl1<-sqldf(qry);
+    tbl1<-sqldf::sqldf(qry);
+
+    idx = tbl1$numNonZeroHauls<0;
+    tbl1$numNonZeroHauls[idx] = -1;
 
     if (export){
         if (!is.null(out.dir)){

@@ -8,8 +8,8 @@
 #'@param avgHaulsByStation : flag (T/F) to average hauls by station before calc'ing size comps
 #'@param useStratumArea : flag (T/F) to use STRATUM_AREA to expand average CPUE to stratum abundance/biomass (default is T)
 #'@param bySex            : flag (T/F) to calc by sex
-#'@param byShellCondition : flag (T/F) to calc by shell condition
 #'@param byMaturity       : flag (T/F) to calc by maturity state
+#'@param byShellCondition : flag (T/F) to calc by shell condition
 #'@param cutpts        : vector of cutpoints to create size bins from
 #'@param truncate.low  : flag (T/F) to exclude individuals smaller than minSize
 #'@param truncate.high : flag (T/F) to exclude individuals larger than maxSize
@@ -67,6 +67,9 @@
 #' @importFrom sqldf sqldf
 #' @importFrom wtsUtilities selectFile
 #'
+#' @import dplyr
+#' @import magrittr
+#'
 #'@export
 #'
 #######################################################################
@@ -77,8 +80,8 @@ calcSizeComps.ByStratum<-function(tbl_strata,
                                   avgHaulsByStation=FALSE,
                                   useStratumArea=TRUE,
                                   bySex=FALSE,
-                                  byShellCondition=FALSE,
                                   byMaturity=FALSE,
+                                  byShellCondition=FALSE,
                                   cutpts=seq(from=25,to=185,by=5),
                                   truncate.low=TRUE,
                                   truncate.high=FALSE,
@@ -167,7 +170,7 @@ calcSizeComps.ByStratum<-function(tbl_strata,
                     if (!is.null(in.csv)) {out.dir<-dirname(file.path(in.csv));}
                     if (verbosity>0) cat("Output directory for calcSizeComps.ByStratum will be '",out.dir,"'\n",sep='');
                 }
-            }#creating tbl_cpue
+            }#creating tbl_indivs
             if (verbosity>1) cat("creating tbl_cpue\n")
             tbl_cpue<-calcCPUE.ByHaul(tbl_hauls,
                                       tbl_indivs=tbl_indivs,
@@ -186,6 +189,16 @@ calcSizeComps.ByStratum<-function(tbl_strata,
         }#creating tbl_cpue
     }#read in or created tbl_cpue
 
+
+    #Calculate numbers of hauls with non-zero catch
+    tbl_nonZeroHauls = tbl_cpue %>%
+                         dplyr::select(YEAR,STRATUM,SEX,MATURITY,SHELL_CONDITION,GIS_STATION,numIndivs) %>%
+                         dplyr::group_by(YEAR,STRATUM,SEX,MATURITY,SHELL_CONDITION,GIS_STATION) %>%
+                         dplyr::summarize(nonZeroHaul=sum(numIndivs)>0) %>%
+                         dplyr::group_by(YEAR,STRATUM,SEX,MATURITY,SHELL_CONDITION) %>%
+                         dplyr::summarize(numNonZeroHauls=sum(nonZeroHaul)) %>%
+                         dplyr::ungroup();
+
     #Now calculate size comps
     tbl_zcs<-calcAB.ByStratum(tbl_strata,
                               tbl_cpue=tbl_cpue,
@@ -203,11 +216,11 @@ calcSizeComps.ByStratum<-function(tbl_strata,
             -1 as numNonZeroHauls
           from tbl_ufacs;";
     qry<-gsub("&&ucols",paste(ucols[1:(length(ucols)-1)],collapse=","),qry)
-    tbl_ufacs<-sqldf(qry);
+    tbl_ufacs<-sqldf::sqldf(qry);
 
     tbl_zs<-as.data.frame(list(SIZE=cutpts[1:(length(cutpts)-1)]))
     qry<-"select * from tbl_ufacs, tbl_zs;";
-    tbl_uzfacs<-sqldf(qry);
+    tbl_uzfacs<-sqldf::sqldf(qry);
 
     #rearrange column names to get SIZE at end of other factors (if any)
     nms<-names(tbl_uzfacs);
@@ -232,13 +245,18 @@ calcSizeComps.ByStratum<-function(tbl_strata,
     qry<-gsub("&&ucols",ucolstr,qry);
     qry<-gsub("&&joinConds",joinConds,qry);
     if (verbosity>0) cat(qry,'\n')
-    tbl_zcs1<-sqldf(qry);
+    tbl_zcs1<-sqldf::sqldf(qry);
 
     #change NAs to 0s in formerly missing cells
     idx<-is.na(tbl_zcs1$numIndivs);
     tbl_zcs1$numIndivs[idx]<-0;
     tbl_zcs1$totABUNDANCE[idx]<-0;
     tbl_zcs1$totBIOMASS[idx]<-0;
+
+    #--add in numbers of non-zero catch hauls
+    tbl_zcs2 = tbl_zcs1 %>%
+                 dplyr::select(-numNonZeroHauls) %>%
+                 dplyr::inner_join(tbl_nonZeroHauls,by=c("YEAR","STRATUM","SEX","MATURITY","SHELL_CONDITION"));
 
     if (export){
         if (!is.null(out.dir)){
@@ -251,11 +269,11 @@ calcSizeComps.ByStratum<-function(tbl_strata,
             }
             out.csv<-file.path(out.dir,out.csv)
         }
-        write.csv(tbl_zcs1,out.csv,na='',row.names=FALSE);
+        write.csv(tbl_zcs2,out.csv,na='',row.names=FALSE);
     }
 
     if (verbosity>1) cat("finished calcSizeComps.ByStratum\n");
-    return(tbl_zcs1);
+    return(tbl_zcs2);
 }
 
 # tbl_zcs<-calcSizeComps.ByStratum(strata.org,

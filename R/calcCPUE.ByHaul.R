@@ -6,8 +6,8 @@
 #'@param tbl_hauls   : dataframe from call to \code{\link{selectHauls.TrawlSurvey}} [required]
 #'@param tbl_indivs  : dataframe from call to \code{\link{selectIndivs.TrawlSurvey}} (or crab survey filename, or NULL)
 #'@param  bySex            : flag (T/F) to calc by sex
-#'@param  byShellCondition : flag (T/F) to calc by shell condition
 #'@param  byMaturity       : flag (T/F) to calc by maturity state
+#'@param  byShellCondition : flag (T/F) to calc by shell condition
 #'@param  bySize        : flag (T/F) to calc by size
 #'@param  cutpts        : vector of cutpoints to create size bins from
 #'@param  truncate.low  : flag (T/F) to exclude individuals smaller than minSize
@@ -57,8 +57,8 @@
 calcCPUE.ByHaul<-function(tbl_hauls,
                           tbl_indivs=NULL,
                           bySex=FALSE,
-                          byShellCondition=FALSE,
                           byMaturity=FALSE,
+                          byShellCondition=FALSE,
                           bySize=FALSE,
                           cutpts=seq(from=25,to=185,by=5),
                           truncate.low=TRUE,
@@ -101,8 +101,8 @@ calcCPUE.ByHaul<-function(tbl_hauls,
     byX<-bySex;byS<-byShellCondition;byM<-byMaturity;byZ<-bySize;
 
     if (!byX){tbl_indivs$SEX            <-"ALL";}
-    if (!byS){tbl_indivs$SHELL_CONDITION<-"ALL";}
     if (!byM){tbl_indivs$MATURITY       <-"ALL";}
+    if (!byS){tbl_indivs$SHELL_CONDITION<-"ALL";}
     if (!byZ){tbl_indivs$SIZE           <-"ALL";tbl_uzs<-data.frame(SIZE="ALL");} else {
       #expand cutpts to truncate or not
       nCtPts<-length(cutpts);

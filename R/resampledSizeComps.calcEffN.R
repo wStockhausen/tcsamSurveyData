@@ -4,10 +4,9 @@
 #' @description Function to calculate and plot effective N from resampled size compositions.
 #'
 #' @param dfr - dataframe with resampled size compositions
+#' @param byFacs - vector of column names for factors other than YEAR and STRATUM
 #' @param nDefault - assumed effective sample size (for plotting)
 #' @param nStations - typical number of survey stations (for plotting)
-#' @param dropLevels - list of factor levels to remove from dfr
-#' @param removeImmOS - flag to remove immature, old shell crab
 #'
 #' @details dfr should be an output from \code{\link{resampledSizeComps.calc}}.
 #'
@@ -18,16 +17,7 @@
 resampledSizeComps.calcEffN<-function(dfr,
                                       byFacs="",
                                       nDefault=200,
-                                      nStations=375,
-                                      dropLevels=list(SEX=c("HERMAPHRODITE","HERMAPHRODITIC","UNDETERMINED"),
-                                                      MATURITY="UNDETERMINED"),
-                                      convertImmOS=TRUE){
-  #--drop unnecessary levels
-  dfr<-wtsUtilities::dropLevels(
-                            dfr,
-                            dropLevels=dropLevels
-                          );
-  if (convertImmOS) dfr<-convertImmOS(dfr);
+                                      nStations=375){
 
   #--convert to lower case and replace "_"'s with spaces
   dfr$SEX            <-tolower(dfr$SEX);
@@ -163,4 +153,4 @@ resampledSizeComps.calcEffN<-function(dfr,
   return(list(plots=ps,dfrEffNs=dfrEffNs));
 }
 
-#resampledSizeComps.calcEffN(dfr);
+#lst=resampledSizeComps.calcEffN(dfrRZCs,byFacs="SEX");

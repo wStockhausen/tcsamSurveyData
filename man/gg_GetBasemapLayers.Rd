@@ -39,7 +39,7 @@ gg_GetBasemapLayers(
 This function creates basemap layers for maps based on the \pkg{ggplot2} package
 }
 \details{
-Uses \code{wtsGIS::tmap_CreateBasemap} and \code{wtsGIS::transformCRS}.
+Uses functions from package [wtsGIS].
 
 The returned list has elements:
 \itemize{

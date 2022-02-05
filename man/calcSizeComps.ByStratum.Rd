@@ -12,8 +12,8 @@ calcSizeComps.ByStratum(
   avgHaulsByStation = FALSE,
   useStratumArea = TRUE,
   bySex = FALSE,
-  byShellCondition = FALSE,
   byMaturity = FALSE,
+  byShellCondition = FALSE,
   cutpts = seq(from = 25, to = 185, by = 5),
   truncate.low = TRUE,
   truncate.high = FALSE,
@@ -51,9 +51,9 @@ calcSizeComps.ByStratum(
 
 \item{bySex}{: flag (T/F) to calc by sex}
 
-\item{byShellCondition}{: flag (T/F) to calc by shell condition}
-
 \item{byMaturity}{: flag (T/F) to calc by maturity state}
+
+\item{byShellCondition}{: flag (T/F) to calc by shell condition}
 
 \item{cutpts}{: vector of cutpoints to create size bins from}
 

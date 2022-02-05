@@ -3,8 +3,8 @@
 #'
 #'@param N          : number of resamples/year
 #'@param tbl_strata : data frame from call to \code{\link{selectStrata.TrawlSurvey}} [required]
-#'@param tbl_hauls  : dataframe from call to \code{\link{selectHauls.TrawlSurvey}} [required only if tbl_cpue not given]
-#'@param tbl_indivs : dataframe from call to \code{\link{selectIndivs.TrawlSurvey}} (or crab survey filename, or NULL) [required only if tbl_cpue not given]
+#'@param tbl_hauls  : dataframe from call to \code{\link{selectHauls.TrawlSurvey}} [required]
+#'@param tbl_indivs : dataframe from call to \code{\link{selectIndivs.TrawlSurvey}} (or crab survey filename)
 #'@param avgHaulsByStation : flag (T/F) to average hauls by station before calc'ing size comps
 #'@param byEW166           : flag (T/F) to aggregate size comps to EW166
 #'@param byEBS             : flag (T/F) to aggregate size comps to the EBS
@@ -50,23 +50,24 @@
 #'@export
 #'
 #######################################################################
-resampledSizeComps.calc<-function(tbl_strata,
+resampledSizeComps.calc<-function(N=100,
+                                  tbl_strata,
                                   tbl_hauls=NULL,
                                   tbl_indivs=NULL,
                                   avgHaulsByStation=TRUE,
-                                  N=100,
                                   byEW166=FALSE,
                                   byEBS=TRUE,
                                   bySex=FALSE,
-                                  byShellCondition=FALSE,
                                   byMaturity=FALSE,
+                                  byShellCondition=FALSE,
                                   cutpts=seq(from=25,to=185,by=5),
                                   truncate.low=TRUE,
                                   truncate.high=FALSE,
                                   verbosity=0){
   message("#--starting calcResampledSizeComps");
 
-  dfr.zcs<-NULL;
+  bctr    = 0;     #--bootstrap counter (0 is non-bootstrapped version)
+  lst.zcs = list();#--list of bootstrapped size comps
   #calculate observed size comps
   message("#----calculating observed size comps");
   zcs <- calcSizeComps.ByStratum(tbl_strata=tbl_strata,
@@ -74,8 +75,8 @@ resampledSizeComps.calc<-function(tbl_strata,
                                  tbl_indivs=tbl_indivs,
                                  avgHaulsByStation=avgHaulsByStation,
                                  bySex=bySex,
-                                 byShellCondition=byShellCondition,
                                  byMaturity=byMaturity,
+                                 byShellCondition=byShellCondition,
                                  cutpts=cutpts,
                                  truncate.low=truncate.low,
                                  truncate.high=truncate.high,
@@ -84,14 +85,14 @@ resampledSizeComps.calc<-function(tbl_strata,
     zcs<-calcSizeComps.EW166(tbl=zcs,export=FALSE,verbosity=verbosity);
     if (byEBS) zcs<-calcSizeComps.EBS(tbl=zcs,export=FALSE,verbosity=verbosity);
   }
-  dfr.zcs<-rbind(dfr.zcs,cbind(i=0,zcs));
+  bctr=bctr+1;
+  lst.zcs[[bctr]]<-dplyr::bind_cols(i=0,zcs);
 
   if (N>0){
     #only do for years in tbl_hauls
     uY<-sort(unique(tbl_hauls$YEAR));
     nY<-length(uY);#number of years
     nTBs<-nY*N;   #total number of bootstraps
-    bctr<-0;      #bootstrap counter
     start_time<-Sys.time();
     for (y in uY){
       ytbl_strata<-tbl_strata[tbl_strata$YEAR==y,];
@@ -160,7 +161,8 @@ resampledSizeComps.calc<-function(tbl_strata,
             zcs<-calcSizeComps.EW166(tbl=zcs,export=FALSE);
             if (byEBS) zcs<-calcSizeComps.EBS(tbl=zcs,export=FALSE);
           }
-          dfr.zcs<-rbind(dfr.zcs,cbind(i=i,zcs));
+          bctr=bctr+1;
+          lst.zcs[[bctr]] = dplyr::bind_cols(i=i,zcs);
         } else {
           message("#----no size comps for year ",y,", sample",i);
         }
@@ -173,17 +175,24 @@ resampledSizeComps.calc<-function(tbl_strata,
             message("#----elapsed time: ",as.numeric(el_time,units="mins")," minutes.");
           }
         }
-        bctr<-bctr+1;
-        rm_time<-as.numeric(nTBs*(el_time/bctr)-el_time,units="days");
+        rm_time<-as.numeric(nTBs*(el_time/(bctr-1))-el_time,units="days");
         if (rm_time > 1) {message("#----remaining time: ",rm_time," days.");} else {
-          rm_time<-as.numeric(nTBs*(el_time/bctr)-el_time,units="hours");
+          rm_time<-as.numeric(nTBs*(el_time/(bctr-1))-el_time,units="hours");
           if (rm_time > 1) {message("#----remaining time: ",rm_time," hours.");} else {
             message("#----remaining time: ",as.numeric(nTBs*(el_time/bctr)-el_time,units="mins")," minutes.");
+          }
+        }
+        tt_time<-as.numeric(nTBs*(el_time/(bctr-1)),units="days");
+        if (tt_time > 1) {message("#----total time: ",tt_time," days.");} else {
+          tt_time<-as.numeric(nTBs*(el_time/(bctr-1)),units="hours");
+          if (tt_time > 1) {message("#----total time: ",tt_time," hours.");} else {
+            message("#----total time: ",as.numeric(nTBs*(el_time/bctr),units="mins")," minutes.");
           }
         }
       }#i-loop
     }#y-loop
   }#N>0
+  dfr.zcs = dplyr::bind_rows(lst.zcs); #--rm(lst.zcs);
 
   if (!("SEX" %in% names(dfr.zcs)))             dfr.zcs$SEX<-"all";
   if (!("MATURITY" %in% names(dfr.zcs)))        dfr.zcs$MATURITY<-"all";

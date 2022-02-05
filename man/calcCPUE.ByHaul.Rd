@@ -8,8 +8,8 @@ calcCPUE.ByHaul(
   tbl_hauls,
   tbl_indivs = NULL,
   bySex = FALSE,
-  byShellCondition = FALSE,
   byMaturity = FALSE,
+  byShellCondition = FALSE,
   bySize = FALSE,
   cutpts = seq(from = 25, to = 185, by = 5),
   truncate.low = TRUE,
@@ -28,9 +28,9 @@ calcCPUE.ByHaul(
 
 \item{bySex}{: flag (T/F) to calc by sex}
 
-\item{byShellCondition}{: flag (T/F) to calc by shell condition}
-
 \item{byMaturity}{: flag (T/F) to calc by maturity state}
+
+\item{byShellCondition}{: flag (T/F) to calc by shell condition}
 
 \item{bySize}{: flag (T/F) to calc by size}
 
