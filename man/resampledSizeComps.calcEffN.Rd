@@ -11,13 +11,19 @@ resampledSizeComps.calcEffN(dfr, byFacs = "", nDefault = 200, nStations = 375)
 
 \item{byFacs}{- vector of column names for factors other than YEAR and STRATUM}
 
-\item{nDefault}{- assumed effective sample size (for plotting)}
+\item{nDefault}{- default sample size (for plotting)}
 
 \item{nStations}{- typical number of survey stations (for plotting)}
+}
+\value{
+a list, with elements \code{plots} and \code{dfrEffNs}. \code{plots} former is
+a 2-element list of plots (with and without number of crab sampled) comparing time series of the measured N's,
+the mean effective N's, the harmonic mean effective N's, the number of non-zero stations, and the total number
+of stations. \code{dfrEffNs} is a dataframe with similar information.
 }
 \description{
 Function to calculate and plot effective N from resampled size compositions.
 }
 \details{
-dfr should be an output from \code{\link{resampledSizeComps.calc}}.
+dfr should be a dataframe output from [resampledSizeComps.calc].
 }

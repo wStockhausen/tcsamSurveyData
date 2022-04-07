@@ -5,12 +5,19 @@
 #'
 #' @param dfr - dataframe with resampled size compositions
 #' @param byFacs - vector of column names for factors other than YEAR and STRATUM
-#' @param nDefault - assumed effective sample size (for plotting)
+#' @param nDefault - default sample size (for plotting)
 #' @param nStations - typical number of survey stations (for plotting)
 #'
-#' @details dfr should be an output from \code{\link{resampledSizeComps.calc}}.
+#' @return a list, with elements \code{plots} and \code{dfrEffNs}. \code{plots} former is
+#' a 2-element list of plots (with and without number of crab sampled) comparing time series of the measured N's,
+#' the mean effective N's, the harmonic mean effective N's, the number of non-zero stations, and the total number
+#' of stations. \code{dfrEffNs} is a dataframe with similar information.
+#'
+#' @details dfr should be a dataframe output from [resampledSizeComps.calc].
 #'
 #' @import ggplot2
+#' @import reshape2
+#' @import sqldf
 #'
 #' @export
 #'
@@ -130,7 +137,6 @@ resampledSizeComps.calcEffN<-function(dfr,
   dfrEffNs[["num. non-0 hauls"]]<-origN$numNonZeroHauls;
 
   #--plot results
-  require(ggplot2);
   ps<-list();
   measure.vars<-c("avg(N)","har(N)","num. crab","num. non-0 hauls");
   tmp<-reshape2::melt(dfrEffNs,measure.vars=measure.vars,variable.name="type",value.name="N");
