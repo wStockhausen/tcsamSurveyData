@@ -4,7 +4,7 @@
 \alias{resampledSizeComps.calcEffN}
 \title{Calculate and plot effective N from resampled size compositions}
 \usage{
-resampledSizeComps.calcEffN(dfr, byFacs = "", nDefault = 200, nStations = 375)
+resampledSizeComps.calcEffN(dfr, byFacs = "")
 }
 \arguments{
 \item{dfr}{- dataframe with resampled size compositions}
@@ -16,10 +16,8 @@ resampledSizeComps.calcEffN(dfr, byFacs = "", nDefault = 200, nStations = 375)
 \item{nStations}{- typical number of survey stations (for plotting)}
 }
 \value{
-a list, with elements \code{plots} and \code{dfrEffNs}. \code{plots} former is
-a 2-element list of plots (with and without number of crab sampled) comparing time series of the measured N's,
-the mean effective N's, the harmonic mean effective N's, the number of non-zero stations, and the total number
-of stations. \code{dfrEffNs} is a dataframe with similar information.
+a dataframe with the number of measured crab, the mean effective N's, the harmonic mean effective N's,
+and the number of non-zero stations, by stratum, year, and factors in \code{byFacs}.
 }
 \description{
 Function to calculate and plot effective N from resampled size compositions.

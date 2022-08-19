@@ -16,6 +16,7 @@ selectIndivs.TrawlSurvey(
   dropLevels = NULL,
   minSize = -Inf,
   maxSize = Inf,
+  skip = 6,
   export = FALSE,
   out.csv = "SelectedIndivs.csv",
   out.dir = NULL,
@@ -44,6 +45,8 @@ selectIndivs.TrawlSurvey(
 \item{minSize}{: minimum size (width) of individuals to select}
 
 \item{maxSize}{: maximum size (width) of individuals to select}
+
+\item{skip}{- number of rows to skip when reading crabhaul csv file (default=6 to match AKFIN crabhaul download)}
 
 \item{export}{- boolean flag to export results to csv file}
 
