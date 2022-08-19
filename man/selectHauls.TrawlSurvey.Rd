@@ -13,6 +13,7 @@ selectHauls.TrawlSurvey(
   DepthRange = NULL,
   LatRange = NULL,
   LonRange = NULL,
+  skip = 6,
   export = FALSE,
   out.csv = "SelectedSurveyHauls.csv",
   out.dir = NULL,
@@ -35,6 +36,8 @@ selectHauls.TrawlSurvey(
 \item{LatRange}{- vector of min, max haul latitudes to include in output  (ignored if NULL)}
 
 \item{LonRange}{- vector of min, max haul longitudes to include in output (ignored if NULL)}
+
+\item{skip}{- number of rows to skip when reading crabhaul csv file (default=6 to match AKFIN crabhaul download)}
 
 \item{export}{- boolean flag to export results to csv file}
 

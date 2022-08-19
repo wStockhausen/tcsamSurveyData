@@ -8,10 +8,8 @@
 #' @param nDefault - default sample size (for plotting)
 #' @param nStations - typical number of survey stations (for plotting)
 #'
-#' @return a list, with elements \code{plots} and \code{dfrEffNs}. \code{plots} former is
-#' a 2-element list of plots (with and without number of crab sampled) comparing time series of the measured N's,
-#' the mean effective N's, the harmonic mean effective N's, the number of non-zero stations, and the total number
-#' of stations. \code{dfrEffNs} is a dataframe with similar information.
+#' @return a dataframe with the number of measured crab, the mean effective N's, the harmonic mean effective N's,
+#' and the number of non-zero stations, by stratum, year, and factors in \code{byFacs}.
 #'
 #' @details dfr should be a dataframe output from [resampledSizeComps.calc].
 #'
@@ -22,9 +20,7 @@
 #' @export
 #'
 resampledSizeComps.calcEffN<-function(dfr,
-                                      byFacs="",
-                                      nDefault=200,
-                                      nStations=375){
+                                      byFacs=""){
 
   #--convert to lower case and replace "_"'s with spaces
   dfr$SEX            <-tolower(dfr$SEX);
@@ -136,27 +132,7 @@ resampledSizeComps.calcEffN<-function(dfr,
   dfrEffNs[["num. crab"]]       <-origN$numIndivs;
   dfrEffNs[["num. non-0 hauls"]]<-origN$numNonZeroHauls;
 
-  #--plot results
-  ps<-list();
-  measure.vars<-c("avg(N)","har(N)","num. crab","num. non-0 hauls");
-  tmp<-reshape2::melt(dfrEffNs,measure.vars=measure.vars,variable.name="type",value.name="N");
-  frmla<-".";
-  if (nFacs>0) frmla<-tolower(paste0(byFacs,collapse="+"));
-  frmla<-paste0(frmla,"~stratum")
-  p <- ggplot(tmp,aes_string(x="year",y="N",colour="type",linetype="stratum",shape="stratum"));
-  p <- p + geom_hline(yintercept=nDefault,linetype=2);
-  p <- p + geom_hline(yintercept=nStations,linetype=3);
-  p <- p + geom_line();
-  p <- p + geom_point();
-  p <- p + facet_grid(rows=as.formula(frmla));
-  p <- p + scale_y_continuous(limits=c(0,NA));
-  p <- p + labs(x="year",y="effective N");
-  ps[[paste0("Figure &&figno. Input N (dotted line), effective N, number of crab measured, and number of non-zero hauls.")]]<-p;
-
-  p <- p %+% tmp[tmp$type!="num. crab",];
-  ps[[paste0("Figure &&figno. Input N (dotted line), effective N, and number of non-zero hauls..")]]<-p;
-
-  return(list(plots=ps,dfrEffNs=dfrEffNs));
+  return(dfrEffNs);
 }
 
 #lst=resampledSizeComps.calcEffN(dfrRZCs,byFacs="SEX");

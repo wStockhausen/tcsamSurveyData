@@ -26,6 +26,10 @@
 #'
 #' @return a dataframe with strata/stations info.
 #'
+#' @importFrom readr read_csv
+#' @importFrom sqldf sqldf
+#' @importFrom wtsUtilities selectFile
+#'
 #' @export
 #'
 selectStrata.TrawlSurvey<-function(tbl=NULL,
@@ -46,7 +50,7 @@ selectStrata.TrawlSurvey<-function(tbl=NULL,
             in.csv<-tbl;#tbl is a filename
         }
         if (verbosity>1) cat("Reading AFSC crab survey strata file (csv) for station info.\n",sep='')
-        tbl<-read.csv(in.csv,stringsAsFactors=FALSE);
+        tbl<-readr::read_csv(in.csv,guess_max=1000000);
         if (verbosity>1) cat("Done reading input csv file.\n")
     }
 

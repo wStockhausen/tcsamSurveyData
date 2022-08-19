@@ -14,6 +14,7 @@
 #'@param dropLevels : NULL (default) or list of levels to drop, by factor
 #'@param minSize : minimum size (width) of individuals to select
 #'@param maxSize : maximum size (width) of individuals to select
+#'@param skip - number of rows to skip when reading crabhaul csv file (default=6 to match AKFIN crabhaul download)
 #'@param export  - boolean flag to export results to csv file
 #'@param out.csv - name of output csv file                    (ignored if NULL)
 #'@param out.dir - base path for output csv file              (set to folder of input csv file or current working directory)
@@ -47,6 +48,7 @@
 #'
 #' @import tcsamFunctions
 #'
+#' @importFrom readr read_csv
 #' @importFrom sqldf sqldf
 #' @importFrom wtsUtilities selectFile
 #'
@@ -66,6 +68,7 @@ selectIndivs.TrawlSurvey<-function(tbl_hauls,
                                    dropLevels=NULL,
                                    minSize=-Inf,
                                    maxSize=Inf,
+                                   skip=6,
                                    export=FALSE,
                                    out.csv="SelectedIndivs.csv",
                                    out.dir=NULL,
@@ -82,13 +85,13 @@ selectIndivs.TrawlSurvey<-function(tbl_hauls,
     in.csv<-NULL;
     if (!is.data.frame(tbl)){
         if (!is.character(tbl)) {
-            in.csv<-selectFile(ext="csv",caption="Select AFSC crab trawl survey file");
+            in.csv<-selectFile(ext="csv",caption="Select AFSC crabhaul survey file");
             if (is.null(in.csv)|(in.csv=='')) return(NULL);
         } else {
             in.csv<-tbl;#tbl is a filename
         }
-        if (verbosity>1) message("Reading AFSC crab trawl survey csv file for individual crab info.");
-        tbl<-read.csv(in.csv,stringsAsFactors=FALSE);
+        if (verbosity>1) message("Reading AFSC crabhaul survey csv file for individual crab info.");
+        tbl<-readr::read_csv(in.csv,skip=skip,guess_max=10000000);
         if (verbosity>1) message("Done reading input csv file.")
     }
 
@@ -110,6 +113,13 @@ selectIndivs.TrawlSurvey<-function(tbl_hauls,
     cols<-c("HAULJOIN","SEX","SIZE","SHELL_CONDITION",
             "EGG_COLOR","EGG_CONDITION","CLUTCH_SIZE","CHELA_HEIGHT",
             "WEIGHT","CALCULATED_WEIGHT","SAMPLING_FACTOR");
+    if (!all(cols %in% names(tbl))){
+      msg<-paste0("\n#--ERROR in selectIndivs.TrawlSurvey:\n",
+                  "Required column(s) ",paste0("'",req_cols[!(req_cols %in% names(tbl))],"'",collapse=", "),"\n",
+                  "were not found in the input indiv crab dataframe or crabhaul csv file (tbl).\n",
+                  "It's column names were: ",paste0(names(tbl),collapse=", "),"\n");
+      stop(msg);
+    }
     tbl<-tbl[,cols];
 
     #extract data for hauls of interest

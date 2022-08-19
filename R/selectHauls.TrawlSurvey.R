@@ -11,6 +11,7 @@
 #'@param DepthRange - vector of min, max haul depths to include in output     (ignored if NULL)
 #'@param LatRange   - vector of min, max haul latitudes to include in output  (ignored if NULL)
 #'@param LonRange   - vector of min, max haul longitudes to include in output (ignored if NULL)
+#'@param skip - number of rows to skip when reading crabhaul csv file (default=6 to match AKFIN crabhaul download)
 #'@param export  - boolean flag to export results to csv file
 #'@param out.csv - name of output csv file                    (ignored if NULL)
 #'@param out.dir - base path for output csv file              (set to folder of input csv file or current working directory)
@@ -37,6 +38,7 @@ selectHauls.TrawlSurvey<-function(tbl_strata,
                                   DepthRange=NULL,
                                   LatRange=NULL,
                                   LonRange=NULL,
+                                  skip=6,
                                   export=FALSE,
                                   out.csv="SelectedSurveyHauls.csv",
                                   out.dir=NULL,
@@ -60,7 +62,7 @@ selectHauls.TrawlSurvey<-function(tbl_strata,
             in.csv<-tbl;#tbl is a filename
         }
         if (verbosity>1) cat("Reading AFSC crab trawl survey csv file for hauls info, skipping first 5 lines.\n",sep='')
-        tbl<-readr::read_csv(in.csv,skip=5,guess_max=Inf);
+        tbl<-readr::read_csv(in.csv,skip=skip,guess_max=10000000);
         if (verbosity>1) cat("Done reading input csv file.\n")
     }
 
