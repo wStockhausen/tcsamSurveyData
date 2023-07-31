@@ -1,23 +1,25 @@
 #'
-#'@title Resample haul data to bootstrap aggregated catch data by year/stratum from AFSC trawl survey data
+#'@title TODO: finish implementing this.
+#'
+#'@description Function to resample haul data to bootstrap aggregated catch data by year/stratum from AFSC trawl survey data
 #'
 #'@param N          : number of resamples/year
-#'@param tbl_strata : data frame from call to \code{\link{selectStrata.TrawlSurvey}} [required]
-#'@param tbl_hauls  : dataframe from call to \code{\link{selectHauls.TrawlSurvey}} [required only if tbl_cpue not given]
-#'@param tbl_indivs : dataframe from call to \code{\link{selectIndivs.TrawlSurvey}} (or crab survey filename, or NULL) [required only if tbl_cpue not given]
+#'@param tbl_strata : data frame from call to \code{\link{selectStrata.TrawlSurvey}} \[required\]
+#'@param tbl_hauls  : dataframe from call to \code{\link{selectHauls.TrawlSurvey}} \[required only if tbl_cpue not given\]
+#'@param tbl_indivs : dataframe from call to \code{\link{selectIndivs.TrawlSurvey}} (or crab survey filename, or NULL) \[required only if tbl_cpue not given\]
 #'@param byEW166          : flag (T/F) to aggregate size comps to EW166
 #'@param byEBS            : flag (T/F) to aggregate size comps to the EBS
 #'@param bySex            : flag (T/F) to calc by sex
 #'@param byShellCondition : flag (T/F) to calc by shell condition
 #'@param byMaturity       : flag (T/F) to calc by maturity state
+#'@param minSize : minimum size to include in calculations
+#'@param maxSize : maximum size to include in calculations
 #'@param truncate.low  : flag (T/F) to exclude individuals smaller than minSize
 #'@param truncate.high : flag (T/F) to exclude individuals larger than maxSize
 #'@param verbosity : integer flag indicating level of printed output (0=off,1=minimal,2=full)
 #'
-#'@description This function resamples size compositions by year/stratum for AFSC trawl survey data.
-#'
 #'@details This function performs two-stage resampling (hauls w/in strata, individuals w/in hauls)
-#'to calculate a set of resampled size compositions by year. \cr
+#'to calculate a set of resampled **size compositions** (<-FIX THIS!) by year. \cr
 #'\cr
 #'Other notes: \cr
 #'\itemize{
@@ -54,13 +56,14 @@ calcResampledACDs<-function(tbl_strata,
                             byShellCondition=FALSE,
                             byMaturity=FALSE,
                             minSize=25,
+                            maxSize=185,
                             truncate.low=TRUE,
                             truncate.high=FALSE,
                             verbosity=0){
   if (verbosity>0) cat("starting calcResampledACDs\n");
 
   dfr.acds<-NULL;
-  #calculate observed size comps
+  #calculate observed size comps <-CHANGE THIS(?!)
   acds <- calcSizeComps.ByStratum(tbl_strata=tbl_strata,
                                  tbl_hauls=tbl_hauls,
                                  tbl_indivs=tbl_indivs,

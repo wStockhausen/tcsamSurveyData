@@ -19,27 +19,49 @@ doCalcs_SSs(
 )
 }
 \arguments{
-\item{tbl_strata}{- dataframe with survey strata info (output from \code{\link{selectStrata.TrawlSurvey}})}
+\item{tbl_strata}{\itemize{
+\item dataframe with survey strata info (output from \code{\link{selectStrata.TrawlSurvey}})
+}}
 
-\item{tbl_hauls}{- dataframe with hauls info (output from \code{\link{selectHauls.TrawlSurvey}})}
+\item{tbl_hauls}{\itemize{
+\item dataframe with hauls info (output from \code{\link{selectHauls.TrawlSurvey}})
+}}
 
-\item{tbl_indivs}{- dataframe with individual crab info (output from \code{\link{selectIndivs.TrawlSurvey}})}
+\item{tbl_indivs}{\itemize{
+\item dataframe with individual crab info (output from \code{\link{selectIndivs.TrawlSurvey}})
+}}
 
-\item{averageHaulsByStation}{- TRUE (average hauls by station prior to calculating stratum-level quantities)}
+\item{averageHaulsByStation}{\itemize{
+\item TRUE (average hauls by station prior to calculating stratum-level quantities)
+}}
 
-\item{aggBySex}{- flag to agregate CPUE over sexes}
+\item{aggBySex}{\itemize{
+\item flag to agregate CPUE over sexes
+}}
 
-\item{aggByMaturity}{- flag to aggregate of maturity states}
+\item{aggByMaturity}{\itemize{
+\item flag to aggregate of maturity states
+}}
 
-\item{aggByShellCondition}{- flag to aggregate over shell conditions}
+\item{aggByShellCondition}{\itemize{
+\item flag to aggregate over shell conditions
+}}
 
-\item{dropLevels}{- NULL, or list (by factor name) of vectors of factor values to drop (see help for \code{wtsUtilities::dropLevels})}
+\item{dropLevels}{\itemize{
+\item NULL, or list (by factor name) of vectors of factor values to drop (see help for \code{wtsUtilities::dropLevels})
+}}
 
-\item{colName}{- column name with sample sizes}
+\item{colName}{\itemize{
+\item column name with sample sizes
+}}
 
-\item{totVal}{- total SS for relative SS calculations}
+\item{totVal}{\itemize{
+\item total SS for relative SS calculations
+}}
 
-\item{verbosity}{- integer flag indicating level of printed output (0=off,1=minimal,2=full)}
+\item{verbosity}{\itemize{
+\item integer flag indicating level of printed output (0=off,1=minimal,2=full)
+}}
 }
 \value{
 a list with elements \code{ss.EBS} and \code{relSS.EBS}. \code{ss.EBS} is a dataframe with columns: \cr

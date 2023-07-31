@@ -14,7 +14,7 @@ calcCPUE.ByStratum(
 )
 }
 \arguments{
-\item{tbl_strata}{: data frame w/ stations/strata from call to selectStrata.TrawlSurvey(...)}
+\item{tbl_strata}{: data frame w/ stations/strata from call to \link{selectStrata.TrawlSurvey}}
 
 \item{tbl_cpue}{: data frame w/ cpue by year, station, other factor levels (or csv filename or NULL)}
 
@@ -52,10 +52,10 @@ This function calculates average cpue, numbers and biomass by stratum from cpue 
 If tbl_cpue is NULL, the user is prompted to enter a csv file with cpue info. \cr
 \cr Other notes: \cr
 \itemize{
-  \item Area is in square nautical miles
-  \item CPUE in numbers is in no/(sq. nm.)
-  \item CPUE in weight  is in mt/(sq. nm.)
-  \item Abundance is in 10^6 indivs
-  \item Biomass   is in 10^3 mt
+\item Area is in square nautical miles
+\item CPUE in numbers is in no/(sq. nm.)
+\item CPUE in weight  is in mt/(sq. nm.)
+\item Abundance is in 10^6 indivs
+\item Biomass   is in 10^3 mt
 }
 }

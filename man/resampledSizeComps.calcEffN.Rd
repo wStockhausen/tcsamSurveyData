@@ -7,13 +7,9 @@
 resampledSizeComps.calcEffN(dfr, byFacs = "")
 }
 \arguments{
-\item{dfr}{- dataframe with resampled size compositions}
+\item{dfr}{: dataframe with resampled size compositions}
 
-\item{byFacs}{- vector of column names for factors other than YEAR and STRATUM}
-
-\item{nDefault}{- default sample size (for plotting)}
-
-\item{nStations}{- typical number of survey stations (for plotting)}
+\item{byFacs}{: vector of column names for factors other than YEAR and STRATUM}
 }
 \value{
 a dataframe with the number of measured crab, the mean effective N's, the harmonic mean effective N's,
@@ -23,5 +19,5 @@ and the number of non-zero stations, by stratum, year, and factors in \code{byFa
 Function to calculate and plot effective N from resampled size compositions.
 }
 \details{
-dfr should be a dataframe output from [resampledSizeComps.calc].
+dfr should be a dataframe output from \link{resampledSizeComps.calc}.
 }

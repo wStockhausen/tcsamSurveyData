@@ -30,6 +30,8 @@
 #'
 #'@import ggplot2
 #'@importFrom scales squish
+#'@importFrom stats qlnorm qnorm
+#'@importFrom utils packageVersion
 #'
 #'@export
 #'
@@ -115,8 +117,8 @@ plotACD<-function(acd,
         p <- p + geom_hline(yintercept=0,colour='black',size=0.5);
         p <- p + labs(x=xlab,y=ylab)
         if (!is.null(faceting)) {
-          if (packageVersion("ggplot2")<="2.2.1") p <- p + facet_grid(tolower(faceting),scales=facetsScale,drop=facetsDrop);
-          if (packageVersion("ggplot2")>="3.0.0") p <- p + facet_grid(rows=faceting,scales=facetsScale,drop=facetsDrop);
+          if (utils::packageVersion("ggplot2")<="2.2.1") p <- p + facet_grid(tolower(faceting),scales=facetsScale,drop=facetsDrop);
+          if (utils::packageVersion("ggplot2")>="3.0.0") p <- p + facet_grid(rows=faceting,scales=facetsScale,drop=facetsDrop);
         }
         p <- p + guides(fill=guide_legend(''),colour=guide_legend(''),shape=guide_legend(''));
         p <- p + ggtheme;

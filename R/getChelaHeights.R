@@ -3,18 +3,18 @@
 #'
 #' @description Function to extract chela height data on males w/ selected characteristics from NMFS trawl survey csv files.
 #'
-#' @param tbl_hauls - hauls table (dataframe) from call to selectHauls.TrawlSurvey(...) [required]
-#' @param tbl       - table (dataframe) of survey data (or filename of survey csv file, or NULL)
+#' @param tbl_hauls : hauls table (dataframe) from call to selectHauls.TrawlSurvey(...) \[required\]
+#' @param tbl       : table (dataframe) of survey data (or filename of survey csv file, or NULL)
 #' @param col.Size  : column name for size information
-#' @param shell_condition - one of 'NEW_SHELL','OLD_SHELL' or 'ALL' for narrowing selection of individuals
-#' @param minSize - minimum size (width) of individuals to select
-#' @param maxSize - maximum size (width) of individuals to select
-#' @param showPlot - flag to show plot of chela heights
-#' @param export  - boolean flag to export results to csv file
-#' @param out.csv - name of output csv file                    (ignored if NULL)
-#' @param out.dir - base path for output csv file              (set to folder of input csv file or current working directory)
-#' @param verbosity - flags for intermediate output
-#' @param ... - parameters passed to plotChelaHeights(...)
+#' @param shell_condition : one of 'NEW_SHELL','OLD_SHELL' or 'ALL' for narrowing selection of individuals
+#' @param minSize : minimum size (width) of individuals to select
+#' @param maxSize : maximum size (width) of individuals to select
+#' @param showPlot : flag to show plot of chela heights
+#' @param export  : boolean flag to export results to csv file
+#' @param out.csv : name of output csv file                    (ignored if NULL)
+#' @param out.dir : base path for output csv file              (set to folder of input csv file or current working directory)
+#' @param verbosity : flags for intermediate output
+#' @param ... : parameters passed to plotChelaHeights(...)
 #'
 #' @return dataframe
 #'

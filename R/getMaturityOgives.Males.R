@@ -3,16 +3,16 @@
 #'
 #' @description Function to extract female maturity ogives from a size composition dataframe.
 #'
-#' @param fn - filename for maturity-classified chela height dataset
-#' @param tbl_strata : data frame from call to \code{\link{selectStrata.TrawlSurvey}} [required]
+#' @param fn : filename for maturity-classified chela height dataset
+#' @param tbl_strata : data frame from call to \code{\link{selectStrata.TrawlSurvey}} \[required\]
 #' @param byEBS : flag to aggregate across strata to EBS
-#' @param cutpts - vector of cutpoints to create size bins from
-#' @param showPlot - flag to show plot of ogives
-#' @param export  - boolean flag to export results to csv file
-#' @param out.csv - name of output csv file                    (ignored if NULL)
-#' @param out.dir - base path for output csv file              (set to folder of input csv file or current working directory)
-#' @param verbosity - flags for intermediate output
-#' @param ... - parameters passed to plotMaturityOgives(...)
+#' @param cutpts : vector of cutpoints to create size bins from
+#' @param showPlot : flag to show plot of ogives
+#' @param export  : boolean flag to export results to csv file
+#' @param out.csv : name of output csv file                    (ignored if NULL)
+#' @param out.dir : base path for output csv file              (set to folder of input csv file or current working directory)
+#' @param verbosity : flags for intermediate output
+#' @param ... : parameters passed to plotMaturityOgives(...)
 #'
 #' @return dataframe with columns: \cr
 #'\itemize{
@@ -26,6 +26,10 @@
 #'
 #' @details None.\cr
 #'
+#' @importFrom reshape2 dcast
+#' @importFrom utils read.csv write.csv
+#' @importFrom sqldf sqldf
+
 #' @export
 #'
 getMaturityOgives.Males<-function(

@@ -24,7 +24,7 @@ selectIndivs.TrawlSurvey(
 )
 }
 \arguments{
-\item{tbl_hauls}{: hauls table (dataframe) from call to selectHauls.TrawlSurvey(...) [required]}
+\item{tbl_hauls}{: hauls table (dataframe) from call to \link{selectHauls.TrawlSurvey} [required]}
 
 \item{tbl}{: table (dataframe) of survey data (or csv filename or NULL)}
 
@@ -46,18 +46,26 @@ selectIndivs.TrawlSurvey(
 
 \item{maxSize}{: maximum size (width) of individuals to select}
 
-\item{skip}{- number of rows to skip when reading crabhaul csv file (default=6 to match AKFIN crabhaul download)}
+\item{skip}{\itemize{
+\item number of rows to skip when reading crabhaul csv file (default=6 to match AKFIN crabhaul download)
+}}
 
-\item{export}{- boolean flag to export results to csv file}
+\item{export}{\itemize{
+\item boolean flag to export results to csv file
+}}
 
-\item{out.csv}{- name of output csv file                    (ignored if NULL)}
+\item{out.csv}{\itemize{
+\item name of output csv file                    (ignored if NULL)
+}}
 
-\item{out.dir}{- base path for output csv file              (set to folder of input csv file or current working directory)}
+\item{out.dir}{\itemize{
+\item base path for output csv file              (set to folder of input csv file or current working directory)
+}}
 
 \item{verbosity}{: integer flag indicating level of printed output (0=off,1=minimal,2=full)}
 }
 \value{
-dataframe (see \link{details} for coulmn names)
+dataframe (see Details for column names)
 }
 \description{
 Function to extract crab data on individuals w/ selected characteristics from trawl survey data in NMFS csv format.
@@ -66,24 +74,24 @@ Function to extract crab data on individuals w/ selected characteristics from tr
 If neither tbl or in.csv is given, the user will be prompted for a survey data csv file via a file dialog box.\cr
 Returned dataframe will have columns:
 \itemize{\item {HAULJOIN}
-         \item {numIndivs}         {number of "effective" individuals}
-         \item {SEX}
-         \item {SHELL_CONDITION}
-         \item {MATURITY}
-         \item {SEX_CODE}
-         \item {SHELL_CONDITION_CODE}
-         \item {SIZE}
-         \item {EGG_COLOR}
-         \item {EGG_CONDITION}
-         \item {CLUTCH_SIZE}
-         \item {CHELA_HEIGHT}
-         \item {SAMPLING_FACTOR}   {sub-sampling ratio (>= 1)}
-         \item {WEIGHT}            {measured weight of an individual crab, in grams}
-         \item {CALCULATED_WEIGHT} {weight of an individual crab, in grams}
-        } \cr
+\item {numIndivs}         {number of "effective" individuals}
+\item {SEX}
+\item {SHELL_CONDITION}
+\item {MATURITY}
+\item {SEX_CODE}
+\item {SHELL_CONDITION_CODE}
+\item {SIZE}
+\item {EGG_COLOR}
+\item {EGG_CONDITION}
+\item {CLUTCH_SIZE}
+\item {CHELA_HEIGHT}
+\item {SAMPLING_FACTOR}   {sub-sampling ratio (>= 1)}
+\item {WEIGHT}            {measured weight of an individual crab, in grams}
+\item {CALCULATED_WEIGHT} {weight of an individual crab, in grams}
+} \cr
 Notes:
 \itemize{
-  \item "effective" number of individuals is < 1 when male maturity
-  \item Weights are in grams.
+\item "effective" number of individuals is < 1 when male maturity
+\item Weights are in grams.
 }
 }

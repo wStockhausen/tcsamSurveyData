@@ -17,17 +17,29 @@ getMaturityOgives.Females(
 \arguments{
 \item{dfrZCs}{: dataframe with new shell female size compositions by maturity state}
 
-\item{showPlot}{- flag to show plot of ogives}
+\item{showPlot}{\itemize{
+\item flag to show plot of ogives
+}}
 
-\item{export}{- boolean flag to export results to csv file}
+\item{export}{\itemize{
+\item boolean flag to export results to csv file
+}}
 
-\item{out.csv}{- name of output csv file                    (ignored if NULL)}
+\item{out.csv}{\itemize{
+\item name of output csv file                    (ignored if NULL)
+}}
 
-\item{out.dir}{- base path for output csv file              (set to folder of input csv file or current working directory)}
+\item{out.dir}{\itemize{
+\item base path for output csv file              (set to folder of input csv file or current working directory)
+}}
 
-\item{verbosity}{- flags for intermediate output}
+\item{verbosity}{\itemize{
+\item flags for intermediate output
+}}
 
-\item{...}{- parameters passed to plotMaturityOgives(...)}
+\item{...}{\itemize{
+\item parameters passed to plotMaturityOgives(...)
+}}
 }
 \value{
 dataframe with columns: \cr

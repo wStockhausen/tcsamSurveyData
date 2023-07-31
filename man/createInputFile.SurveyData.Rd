@@ -7,8 +7,8 @@
 createInputFile.SurveyData(
   fn,
   survey_name = "NMFS_trawl_survey",
-  acdInfo = list(abundance = list(fitType = "BY_XM", likeType = "LOGNORMAL", likeWgt =
-    0, unitsIn = "MILLIONS", unitsOut = "MILLIONS"), biomass = list(fitType = "BY_XM",
+  acdInfo = list(abundance = list(fitType = "BY_XM", likeType = "LOGNORMAL", likeWgt = 0,
+    unitsIn = "MILLIONS", unitsOut = "MILLIONS"), biomass = list(fitType = "BY_XM",
     likeType = "LOGNORMAL", likeWgt = 1), unitsIn = "MILLIONS", unitsOut = "MILLIONS"),
   zcsInfo = list(fitType = "BY_XM", likeType = "MULTINOMIAL", likeWgt = 1,
     tail_compression = c(0, 0), unitsIn = "MILLIONS", unitsOut = "MILLIONS"),
@@ -21,37 +21,37 @@ createInputFile.SurveyData(
 )
 }
 \arguments{
-\item{fn}{- output file name}
+\item{fn}{: output file name}
 
-\item{survey_name}{- name to use for survey}
+\item{survey_name}{: name to use for survey}
 
-\item{acdInfo}{- list with sublists for abundance and biomass specifying fitType, likeType, and likeWgt}
+\item{acdInfo}{: list with sublists for abundance and biomass specifying fitType, likeType, and likeWgt}
 
-\item{zcsInfo}{- list for size compositions specifying fitType, likeType, and likeWgt}
+\item{zcsInfo}{: list for size compositions specifying fitType, likeType, and likeWgt}
 
-\item{cutpts}{- vector of cutpoints for the input size compositions}
+\item{cutpts}{: vector of cutpoints for the input size compositions}
 
-\item{dfrACD}{- dataframe of aggregated catch data}
+\item{dfrACD}{: dataframe of aggregated catch data}
 
-\item{dfrZCs}{- dataframe of size comps}
+\item{dfrZCs}{: dataframe of size comps}
 
-\item{dfrSSs}{- dataframe with relative sample sizes to use with size comps}
+\item{dfrSSs}{: dataframe with relative sample sizes to use with size comps}
 
-\item{ssCol}{- sample size column name in dfrSSs (default="numIndivs")}
+\item{ssCol}{: sample size column name in dfrSSs (default="numIndivs")}
 
-\item{verbose}{- flag to print debugging info}
+\item{verbose}{: flag to print debugging info}
 }
 \description{
 This function creates a survey input file for TCSAM02.
 }
 \details{
 This function that creates a survey input file for TCSAM02. It utilizes
-functions from the [tcsamFunctions] package to organize the inputs and write the file,
+functions from the \pkg{tcsamFunctions} package to organize the inputs and write the file,
 with the survey data treated as index catch data.
 
 \code{acdInfo} list has elements \code{abundance} and \code{biomass}, each of which
 is a list with elements (consistent with the output from
-[tcsamFunctions::inputList_AggregateCatchData]):
+\link[tcsamFunctions:inputList_AggregateCatchData]{tcsamFunctions::inputList_AggregateCatchData}):
 \itemize{
 \item{dfr - dataframe}
 \item{cv - default cv (e.g., for fishery data)}
@@ -64,7 +64,7 @@ is a list with elements (consistent with the output from
 }
 
 \code{zcsInfo} is a list (consistent with output from
-[tcsamFunctions::inputList_SizeCompsData]) with elements:
+\link[tcsamFunctions:inputList_SizeCompsData]{tcsamFunctions::inputList_SizeCompsData}) with elements:
 
 \itemize{
 \item{dfrZCs - size comps dataframe}

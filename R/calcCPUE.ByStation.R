@@ -16,8 +16,8 @@
 #'@details
 #'Notes: \cr
 #'\itemize{
-#'\item   CPUE in numbers is in no/(sq. nm.) \cr
-#'\item   CPUE in weight  is in mt/(sq. nm.) \cr
+#'\item   CPUE in numbers is in no/(sq. nm.)
+#'\item   CPUE in weight  is in mt/(sq. nm.)
 #'\item   CPUE is calculated only for stations at which at least 1 haul was conducted
 #'} \cr
 #' The returned dataframe has the following columns: \cr
@@ -42,6 +42,7 @@
 #'}
 #'
 #' @importFrom sqldf sqldf
+#' @importFrom utils read.csv write.csv
 #' @importFrom wtsUtilities selectFile
 #'
 #'@export

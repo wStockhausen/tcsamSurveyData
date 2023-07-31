@@ -24,37 +24,37 @@ tmap_CreateSurveyMap.CPUE(
 )
 }
 \arguments{
-\item{basemap}{- \pkg{tmap}-style basemap}
+\item{basemap}{: \pkg{tmap}-style basemap}
 
-\item{cpue}{- spatial dataframe with cpue data}
+\item{cpue}{: spatial dataframe with cpue data}
 
-\item{raster}{- raster object with environmental data}
+\item{raster}{: raster object with environmental data}
 
-\item{cpueCol}{- name of column in cpue dataframe to plot as bubbles}
+\item{cpueCol}{: name of column in cpue dataframe to plot as bubbles}
 
-\item{cpueColor}{- color for cpue bubbles}
+\item{cpueColor}{: color for cpue bubbles}
 
-\item{cpueAlpha}{- alpha (transparency) for cpue bubbles}
+\item{cpueAlpha}{: alpha (transparency) for cpue bubbles}
 
-\item{maxCPUE}{- max value for cpue scale}
+\item{maxCPUE}{: max value for cpue scale}
 
-\item{cpueLabel}{- label for cpue scale}
+\item{cpueLabel}{: label for cpue scale}
 
-\item{cpueLegend}{- TRUE/FALSE to show cpue scale}
+\item{cpueLegend}{: TRUE/FALSE to show cpue scale}
 
-\item{rasterCol}{- name of raster data column}
+\item{rasterCol}{: name of raster data column}
 
-\item{rasterPalette}{- palette for raster}
+\item{rasterPalette}{: palette for raster}
 
-\item{rasterAlpha}{- alpha (transparency) for raster}
+\item{rasterAlpha}{: alpha (transparency) for raster}
 
-\item{rasterLabel}{- label for raster scale}
+\item{rasterLabel}{: label for raster scale}
 
-\item{rasterBreaks}{- breaks for raster scale}
+\item{rasterBreaks}{: breaks for raster scale}
 
-\item{rasterLegend}{- TRUE/FALSE to show raster scale}
+\item{rasterLegend}{: TRUE/FALSE to show raster scale}
 
-\item{panelLabel}{- label for map panel}
+\item{panelLabel}{: label for map panel}
 }
 \value{
 \pkg{tmap}-style map object

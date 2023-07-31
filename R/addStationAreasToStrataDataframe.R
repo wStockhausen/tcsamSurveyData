@@ -6,7 +6,7 @@
 #'             and adds it as a column to the input dataframe. Note that this function is
 #'             now (20190823) called in the course of evaluating \code{selectStrat.TrawlSurvey}.
 #'
-#'@param dfrSD -table (dataframe) of survey station/strata data
+#'@param dfrSD : table (dataframe) of survey station/strata data
 #'
 #'@details  The returned dataframe has columns:
 #'\itemize{\item {YEAR}

@@ -3,14 +3,14 @@
 #'
 #'@description Function to export aggregated catch data to stock assessment format.
 #'
-#'@param tbl - dataframe from call to one of the calcBiomass... functions
-#'@param facs - factors to include in output
-#'@param dropLevels - factor levels to drop
-#'@param var - variable type to export (abundance or biomass)
-#'@param export  - boolean flag to write results to csv file
-#'@param out.csv - output file name
-#'@param out.dir - output file directory
-#'@param verbosity - integer flag indicating level of printed output (0=off,1=minimal,2=full)
+#'@param tbl : dataframe from call to one of the calcBiomass... functions
+#'@param facs : factors to include in output
+#'@param dropLevels : factor levels to drop
+#'@param var : variable type to export (abundance or biomass)
+#'@param export  : boolean flag to write results to csv file
+#'@param out.csv : output file name
+#'@param out.dir : output file directory
+#'@param verbosity : integer flag indicating level of printed output (0=off,1=minimal,2=full)
 #'
 #'@return dataframe in stock assessment format
 #'

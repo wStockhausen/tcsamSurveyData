@@ -3,13 +3,13 @@
 #'
 #' @description This function creates basemap layers for maps based on the \pkg{ggplot2} package
 #'
-#' @details Uses functions from package [wtsGIS].
+#' @details Uses functions from package \pkg{wtsGIS}.
 #'
 #' @param sf_land - a spatial layer representing land (or NULL)
 #' @param sf_bathym - a spatial layer representing bathymetry (or NULL)
 #' @param sfs_survey -  a list of spatial layers representing the survey grid and survey stations (or NULL)
 #' @param final_crs - string representation of CRS (default = WGS84) used for ALL shapefiles
-#' @param bbox - a \code{sf::bbox} bounding box
+#' @param bbox - a \pkg{sf} bounding box object
 #' @param bw - flag (T/F) to create layers in black & white (TRUE) or color (FALSE)
 #' @param colors - list of colors to use for "land","bathym", "grid" and "stations"
 #' @param size - point size for the station locations

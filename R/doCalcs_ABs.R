@@ -7,7 +7,7 @@
 #' @param tbl_hauls   - dataframe with hauls info (output from \code{\link{selectHauls.TrawlSurvey}})
 #' @param tbl_indivs  - dataframe with individual crab info (output from \code{\link{selectIndivs.TrawlSurvey}})
 #' @param averageHaulsByStation - TRUE (average hauls by station prior to calculating stratum-level quantities)
-#' @param calcByEW166: TRUE (calculate AB by EW166 prior to calculating total for EBS)
+#' @param calcByEW166 : TRUE (calculate AB by EW166 prior to calculating total for EBS)
 #' @param aggBySex            - flag to agregate CPUE over sexes
 #' @param aggByMaturity       - flag to aggregate of maturity states
 #' @param aggByShellCondition - flag to aggregate over shell conditions

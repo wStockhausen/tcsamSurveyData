@@ -36,8 +36,8 @@ Function to calculate cpue by survey station, averaging over cpue by haul.
 \details{
 Notes: \cr
 \itemize{
-\item   CPUE in numbers is in no/(sq. nm.) \cr
-\item   CPUE in weight  is in mt/(sq. nm.) \cr
+\item   CPUE in numbers is in no/(sq. nm.)
+\item   CPUE in weight  is in mt/(sq. nm.)
 \item   CPUE is calculated only for stations at which at least 1 haul was conducted
 } \cr
 The returned dataframe has the following columns: \cr

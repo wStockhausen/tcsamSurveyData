@@ -3,7 +3,7 @@
 #'
 #'@description This function calculates total abundance and biomass from a by-stratum data frame or csv file.
 #'
-#'@param tbl     : data frame with size comps by stratum info from call to \code{\link{calcSizeComps.ByStratum} or \link{calcSizeComps.EW166}}, or a csv file from such a call, or NULL
+#'@param tbl     : data frame with size comps by stratum info from call to [calcSizeComps.ByStratum] or [calcSizeComps.EW166], or a csv file from such a call, or NULL
 #'@param in.csv  : csv filename from which to read input dataframe
 #'@param export  : boolean flag to write results to csv file
 #'@param out.csv : output file name
@@ -34,6 +34,7 @@
 #'}
 #'
 #' @importFrom sqldf sqldf
+#' @importFrom utils read.csv write.csv
 #' @importFrom wtsUtilities selectFile
 #'
 #'@export

@@ -3,7 +3,7 @@
 #'
 #'@description This function estimates size comps for abundance, size comps by year, east/west of 166W from a size comps-by-stratum data frame or csv file.
 #'
-#'@param tbl         : data frame with size comps by stratum info from call to \code{\link{calcSizeComps.ByStratum}} or csv file with size comps by stratum info, or NULL
+#'@param tbl         : data frame with size comps by stratum info from call to [calcSizeComps.ByStratum] or csv file with size comps by stratum info, or NULL
 #'@param strata_toEW166 : data frame w/ conversion from original strata to EW166 strata
 #'@param export      : boolean flag to write results to csv file
 #'@param out.csv     : output file name

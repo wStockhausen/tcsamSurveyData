@@ -21,31 +21,57 @@ plotChelaHeights(
 )
 }
 \arguments{
-\item{dfrp}{- dataframe of chela height data from call to getChelaHeights(...)}
+\item{dfrp}{\itemize{
+\item dataframe of chela height data from call to getChelaHeights(...)
+}}
 
-\item{ratio}{- default ratio (if NULL, maturity status will not be characterized)}
+\item{ratio}{\itemize{
+\item default ratio (if NULL, maturity status will not be characterized)
+}}
 
-\item{discrim}{- optional function taking a vector of sizes (CW) and returning the associated chela height cutline values yielding a "mature" classification}
+\item{discrim}{\itemize{
+\item optional function taking a vector of sizes (CW) and returning the associated chela height cutline values yielding a "mature" classification
+}}
 
-\item{byShellCondition}{- flag (T/F) to color points by shell condition}
+\item{byShellCondition}{\itemize{
+\item flag (T/F) to color points by shell condition
+}}
 
-\item{facet_grid}{- formula to use for a faceted grid plot (default=NULL)}
+\item{facet_grid}{\itemize{
+\item formula to use for a faceted grid plot (default=NULL)
+}}
 
-\item{plotRatio}{- flag to plot CH/CW vs CW, rather than CH vs. CW (default=FALSE)}
+\item{plotRatio}{\itemize{
+\item flag to plot CH/CW vs CW, rather than CH vs. CW (default=FALSE)
+}}
 
-\item{plotLMs}{- flag to plot linear model fits to immature/mature data (default=TRUE)}
+\item{plotLMs}{\itemize{
+\item flag to plot linear model fits to immature/mature data (default=TRUE)
+}}
 
-\item{useLnScales}{- flag (T/F) to plot data on ln-scales default=FALSE)}
+\item{useLnScales}{\itemize{
+\item flag (T/F) to plot data on ln-scales default=FALSE)
+}}
 
-\item{aggYears}{- number of years over which to aggregate}
+\item{aggYears}{\itemize{
+\item number of years over which to aggregate
+}}
 
-\item{rng}{- y-axis range}
+\item{rng}{\itemize{
+\item y-axis range
+}}
 
-\item{ncol}{- number of coulmns to use for faceting}
+\item{ncol}{\itemize{
+\item number of coulmns to use for faceting
+}}
 
-\item{title}{- title for plot}
+\item{title}{\itemize{
+\item title for plot
+}}
 
-\item{showPlot}{- flag to show plots immediately}
+\item{showPlot}{\itemize{
+\item flag to show plots immediately
+}}
 }
 \value{
 ggplot2 plot object to print

@@ -3,14 +3,14 @@
 #'
 #'@description Function to aggregate size comps from survey data over factors.
 #'
-#'@param zcs - dataframe from call to one of the calcSizeComps... functions
-#'@param facs - factors to include in output
-#'@param dropLevels - list by factor of factor levels to drop
-#'@param var - variable type to export (abundance or biomass)
-#'@param export  - boolean flag to write results to csv file
-#'@param out.csv - output file name
-#'@param out.dir - output file directory
-#'@param verbosity - integer flag indicating level of printed output (0=off,1=minimal,2=full)
+#'@param zcs  dataframe from call to one of the calcSizeComps... functions
+#'@param facs  factors to include in output
+#'@param dropLevels  list by factor of factor levels to drop
+#'@param var  variable type to export (abundance or biomass)
+#'@param export   boolean flag to write results to csv file
+#'@param out.csv  output file name
+#'@param out.dir  output file directory
+#'@param verbosity  integer flag indicating level of printed output (0=off,1=minimal,2=full)
 #'
 #'@return a dataframe
 #'

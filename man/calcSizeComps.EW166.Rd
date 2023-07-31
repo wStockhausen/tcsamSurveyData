@@ -14,7 +14,7 @@ calcSizeComps.EW166(
 )
 }
 \arguments{
-\item{tbl}{: data frame with size comps by stratum info from call to \code{\link{calcSizeComps.ByStratum}} or csv file with size comps by stratum info, or NULL}
+\item{tbl}{: data frame with size comps by stratum info from call to \link{calcSizeComps.ByStratum} or csv file with size comps by stratum info, or NULL}
 
 \item{strata_toEW166}{: data frame w/ conversion from original strata to EW166 strata}
 

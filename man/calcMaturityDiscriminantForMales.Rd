@@ -13,15 +13,25 @@ calcMaturityDiscriminantForMales(
 )
 }
 \arguments{
-\item{dfr}{- dataframe with data to analyse for  discriminant}
+\item{dfr}{\itemize{
+\item dataframe with data to analyse for  discriminant
+}}
 
-\item{col}{- number or name of column with data to analyse for discriminant}
+\item{col}{\itemize{
+\item number or name of column with data to analyse for discriminant
+}}
 
-\item{min}{- minimum value of dfr[[col]] to consider}
+\item{min}{\itemize{
+\item minimum value of dfr[[col]] to consider
+}}
 
-\item{max}{- maximum value of dfr[[col]] to consider}
+\item{max}{\itemize{
+\item maximum value of dfr[[col]] to consider
+}}
 
-\item{binwidth}{- binwidth for histogram}
+\item{binwidth}{\itemize{
+\item binwidth for histogram
+}}
 }
 \value{
 value to use as discriminant

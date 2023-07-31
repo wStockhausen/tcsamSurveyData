@@ -16,21 +16,37 @@ exportSizeComps.wide(
 )
 }
 \arguments{
-\item{dfr}{- dataframe with survey size comps from call to \code{\link{calcSizeComps.ByStratum}} or  \code{\link{calcSizeComps.EW166}} or  \code{\link{calcSizeComps.EBS}}}
+\item{dfr}{\itemize{
+\item dataframe with survey size comps from call to \code{\link{calcSizeComps.ByStratum}} or  \code{\link{calcSizeComps.EW166}} or  \code{\link{calcSizeComps.EBS}}
+}}
 
-\item{facs}{- vector of 'factor' column names (e.g., 'SEX', 'MATURITY') for output}
+\item{facs}{\itemize{
+\item vector of 'factor' column names (e.g., 'SEX', 'MATURITY') for output
+}}
 
-\item{var}{- variable type to extract ("ABUNDANCE" or "BIOMASS")}
+\item{var}{\itemize{
+\item variable type to extract ("ABUNDANCE" or "BIOMASS")
+}}
 
-\item{dropLevels}{- factor levels to drop}
+\item{dropLevels}{\itemize{
+\item factor levels to drop
+}}
 
-\item{export}{- boolean flag to write results to csv file}
+\item{export}{\itemize{
+\item boolean flag to write results to csv file
+}}
 
-\item{out.csv}{- output file name}
+\item{out.csv}{\itemize{
+\item output file name
+}}
 
-\item{out.dir}{- output file directory}
+\item{out.dir}{\itemize{
+\item output file directory
+}}
 
-\item{verbosity}{- integer flag indicating level of printed output (0=off,1=minimal,2=full)}
+\item{verbosity}{\itemize{
+\item integer flag indicating level of printed output (0=off,1=minimal,2=full)
+}}
 }
 \value{
 dataframe with size comps in 'wide' format.

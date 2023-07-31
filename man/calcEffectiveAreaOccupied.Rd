@@ -7,7 +7,9 @@
 calcEffectiveAreaOccupied(dfrCPUE)
 }
 \arguments{
-\item{dfrCPUE}{- dataframe with cpue estimates by station (i.e., output from from \code{calcCPUE.ByStation})}
+\item{dfrCPUE}{\itemize{
+\item dataframe with cpue estimates by station (i.e., output from from \link{calcCPUE.ByStation})
+}}
 }
 \value{
 a 2-element list with dataframes giving effective area occupied based on abundance and biomass.

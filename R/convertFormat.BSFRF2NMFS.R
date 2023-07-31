@@ -3,9 +3,9 @@
 #'
 #' @description Function to convert BSFRF data to (almost) NMFS CRABHAUL_DATA format.
 #'
-#' @param tbl - filename for BSFRF  csv file to read or dataframe from reading csv file
-#' @param types - BSFRF study types to select ("SBS", "IDX", or both)
-#' @param verbose - flag to print debug info
+#' @param tbl : filename for BSFRF  csv file to read or dataframe from reading csv file
+#' @param types : BSFRF study types to select ("SBS", "IDX", or both)
+#' @param verbosity : integer flag to print debug info
 #'
 #' @return dataframe "almost" in CRABHAUL_DATA format.
 #'
@@ -40,6 +40,8 @@
 #'   \item {SAMPLING_FACTOR}
 #'   \item {CPUE_NUM}
 #' }
+#'
+#' @importFrom utils read.csv write.csv
 #'
 #' @export
 #'

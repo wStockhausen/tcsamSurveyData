@@ -2,7 +2,7 @@
 % Please edit documentation in R/selectStrata.TrawlSurvey.R
 \name{selectStrata.TrawlSurvey}
 \alias{selectStrata.TrawlSurvey}
-\title{Function to extract crab station data and strata information from a NMFS trawl survey strata file.}
+\title{Extract crab strata and associated station information from a NMFS trawl survey strata file}
 \usage{
 selectStrata.TrawlSurvey(
   tbl = NULL,
@@ -15,7 +15,7 @@ selectStrata.TrawlSurvey(
 )
 }
 \arguments{
-\item{tbl}{: table (dataframe) of survey station/strata data (or name of survey station/strata csv file, or NULL)}
+\item{tbl}{: table (dataframe) of survey strata /stationdata (or name of survey strata/station csv file, or NULL)}
 
 \item{species}{: code ('BKC','BTC','RKC','OTC') indicating species}
 
@@ -33,19 +33,19 @@ selectStrata.TrawlSurvey(
 a dataframe with strata/stations info.
 }
 \description{
-Same as selectStations.TrawlSurvey(...)
+Function to extract crab strata and associated station information from a NMFS trawl survey strata file.
 }
 \details{
 If tbl is NULL, the user will be prompted for a csv file via a file dialog box.
 Returned dataframe has columns:
 \itemize{\item {YEAR}
-        \item {STRATUM}
-        \item {STRATUM_CODE}
-        \item {STRATUM_AREA}
-        \item {GIS_STATION}
-        \item {STATION_LONGITUDE}
-        \item {STATION_LATITUDE}
-        \item {STATION_AREA}
-        }
+\item {STRATUM}
+\item {STRATUM_CODE}
+\item {STRATUM_AREA}
+\item {GIS_STATION}
+\item {STATION_LONGITUDE}
+\item {STATION_LATITUDE}
+\item {STATION_AREA}
+}
 Area is in square nautical miles.
 }

@@ -2,17 +2,21 @@
 % Please edit documentation in R/subForTCSAM.R
 \name{subForTCSAM}
 \alias{subForTCSAM}
-\title{Check abnd make substitutions for "undetermined", "unknown", or "all"}
+\title{Check and make substitutions for "undetermined", "unknown", or "all"}
 \usage{
 subForTCSAM(x, str)
 }
 \arguments{
-\item{x}{- character string to check if equal to "undetermined", "unknown", or "all"}
+\item{x}{\itemize{
+\item character string to check if equal to "undetermined", "unknown", or "all"
+}}
 
-\item{str}{- character string to substitute}
+\item{str}{\itemize{
+\item character string to substitute
+}}
 }
 \value{
-character string with potential susbstitutions made
+character string with potential substitutions made
 }
 \description{
 Function to check and make substitutions for "undetermined", "unknown", or "all".

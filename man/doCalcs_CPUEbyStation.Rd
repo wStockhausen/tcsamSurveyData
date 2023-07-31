@@ -20,29 +20,53 @@ doCalcs_CPUEbyStation(
 )
 }
 \arguments{
-\item{tbl_strata}{- dataframe with survey strata info (output from \code{\link{selectStrata.TrawlSurvey}})}
+\item{tbl_strata}{\itemize{
+\item dataframe with survey strata info (output from \code{\link{selectStrata.TrawlSurvey}})
+}}
 
-\item{tbl_hauls}{- dataframe with hauls info (output from \code{\link{selectHauls.TrawlSurvey}})}
+\item{tbl_hauls}{\itemize{
+\item dataframe with hauls info (output from \code{\link{selectHauls.TrawlSurvey}})
+}}
 
-\item{tbl_indivs}{- dataframe with individual crab info (output from \code{\link{selectIndivs.TrawlSurvey}})}
+\item{tbl_indivs}{\itemize{
+\item dataframe with individual crab info (output from \code{\link{selectIndivs.TrawlSurvey}})
+}}
 
-\item{aggBySex}{- flag to agregate CPUE over sexes}
+\item{aggBySex}{\itemize{
+\item flag to agregate CPUE over sexes
+}}
 
-\item{aggByMaturity}{- flag to aggregate of maturity states}
+\item{aggByMaturity}{\itemize{
+\item flag to aggregate of maturity states
+}}
 
-\item{aggByShellCondition}{- flag to aggregate over shell conditions}
+\item{aggByShellCondition}{\itemize{
+\item flag to aggregate over shell conditions
+}}
 
-\item{aggBySize}{- flag to aggregate over sizes}
+\item{aggBySize}{\itemize{
+\item flag to aggregate over sizes
+}}
 
-\item{cutpts}{- vector of cutpoints to create size bins from}
+\item{cutpts}{\itemize{
+\item vector of cutpoints to create size bins from
+}}
 
-\item{truncate.low}{- flag (T/F) to exclude individuals smaller than minSize}
+\item{truncate.low}{\itemize{
+\item flag (T/F) to exclude individuals smaller than minSize
+}}
 
-\item{truncate.high}{- flag (T/F) to exclude individuals larger than maxSize}
+\item{truncate.high}{\itemize{
+\item flag (T/F) to exclude individuals larger than maxSize
+}}
 
-\item{dropLevels}{- NULL, or list (by factor name) of vectors of factor values to drop (see help for \code{wtsUtilities::dropLevels})}
+\item{dropLevels}{\itemize{
+\item NULL, or list (by factor name) of vectors of factor values to drop (see help for \code{wtsUtilities::dropLevels})
+}}
 
-\item{verbosity}{- integer flag indicating level of printed output (0=off,1=minimal,2=full)}
+\item{verbosity}{\itemize{
+\item integer flag indicating level of printed output (0=off,1=minimal,2=full)
+}}
 }
 \value{
 A dataframe of cpue (numbers and weight) by survey station. See Details.

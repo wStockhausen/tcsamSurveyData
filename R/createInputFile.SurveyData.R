@@ -3,19 +3,19 @@
 #'
 #' @description This function creates a survey input file for TCSAM02.
 #'
-#' @param fn - output file name
-#' @param survey_name - name to use for survey
-#' @param acdInfo - list with sublists for abundance and biomass specifying fitType, likeType, and likeWgt
-#' @param zcsInfo - list for size compositions specifying fitType, likeType, and likeWgt
-#' @param cutpts - vector of cutpoints for the input size compositions
-#' @param dfrACD - dataframe of aggregated catch data
-#' @param dfrZCs - dataframe of size comps
-#' @param dfrSSs - dataframe with relative sample sizes to use with size comps
-#' @param ssCol - sample size column name in dfrSSs (default="numIndivs")
-#' @param verbose - flag to print debugging info
+#' @param fn : output file name
+#' @param survey_name : name to use for survey
+#' @param acdInfo : list with sublists for abundance and biomass specifying fitType, likeType, and likeWgt
+#' @param zcsInfo : list for size compositions specifying fitType, likeType, and likeWgt
+#' @param cutpts : vector of cutpoints for the input size compositions
+#' @param dfrACD : dataframe of aggregated catch data
+#' @param dfrZCs : dataframe of size comps
+#' @param dfrSSs : dataframe with relative sample sizes to use with size comps
+#' @param ssCol : sample size column name in dfrSSs (default="numIndivs")
+#' @param verbose : flag to print debugging info
 #'
 #' @details This function that creates a survey input file for TCSAM02. It utilizes
-#' functions from the [tcsamFunctions] package to organize the inputs and write the file,
+#' functions from the \pkg{tcsamFunctions} package to organize the inputs and write the file,
 #' with the survey data treated as index catch data.
 #'
 #' \code{acdInfo} list has elements \code{abundance} and \code{biomass}, each of which
@@ -111,21 +111,25 @@ createInputFile.SurveyData<-function(fn,
                                                         likeWgt=acdInfo$biomass$likeWgt,
                                                         unitsIn="THOUSANDS_MT",
                                                         unitsOut="THOUSANDS_MT");
-  dfrZCsp = dfrZCs %>%
-             dplyr::select(year=YEAR,sex=SEX,maturity=MATURITY,`shell condition`=SHELL_CONDITION,size=SIZE,
-                           value=totABUNDANCE);
-  names(dfrSSs)[names(dfrSSs)==ssCol]="ss";
-  dfrSSsp = dfrSSs %>%
-             dplyr::select(year=YEAR,sex=SEX,maturity=MATURITY,`shell condition`="SHELL_CONDITION",ss=ss);
-  lstZCsp = tcsamFunctions::inputList_SizeCompsData(dfrZCs=dfrZCsp,
-                                                    dfrSSs=dfrSSsp,
-                                                    cutpts=cutpts,
-                                                    tail_compression =zcsInfo$tail_compression,
-                                                    optFit=zcsInfo$fitType,
-                                                    likeType=zcsInfo$likeType,
-                                                    likeWgt=zcsInfo$likeWgt,
-                                                    unitsIn="MILLIONS",
-                                                    unitsOut="MILLIONS")
+  if (!is.null(dfrZCs)){
+    dfrZCsp = dfrZCs %>%
+               dplyr::select(year=YEAR,sex=SEX,maturity=MATURITY,`shell condition`=SHELL_CONDITION,size=SIZE,
+                             value=totABUNDANCE);
+    names(dfrSSs)[names(dfrSSs)==ssCol]="ss";
+    dfrSSsp = dfrSSs %>%
+               dplyr::select(year=YEAR,sex=SEX,maturity=MATURITY,`shell condition`="SHELL_CONDITION",ss=ss);
+    lstZCsp = tcsamFunctions::inputList_SizeCompsData(dfrZCs=dfrZCsp,
+                                                      dfrSSs=dfrSSsp,
+                                                      cutpts=cutpts,
+                                                      tail_compression =zcsInfo$tail_compression,
+                                                      optFit=zcsInfo$fitType,
+                                                      likeType=zcsInfo$likeType,
+                                                      likeWgt=zcsInfo$likeWgt,
+                                                      unitsIn="MILLIONS",
+                                                      unitsOut="MILLIONS");
+  } else {
+    lstZCsp = NULL;
+  }
   lstIC = list(lstAbd=lstAbd,lstBio=lstBio,lstZCs=lstZCsp);
   #--write output to assessment data file
   if (!file.exists(fn)) {
@@ -139,150 +143,4 @@ createInputFile.SurveyData<-function(fn,
                                            type="SURVEY",
                                            lstIC=lstIC);
   close(con);
-  # #--write output to assessment data file
-  #   if (!file.exists(fn)) {
-  #     res<-file.create(fn);
-  #     if (!res) stop(paste0("Could not create file '",fn,"'.\nAborting...\n"));
-  #   }
-  #   con<-file(fn);
-  #   open(con,open="w");
-  #
-  #   cat("#--------------------------------------------------------------------\n",file=con);
-  #   cat("#TCSAM02 model file for survey data\n",file=con);
-  #   cat("#--------------------------------------------------------------------\n",file=con);
-  #   cat("SURVEY    #required keyword\n",file=con);
-  #   cat(survey_name,"\t#survey name\n",file=con,sep='');
-  #   cat("TRUE      #has index catch data?\n",file=con);
-  #   cat("FALSE     #has retained catch data?\n",file=con);
-  #   cat("FALSE     #has observed discard catch data\n",file=con);
-  #   cat("FALSE     #has observed total catch data\n",file=con);
-  #   cat("FALSE     #has effort data?\n",file=con);
-  #   cat("#------------INDEX CATCH DATA------------	\n",file=con);
-  #   cat("CATCH_DATA     #required keyword\n",file=con);
-  #   cat("TRUE           #has aggregate catch abundance (numbers)\n",file=con);
-  #   cat("TRUE           #has aggregate catch biomass (weight)\n",file=con);
-  #   cat("TRUE           #has size frequency data\n",file=con);
-  #
-  #   tmp<-dfrACD;
-  #   uYs<-sort(unique(dfrACD$YEAR));
-  #   uFCs<-unique(dfrACD[,c(sx,mt,sc)])
-  #   if (verbose){
-  #     cat("uFCs:\n")
-  #     print(uFCs);
-  #   }
-  #   #--survey numbers
-  #   cat("#------------AGGREGATE CATCH ABUNDANCE (NUMBERS)------------#\n",file=con);
-  #   cat("AGGREGATE_ABUNDANCE     #required keyword\n",file=con);
-  #   cat(acdInfo$abundance$fitType, "               #objective function fitting option\n",file=con);
-  #   cat(acdInfo$abundance$likeType,"               #likelihood type\n",file=con);
-  #   cat(acdInfo$abundance$likeWgt, "               #likelihood weight\n",file=con);
-  #   cat(length(uYs),"          #number of years\n",file=con,sep='');
-  #   cat("MILLIONS  # units, catch abundance\n",file=con);
-  #   cat(nrow(uFCs),"         #number of factor combinations\n",file=con);
-  #   for (iFC in 1:nrow(uFCs)){
-  #     fc<-uFCs[iFC,];
-  #     cat(toupper(subForTCSAM(as.character(fc[[sx]]),"ALL_SEX")),
-  #         toupper(subForTCSAM(as.character(fc[[mt]]),"ALL_MATURITY")),
-  #         toupper(subForTCSAM(as.character(fc[[sc]]),"ALL_SHELL")),"\n",file=con);
-  #     cat("#year    abundance    cv\n",file=con);
-  #     for (y in uYs){
-  #       ida<-(tmp[[yr]]==y)&
-  #             (tmp[[sx]]==fc[[sx]])&
-  #             (tmp[[mt]]==fc[[mt]])&
-  #             (tmp[[sc]]==fc[[sc]]);
-  #       cat(y,tmp[ida,abd],tmp[ida,cvA],"\n",sep="    ",file=con);
-  #     }#--y
-  #   }#--fc
-  #   rm(fc,y,ida);
-  #
-  #   #--survey biomass
-  #   cat("#------------AGGREGATE CATCH ABUNDANCE (BIOMASS)------------#\n",file=con);
-  #   cat("AGGREGATE_BIOMASS       #required keyword\n",file=con);
-  #   cat(acdInfo$biomass$fitType, "               #objective function fitting option\n",file=con);
-  #   cat(acdInfo$biomass$likeType,"               #likelihood type\n",file=con);
-  #   cat(acdInfo$biomass$likeWgt, "               #likelihood weight\n",file=con);
-  #   cat(length(uYs),"                      #number of years\n",file=con,sep='');
-  #   cat("THOUSANDS_MT            # units, catch biomass\n",file=con);
-  #   cat(nrow(uFCs),"		#number of factor combinations\n",file=con);
-  #   for (iFC in 1:nrow(uFCs)){
-  #     fc<-uFCs[iFC,];
-  #     cat(toupper(subForTCSAM(as.character(fc[[sx]]),"ALL_SEX")),
-  #         toupper(subForTCSAM(as.character(fc[[mt]]),"ALL_MATURITY")),
-  #         toupper(subForTCSAM(as.character(fc[[sc]]),"ALL_SHELL")),"\n",file=con);
-  #     cat("#year    biomass    cv\n",file=con);
-  #     for (y in uYs){
-  #       ida<-(tmp[[yr]]==y)&
-  #             (tmp[[sx]]==fc[[sx]])&
-  #             (tmp[[mt]]==fc[[mt]])&
-  #             (tmp[[sc]]==fc[[sc]]);
-  #       cat(y,tmp[ida,bio],tmp[ida,cvB],"\n",sep="    ",file=con);
-  #     }#--y
-  #   }#--fc
-  #   rm(fc,y,ida);
-  #
-  #   #--survey size compositions
-  #   bins<-(cutpts[2:length(cutpts)]+cutpts[1:(length(cutpts)-1)])/2;
-  #   tmp<-dfrZCs;
-  #   tmp[[sx]][tmp[[sx]]=="ALL"]<-"UNDETERMINED";
-  #   tmp[[mt]][tmp[[mt]]=="ALL"]<-"UNDETERMINED";
-  #   tmp[[sc]][tmp[[sc]]=="ALL"]<-"UNDETERMINED";
-  #   uYs<-sort(unique(tmp[[yr]]));
-  #   uFCs<-unique(tmp[,c(sx,mt,sc)]);
-  #   if (verbose){
-  #     cat("uFCs:\n")
-  #     print(uFCs);
-  #   }
-  #
-  #   tmpSS<-dfrSSs;
-  #   tmpSS[[sx]][tmpSS[[sx]]=="ALL"]<-"UNDETERMINED";
-  #   tmpSS[[mt]][tmpSS[[mt]]=="ALL"]<-"UNDETERMINED";
-  #   tmpSS[[sc]][tmpSS[[sc]]=="ALL"]<-"UNDETERMINED";
-  #
-  #   cat("#------------NUMBERS-AT-SIZE DATA-----------\n",file=con);
-  #   cat("SIZE_FREQUENCY_DATA  #required keyword\n",file=con);
-  #   cat(zcsInfo$fitType, "               #objective function fitting option\n",file=con);
-  #   cat(zcsInfo$likeType,"               #likelihood type\n",file=con);
-  #   cat(zcsInfo$likeWgt, "               #likelihood weight\n",file=con);
-  #   cat(length(uYs),"       #number of years of data\n",file=con);
-  #   cat("MILLIONS             #units\n",file=con);
-  #   cat(length(cutpts)," #number of size bin cutpoints\n",file=con);
-  #   cat("#size bin cutpts (mm CW)\n",file=con);
-  #   cat(cutpts,"\n",file=con);
-  #   cat("#--------------\n",file=con);
-  #   cat(nrow(uFCs),"    #number of factor combinations\n",file=con);
-  #   for (iFC in 1:nrow(uFCs)){
-  #     fc<-uFCs[iFC,];
-  #     #cat("uFC[",iFC,",]:\n");
-  #     #print(fc);
-  #     cat(toupper(subForTCSAM(fc[[sx]],"ALL_SEX")),
-  #         toupper(subForTCSAM(fc[[mt]],"ALL_MATURITY")),
-  #         toupper(subForTCSAM(fc[[sc]],"ALL_SHELL")),"\n",file=con);
-  #         cat("#year    ss    ",bins,"\n",file=con);
-  #         for (y in uYs){
-  #           # ids<-(dfrSS[[yr]]==y)&
-  #           #       (dfrSS[[sx]]==fc[[sx]])&
-  #           #       (dfrSS[[mt]]==fc[[mt]])&
-  #           #       (dfrSS[[sc]]==fc[[sc]]);
-  #           ids<-(tmpSS[[yr]]==y)&
-  #                 (tmpSS[[sx]]==fc[[sx]])&
-  #                 (tmpSS[[mt]]==fc[[mt]])&
-  #                 (tmpSS[[sc]]==fc[[sc]]);
-  #           idz<-(tmp[[yr]]==y)&
-  #                 (tmp[[sx]]==fc[[sx]])&
-  #                 (tmp[[mt]]==fc[[mt]])&
-  #                 (tmp[[sc]]==fc[[sc]]);
-  #           rw<-paste(tmp[idz,abd],collapse=" ");
-  #           # cat(y,inpSS*dfrSS[ids,"ss"]/ssT[ssT[[yr]]==y,"ss"],rw,"\n",sep="    ",file=con);
-  #           cat(y,ifelse(is.null(tmpSS[ids,ss]),"missing!",tmpSS[ids,ss]),rw,"\n",sep="    ",file=con);
-  #         }#--y
-  #   }#--iFC
-  #
-  #   cat("#------------RETAINED CATCH DATA------------#\n",file=con);
-  #   cat("#---none\n",file=con);
-  #   cat("#------------DISCARD CATCH DATA------------#\n",file=con);
-  #   cat("#---none\n",file=con);
-  #   cat("#------------TOTAL CATCH DATA------------#\n",file=con);
-  #   cat("#---none\n",file=con);
-  #
-  #   close(con);
 }

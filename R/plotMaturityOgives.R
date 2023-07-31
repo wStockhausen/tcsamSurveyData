@@ -20,6 +20,7 @@
 #'"facet_grid" is used to create a faceted grid plot.
 #'
 #'@importFrom scales squish
+#'@importFrom utils packageVersion
 #'
 #'@import ggplot2
 #'
@@ -51,8 +52,8 @@ plotMaturityOgives<-function(dfrp,
     p <- p + ggplot2::scale_x_continuous();
     p <- p + ggplot2::scale_y_continuous(breaks=pretty(c(0,1)),limits=c(0,1),expand=c(0.01,0))
     if (!is.null(facet_grid)){
-      if (packageVersion("ggplot2")<="2.2.1") p <- p + ggplot2::facet_grid(facets=facet_grid);
-      if (packageVersion("ggplot2")>="3.0.0") p <- p + ggplot2::facet_grid(rows=facet_grid);
+      if (utils::packageVersion("ggplot2")<="2.2.1") p <- p + ggplot2::facet_grid(facets=facet_grid);
+      if (utils::packageVersion("ggplot2")>="3.0.0") p <- p + ggplot2::facet_grid(rows=facet_grid);
     }
     p <- p + ggplot2::labs(x=xlab,y=ylab,size="sample\n size",shape="sex");
     if (!is.null(title)) p <- p + ggplot2::ggtitle(title);

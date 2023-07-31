@@ -9,11 +9,13 @@
 #'
 #' @details Mean, median, and 80% confidence intervals are calculated by year,
 #' stratum, sex, maturity state, and shell condition. Stats are calculated on
-#' total abundance and normalized size comps (the latter preceded by "nrm_" in)
+#' total abundance and normalized size comps (the latter preceded by "nrm_") in
 #' the output dataframe.
 #'
 #' @import dplyr
 #' @import magrittr
+#' @importFrom stats median quantile
+#' @importFrom wtsUtilities Sum
 #'
 #' @export
 #'

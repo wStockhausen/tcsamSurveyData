@@ -2,7 +2,8 @@
 % Please edit documentation in R/calcEffectiveN.SurveyData.NMFS.R
 \name{calcEffectiveN.SurveyData.NMFS}
 \alias{calcEffectiveN.SurveyData.NMFS}
-\title{Calculate and plot effective N's for NMFS survey size compositions using a bootstrapping approach}
+\title{Calculate and plot effective N's for NMFS survey size compositions using a bootstrapping approach,
+with output to a Rmarkdown-created document}
 \usage{
 calcEffectiveN.SurveyData.NMFS(
   loadRZCs = NULL,
@@ -25,10 +26,48 @@ calcEffectiveN.SurveyData.NMFS(
 )
 }
 \arguments{
-\item{loadRZCs}{- NULL to calculate and plot resampled size compositions, or path to RData file to re-plot a saved set}
+\item{loadRZCs}{: NULL to calculate and plot resampled size compositions, or path to RData file to re-plot a saved set}
+
+\item{outDir}{: path to output folder for plots}
+
+\item{title}{: document title}
+
+\item{bootN}{: number of bootstrap runs to make}
+
+\item{species}{: crab species}
+
+\item{minYr}{: min year. to include}
+
+\item{maxYr}{: max survey year to include}
+
+\item{minSize}{: min size (mm) to include in size comps}
+
+\item{maxSize}{: max size (mm) to include in size comps}
+
+\item{binSize}{:bin size (mm)}
+
+\item{lglZ}{: legal size}
+
+\item{bySex}{: flag (T/F) to calc by sex}
+
+\item{byMaturity}{: flag (T/F) to calc by maturity state}
+
+\item{byShellCondition}{: flag (T/F) to calc by shell condition}
+
+\item{output_format}{: output format for Rmarkdown file}
+
+\item{clean}{: clean previous files from outDir}
+
+\item{verbosity}{: integer flag indicating level of printed output (0=off,1=minimal,2=full)}
+
+\item{bySize}{: flag (T/F) to calc by size}
+}
+\value{
+nothing
 }
 \description{
-Function to calculate and plot effective N's for NMFS survey size compositions using a bootstrapping approach.
+Function to calculate and plot effective N's for NMFS survey size compositions using a bootstrapping approach,
+with output to a Rmarkdown-created document.
 }
 \details{
 Uses rmd/calcEffectiveN.SurveyData.NMFS.Rmd to produce a report file. Saves results in outDir/RZCs.RData.

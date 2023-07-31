@@ -3,8 +3,8 @@
 #'
 #' @description Function to add haul-associated info to an indiv data datframe.
 #'
-#' @param tbl_hauls  - hauls table (dataframe) from call to selectHauls.TrawlSurvey(...) [required]
-#' @param tbl_indivs - indiv data table (dataframe) from call to selectIndivs.TrawlSurvey(...) [required]
+#' @param tbl_hauls  : hauls table (dataframe) from call to selectHauls.TrawlSurvey(...) \[required\]
+#' @param tbl_indivs : indiv data table (dataframe) from call to selectIndivs.TrawlSurvey(...) \[required\]
 #'
 #' @return dataframe with haul-associated info dropped
 #'

@@ -7,7 +7,9 @@
 resampledSizeComps.CalcStats(dfrRZCs)
 }
 \arguments{
-\item{dfrRZCs}{- dataframe with resampled size comps from [resampledSizeComps.calc]}
+\item{dfrRZCs}{\itemize{
+\item dataframe with resampled size comps from \link{resampledSizeComps.calc}
+}}
 }
 \value{
 dataframe with statistics from resampled size comps.
@@ -16,8 +18,8 @@ dataframe with statistics from resampled size comps.
 Function to calculate statistics on resampled size comps
 }
 \details{
-Mean, median, and 80% confidence intervals are calculated by year,
+Mean, median, and 80\% confidence intervals are calculated by year,
 stratum, sex, maturity state, and shell condition. Stats are calculated on
-total abundance and normalized size comps (the latter preceded by "nrm_" in)
+total abundance and normalized size comps (the latter preceded by "nrm_") in
 the output dataframe.
 }

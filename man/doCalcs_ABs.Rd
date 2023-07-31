@@ -22,33 +22,59 @@ doCalcs_ABs(
 )
 }
 \arguments{
-\item{tbl_strata}{- dataframe with survey strata info (output from \code{\link{selectStrata.TrawlSurvey}})}
+\item{tbl_strata}{\itemize{
+\item dataframe with survey strata info (output from \code{\link{selectStrata.TrawlSurvey}})
+}}
 
-\item{tbl_hauls}{- dataframe with hauls info (output from \code{\link{selectHauls.TrawlSurvey}})}
+\item{tbl_hauls}{\itemize{
+\item dataframe with hauls info (output from \code{\link{selectHauls.TrawlSurvey}})
+}}
 
-\item{tbl_indivs}{- dataframe with individual crab info (output from \code{\link{selectIndivs.TrawlSurvey}})}
+\item{tbl_indivs}{\itemize{
+\item dataframe with individual crab info (output from \code{\link{selectIndivs.TrawlSurvey}})
+}}
 
-\item{averageHaulsByStation}{- TRUE (average hauls by station prior to calculating stratum-level quantities)}
+\item{averageHaulsByStation}{\itemize{
+\item TRUE (average hauls by station prior to calculating stratum-level quantities)
+}}
 
-\item{aggBySex}{- flag to agregate CPUE over sexes}
+\item{calcByEW166}{: TRUE (calculate AB by EW166 prior to calculating total for EBS)}
 
-\item{aggByMaturity}{- flag to aggregate of maturity states}
+\item{aggBySex}{\itemize{
+\item flag to agregate CPUE over sexes
+}}
 
-\item{aggByShellCondition}{- flag to aggregate over shell conditions}
+\item{aggByMaturity}{\itemize{
+\item flag to aggregate of maturity states
+}}
 
-\item{aggBySize}{- flag to aggregate over sizes}
+\item{aggByShellCondition}{\itemize{
+\item flag to aggregate over shell conditions
+}}
 
-\item{cutpts}{- seq(from=0,to=185,by=5)}
+\item{aggBySize}{\itemize{
+\item flag to aggregate over sizes
+}}
 
-\item{truncate.low}{- TRUE}
+\item{cutpts}{\itemize{
+\item seq(from=0,to=185,by=5)
+}}
 
-\item{truncate.high}{- FALSE}
+\item{truncate.low}{\itemize{
+\item TRUE
+}}
 
-\item{dropLevels}{- NULL, or list (by factor name) of vectors of factor values to drop (see help for \code{wtsUtilities::dropLevels})}
+\item{truncate.high}{\itemize{
+\item FALSE
+}}
 
-\item{verbosity}{- integer flag indicating level of printed output (0=off,1=minimal,2=full)}
+\item{dropLevels}{\itemize{
+\item NULL, or list (by factor name) of vectors of factor values to drop (see help for \code{wtsUtilities::dropLevels})
+}}
 
-\item{calcByEW166:}{TRUE (calculate AB by EW166 prior to calculating total for EBS)}
+\item{verbosity}{\itemize{
+\item integer flag indicating level of printed output (0=off,1=minimal,2=full)
+}}
 }
 \value{
 a nested list with elements cpue and ABs. \code{cpue} has the following elements: \cr
@@ -68,9 +94,9 @@ Function to calculate CPUE, abundance and biomass from station, haul and individ
 }
 \details{
 Notes: \itemize{
-  \item CPUE in numbers is in no/(sq. nm.)
-  \item CPUE in weight  is in mt/(sq. nm.)
-  \item Abundance is in 10^6 individuals
-  \item Biomass   is in 10^3 mt
-  }
+\item CPUE in numbers is in no/(sq. nm.)
+\item CPUE in weight  is in mt/(sq. nm.)
+\item Abundance is in 10^6 individuals
+\item Biomass   is in 10^3 mt
+}
 }

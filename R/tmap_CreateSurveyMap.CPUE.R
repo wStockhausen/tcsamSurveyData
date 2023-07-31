@@ -5,22 +5,22 @@
 #'
 #' @details Uses the \pkg{tmap} package.
 #'
-#' @param basemap - \pkg{tmap}-style basemap
-#' @param cpue - spatial dataframe with cpue data
-#' @param raster - raster object with environmental data
-#' @param cpueCol - name of column in cpue dataframe to plot as bubbles
-#' @param cpueColor - color for cpue bubbles
-#' @param cpueAlpha - alpha (transparency) for cpue bubbles
-#' @param maxCPUE - max value for cpue scale
-#' @param cpueLabel - label for cpue scale
-#' @param cpueLegend - TRUE/FALSE to show cpue scale
-#' @param rasterCol - name of raster data column
-#' @param rasterPalette - palette for raster
-#' @param rasterAlpha - alpha (transparency) for raster
-#' @param rasterLabel - label for raster scale
-#' @param rasterBreaks - breaks for raster scale
-#' @param rasterLegend - TRUE/FALSE to show raster scale
-#' @param panelLabel - label for map panel
+#' @param basemap : \pkg{tmap}-style basemap
+#' @param cpue : spatial dataframe with cpue data
+#' @param raster : raster object with environmental data
+#' @param cpueCol : name of column in cpue dataframe to plot as bubbles
+#' @param cpueColor : color for cpue bubbles
+#' @param cpueAlpha : alpha (transparency) for cpue bubbles
+#' @param maxCPUE : max value for cpue scale
+#' @param cpueLabel : label for cpue scale
+#' @param cpueLegend : TRUE/FALSE to show cpue scale
+#' @param rasterCol : name of raster data column
+#' @param rasterPalette : palette for raster
+#' @param rasterAlpha : alpha (transparency) for raster
+#' @param rasterLabel : label for raster scale
+#' @param rasterBreaks : breaks for raster scale
+#' @param rasterLegend : TRUE/FALSE to show raster scale
+#' @param panelLabel : label for map panel
 #'
 #' @return \pkg{tmap}-style map object
 #'

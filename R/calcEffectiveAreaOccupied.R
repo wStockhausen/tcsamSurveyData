@@ -3,7 +3,7 @@
 #'
 #' @description This function calculate the effective area occupied by different life stages.
 #'
-#' @param dfrCPUE - dataframe with cpue estimates by station (i.e., output from from \code{calcCPUE.ByStation})
+#' @param dfrCPUE - dataframe with cpue estimates by station (i.e., output from from [calcCPUE.ByStation])
 #'
 #' @return a 2-element list with dataframes giving effective area occupied based on abundance and biomass.
 #'

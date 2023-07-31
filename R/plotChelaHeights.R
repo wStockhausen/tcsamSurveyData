@@ -28,6 +28,7 @@
 #'"facet_grid" is used to create a faceted grid plot.
 #'
 #'@importFrom scales squish
+#'@importFrom utils head packageVersion
 #'
 #'@import ggplot2
 #'
@@ -107,7 +108,7 @@ plotChelaHeights<-function(dfrp,
     if (byShellCondition) p <- p + geom_point(aes(x=SIZE,y=CHELA_HEIGHT,color=SHELL_CONDITION),size=1,position='jitter')
     if (!is.null(ratio)){
         cat("Plotting cutline!!\n")
-        head(dfrc);
+        utils::head(dfrc);
         p <- p + geom_line(data=dfrc,aes(x=x,y=y),color='red',linetype=2)
         # if (is.null(discrim)){
         #     p <- p + geom_abline(intercept=0,slope=ratio,color='red',linetype=2)

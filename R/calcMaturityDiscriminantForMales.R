@@ -5,13 +5,16 @@
 #'
 #'@param dfr - dataframe with data to analyse for  discriminant
 #'@param col - number or name of column with data to analyse for discriminant
-#'@param min - minimum value of dfr[[col]] to consider
-#'@param max - maximum value of dfr[[col]] to consider
+#'@param min - minimum value of dfr\[\[col\]\] to consider
+#'@param max - maximum value of dfr\[\[col\]\] to consider
 #'@param binwidth - binwidth for histogram
 #'
 #'@return value to use as discriminant
 #'
 #'@details None.
+#'
+#'@importFrom graphics hist plot text
+#'@importFrom stats lowess spline
 #'
 #'@export
 #'

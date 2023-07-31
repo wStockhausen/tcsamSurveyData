@@ -27,11 +27,17 @@ doCalcs_ZCs(
 
 \item{tbl_indivs}{: dataframe with individual crab info (output from \code{\link{selectIndivs.TrawlSurvey}})}
 
-\item{aggBySex}{- flag to agregate CPUE over sexes}
+\item{aggBySex}{\itemize{
+\item flag to agregate CPUE over sexes
+}}
 
-\item{aggByMaturity}{- flag to aggregate of maturity states}
+\item{aggByMaturity}{\itemize{
+\item flag to aggregate of maturity states
+}}
 
-\item{aggByShellCondition}{- flag to aggregate over shell conditions}
+\item{aggByShellCondition}{\itemize{
+\item flag to aggregate over shell conditions
+}}
 
 \item{cutpts}{: seq(from=0,to=185,by=5)}
 
@@ -41,7 +47,9 @@ doCalcs_ZCs(
 
 \item{recodeOldShellImmature}{: recode old shell, immature crab as new shell immature crab}
 
-\item{dropLevels}{- NULL, or list (by factor name) of vectors of factor values to drop (see help for \code{wtsUtilities::dropLevels})}
+\item{dropLevels}{\itemize{
+\item NULL, or list (by factor name) of vectors of factor values to drop (see help for \code{wtsUtilities::dropLevels})
+}}
 
 \item{verbosity}{: integer flag indicating level of printed output (0=off,1=minimal,2=full)}
 
@@ -60,6 +68,6 @@ Function to calculate size compositions from station, haul and individual crab i
 }
 \details{
 Notes: \itemize{
-  \item abundance is in 10^6 individuals
-  }
+\item abundance is in 10^6 individuals
+}
 }

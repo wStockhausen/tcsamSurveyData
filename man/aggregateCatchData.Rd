@@ -16,21 +16,21 @@ aggregateCatchData(
 )
 }
 \arguments{
-\item{tbl}{- dataframe from call to one of the calcBiomass... functions}
+\item{tbl}{: dataframe from call to one of the calcBiomass... functions}
 
-\item{facs}{- factors to include in output}
+\item{facs}{: factors to include in output}
 
-\item{dropLevels}{- factor levels to drop}
+\item{dropLevels}{: factor levels to drop}
 
-\item{var}{- variable type to export (abundance or biomass)}
+\item{var}{: variable type to export (abundance or biomass)}
 
-\item{export}{- boolean flag to write results to csv file}
+\item{export}{: boolean flag to write results to csv file}
 
-\item{out.csv}{- output file name}
+\item{out.csv}{: output file name}
 
-\item{out.dir}{- output file directory}
+\item{out.dir}{: output file directory}
 
-\item{verbosity}{- integer flag indicating level of printed output (0=off,1=minimal,2=full)}
+\item{verbosity}{: integer flag indicating level of printed output (0=off,1=minimal,2=full)}
 }
 \value{
 dataframe in stock assessment format

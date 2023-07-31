@@ -3,7 +3,7 @@
 #'
 #'@description Function to extract crab data on individuals w/ selected characteristics from trawl survey data in NMFS csv format.
 #'
-#'@param tbl_hauls : hauls table (dataframe) from call to selectHauls.TrawlSurvey(...) [required]
+#'@param tbl_hauls : hauls table (dataframe) from call to [selectHauls.TrawlSurvey] \[required\]
 #'@param tbl       : table (dataframe) of survey data (or csv filename or NULL)
 #'@param col.Size  : column name for size information
 #'@param sex             : one of 'MALE','FEMALE','MISSING', 'HERMAPHRODITE', or 'ALL' for narrowing selection of individuals
@@ -20,7 +20,7 @@
 #'@param out.dir - base path for output csv file              (set to folder of input csv file or current working directory)
 #'@param verbosity : integer flag indicating level of printed output (0=off,1=minimal,2=full)
 #'
-#'@return dataframe (see \link{details} for coulmn names)
+#'@return dataframe (see Details for column names)
 #'
 #'@details If neither tbl or in.csv is given, the user will be prompted for a survey data csv file via a file dialog box.\cr
 #' Returned dataframe will have columns:

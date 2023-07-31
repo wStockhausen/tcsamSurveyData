@@ -35,7 +35,7 @@ Function to calculate environmental data by survey station, averaging over value
 \details{
 Notes: \cr
 \itemize{
-\item   mean bottom depth in m \cr
+\item   mean bottom depth in m
 \item   mean bottom (gear) temperature in deg C
 } \cr
 The returned dataframe has the following columns: \cr

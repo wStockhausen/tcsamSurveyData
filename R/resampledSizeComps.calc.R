@@ -2,9 +2,9 @@
 #'@title Resample haul data to bootstrap size compositions by year/stratum from AFSC trawl survey data
 #'
 #'@param N          : number of resamples/year
-#'@param tbl_strata : data frame from call to \code{\link{selectStrata.TrawlSurvey}} [required]
-#'@param tbl_hauls  : dataframe from call to \code{\link{selectHauls.TrawlSurvey}} [required]
-#'@param tbl_indivs : dataframe from call to \code{\link{selectIndivs.TrawlSurvey}} (or crab survey filename)
+#'@param tbl_strata : data frame from call to [selectStrata.TrawlSurvey] \[required\]
+#'@param tbl_hauls  : dataframe from call to [selectHauls.TrawlSurvey] \[required\]
+#'@param tbl_indivs : dataframe from call to [selectIndivs.TrawlSurvey] (or crab survey filename)
 #'@param avgHaulsByStation : flag (T/F) to average hauls by station before calc'ing size comps
 #'@param byEW166           : flag (T/F) to aggregate size comps to EW166
 #'@param byEBS             : flag (T/F) to aggregate size comps to the EBS
@@ -47,6 +47,7 @@
 #'\item  totBIOMASS = estimated biomass-by-size (by stratum)
 #'}
 #'
+#'@importFrom dplyr bind_rows
 #'@export
 #'
 #######################################################################

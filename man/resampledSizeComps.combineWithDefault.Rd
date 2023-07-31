@@ -11,11 +11,11 @@ resampledSizeComps.combineWithDefault(
 )
 }
 \arguments{
-\item{dfrEffNs}{- dataframe with effective Ns from resampled size compositions (output from [resampledSizeComps.calcEffNs])}
+\item{dfrEffNs}{: dataframe with effective Ns from resampled size compositions (output from \link{resampledSizeComps.calcEffN})}
 
-\item{dfrOrgNs}{- dataframe with original Ns, for comparison}
+\item{dfrOrgNs}{: dataframe with original Ns, for comparison}
 
-\item{frmla}{- formula for summing over factors (default: "stratum+year")}
+\item{frmla}{: formula for summing over factors (default: "stratum+year")}
 }
 \value{
 a "melted" dataframe with values for default sample sizes (default N's),
@@ -24,28 +24,28 @@ the number of non-zero stations in the "N" column, identified by the value in th
 }
 \description{
 Function to combine effective Ns from resampled size compositions, together
-with the original Ns that would have been used as input sample sizes
+with the original Ns that would have been used as input sample sizes.
 }
 \details{
-dfrEffNs should be a dataframe output from [resampledSizeComps.calcEffNs].
+dfrEffNs should be a dataframe output from \link{resampledSizeComps.calcEffN}.
 dfrOrgNs should be a dataframe with columns
 \itemize{
-   \item{stratum}
-   \item{year}
-   \item{sex}
-   \item{maturity}
-   \item{shell_condition}
-   \item{relSS - relative sample size}
+\item{stratum}
+\item{year}
+\item{sex}
+\item{maturity}
+\item{shell_condition}
+\item{relSS - relative sample size}
 }
 
 Output dataframe will have columns
 \itemize{
-   \item{stratum- unless stratum is not included in the formula}
-   \item{year - unless year is not included in the formula}
-   \item{sex}
-   \item{maturity}
-   \item{shell_condition}
-   \item{type - type of sample size ("default N", "avg(N)","har(N)","num. crab","num. non-0 hauls")}
-   \item{N - value}
+\item{stratum- unless stratum is not included in the formula}
+\item{year - unless year is not included in the formula}
+\item{sex}
+\item{maturity}
+\item{shell_condition}
+\item{type - type of sample size ("default N", "avg(N)","har(N)","num. crab","num. non-0 hauls")}
+\item{N - value}
 }
 }

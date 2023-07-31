@@ -20,29 +20,29 @@ getChelaHeights(
 )
 }
 \arguments{
-\item{tbl_hauls}{- hauls table (dataframe) from call to selectHauls.TrawlSurvey(...) [required]}
+\item{tbl_hauls}{: hauls table (dataframe) from call to selectHauls.TrawlSurvey(...) [required]}
 
-\item{tbl}{- table (dataframe) of survey data (or filename of survey csv file, or NULL)}
+\item{tbl}{: table (dataframe) of survey data (or filename of survey csv file, or NULL)}
 
 \item{col.Size}{: column name for size information}
 
-\item{shell_condition}{- one of 'NEW_SHELL','OLD_SHELL' or 'ALL' for narrowing selection of individuals}
+\item{shell_condition}{: one of 'NEW_SHELL','OLD_SHELL' or 'ALL' for narrowing selection of individuals}
 
-\item{minSize}{- minimum size (width) of individuals to select}
+\item{minSize}{: minimum size (width) of individuals to select}
 
-\item{maxSize}{- maximum size (width) of individuals to select}
+\item{maxSize}{: maximum size (width) of individuals to select}
 
-\item{showPlot}{- flag to show plot of chela heights}
+\item{showPlot}{: flag to show plot of chela heights}
 
-\item{export}{- boolean flag to export results to csv file}
+\item{export}{: boolean flag to export results to csv file}
 
-\item{out.csv}{- name of output csv file                    (ignored if NULL)}
+\item{out.csv}{: name of output csv file                    (ignored if NULL)}
 
-\item{out.dir}{- base path for output csv file              (set to folder of input csv file or current working directory)}
+\item{out.dir}{: base path for output csv file              (set to folder of input csv file or current working directory)}
 
-\item{verbosity}{- flags for intermediate output}
+\item{verbosity}{: flags for intermediate output}
 
-\item{...}{- parameters passed to plotChelaHeights(...)}
+\item{...}{: parameters passed to plotChelaHeights(...)}
 }
 \value{
 dataframe

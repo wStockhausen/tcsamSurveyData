@@ -27,43 +27,43 @@ gg_MapCPUE(
 )
 }
 \arguments{
-\item{dfrCPUE}{- dataframe with cpue-by-haul or by-station (see \link{@details})}
+\item{dfrCPUE}{: dataframe with cpue-by-haul or by-station (see Details)}
 
-\item{type}{- string indicating cpue type: "biomass" or "abundance" (or "other")}
+\item{type}{: string indicating cpue type: "biomass" or "abundance" (or "other")}
 
-\item{column}{- name of column (if not wgtCPUE or numCPUE, which are identified automatically)}
+\item{column}{: name of column (if not wgtCPUE or numCPUE, which are identified automatically)}
 
-\item{minVal}{- min value for scales (values <= minVal are not plotted; default = 0)}
+\item{minVal}{: min value for scales (values <= minVal are not plotted; default = 0)}
 
-\item{maxVal}{- max value for scales (values > maxVal will be set to maxVal; default = Inf)}
+\item{maxVal}{: max value for scales (values > maxVal will be set to maxVal; default = Inf)}
 
-\item{label}{- label for color/fill/size legends}
+\item{label}{: label for color/fill/size legends}
 
-\item{basemap}{- \pkg{ggplot2} layers for basemap of plots (see [gg_GetBasemapLayers()])}
+\item{basemap}{: \pkg{ggplot2} layers for basemap of plots (see \link{gg_GetBasemapLayers})}
 
-\item{plotAsPolys}{- flag (T/F) to plot as cpue as colored polygons or as colored, scaled points}
+\item{plotAsPolys}{: flag (T/F) to plot as cpue as colored polygons or as colored, scaled points}
 
-\item{plotLand}{- flag (T/F) to include land in plot}
+\item{plotLand}{: flag (T/F) to include land in plot}
 
-\item{plotSurveyGrid}{- flag (T/F) to include survey grid in plot}
+\item{plotBathymetry}{: flag (T/F) to include bathymetry in plot}
 
-\item{color_scale}{- \pkg{ggplot2} scale_color object to use for colors}
+\item{plotSurveyGrid}{: flag (T/F) to include survey grid in plot}
 
-\item{fill_scale}{- \pkg{ggplot2} scale_fill object to use for fills}
+\item{color_scale}{: \pkg{ggplot2} scale_color object to use for colors}
 
-\item{size_scale}{- \pkg{ggplot2} scale_size object to use for symbol sizes}
+\item{fill_scale}{: \pkg{ggplot2} scale_fill object to use for fills}
 
-\item{facet_grid}{- formula to use for gridding plot facets}
+\item{size_scale}{: \pkg{ggplot2} scale_size object to use for symbol sizes}
 
-\item{facet_wrap}{- formula to use for wrapping plot facets}
+\item{facet_grid}{: formula to use for gridding plot facets}
 
-\item{nrow}{- number of rows for wrapped facets}
+\item{facet_wrap}{: formula to use for wrapping plot facets}
 
-\item{ncol}{- number of columns for wrapped facets}
+\item{nrow}{: number of rows for wrapped facets}
 
-\item{scales}{- string indicating how to treat scales among facets}
+\item{ncol}{: number of columns for wrapped facets}
 
-\item{plotBathym}{- flag (T/F) to include bathymetry in plot}
+\item{scales}{: string indicating how to treat scales among facets}
 }
 \value{
 a \pkg{ggplot2} plot object.
@@ -73,14 +73,14 @@ Function to create a \pkg{ggplot2} map of survey cpue-by-haul or by-station.
 }
 \details{
 If dfrCPUE is not a \pkg{sf} dataframe, then the function calls
-[getSurveyGridLayers()] to create a pkg{sf} dataframe using [wtsGIS::mergeDataframeWithLayers()],
+\code{\link[=gisGetSurveyGridLayers]{gisGetSurveyGridLayers()}} to create a pkg{sf} dataframe using \code{\link[wtsGIS:mergeDataframeWithLayer]{wtsGIS::mergeDataframeWithLayer()}},
 merging the CPUE dataframe with either the \code{grid} or \code{points} element of the survey
-grid layers list. The dataframe is joined to the gis layer using the `GIS_STATION` and `ID`
-columns. If `column` is NULL, then it is set to "wgtCPUE" if \code{type="biomass"}
+grid layers list. The dataframe is joined to the gis layer using the \code{GIS_STATION} and \code{ID}
+columns. If \code{column} is NULL, then it is set to "wgtCPUE" if \code{type="biomass"}
 or "numCPUE" if \code{type="abundance"}.
 
-An alternative is provide a \pkg{sf} dataframe, in which case data in the column identified by
-`column` is mapped using the active geometry (in this case `plotAsPolys` and `plotAsPoints` are ignored).
+An alternative is to provide a \pkg{sf} dataframe, in which case data in the column identified by
+\code{column} is mapped using the active geometry (in this case \code{plotAsPolys} and \code{plotAsPoints} are ignored).
 This provides a way of "faking" the code to plot any scalar data associated with a \pkg{sf} dataframe.
 
 #'

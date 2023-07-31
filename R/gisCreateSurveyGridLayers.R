@@ -1,19 +1,20 @@
 #'
-#' @title Create \code{sf} dataframes for a survey grid from polygon and point shapefiles
+#' @title Create \pkg{sf} dataframes for a survey grid from polygon and point shapefiles
 #'
 #' @description This function reads shapefile and creates \pkg{sf} polygon and point dataframes for a survey grid.
 #'
 #' @param gisPath - path to common toplevel folder for files
 #' @param shapeFiles - a list of shapefiles to read ("grid" and "stations", either can be NULL to skip creation of that layer)
-#' @param final_crs - a \code{sf::crs} object to be used as the final coordinate reference system for the spatial layers
+#' @param final_crs - a [sf::st_crs()] object to be used as the final coordinate reference system for the spatial layers
 #'
 #' @return a 2-element list with the grid and stations spatial layers as \pkg{sf} dataframes.
 #'
 #' @details None.
 #'
 #' @import dplyr
-#' @import magrittr
 #' @import wtsGIS
+#'
+#' @md
 #'
 #' @export
 #'
@@ -40,9 +41,9 @@ gisCreateSurveyGridLayers<-function(gisPath=NULL,
     stns.pnts<-wtsGIS::transformCRS(stns.pnts,final_crs);
   } else {
     tmp = wtsGIS::getPackagedLayer("StandardCrabStations");
-    tmp1 = tmp %>% as.data.frame() %>% dplyr::transmute(ID=STATION_ID,LON=LONGITUDE,LAT=LATITUDE);
-    stns.pnts = tmp1 %>%
-                wtsGIS::createSF_points(xCol="LON",yCol='LAT',crs = wtsGIS::get_crs(4326)) %>%
+    tmp1 = tmp |> as.data.frame() |> dplyr::transmute(ID=STATION_ID,LON=LONGITUDE,LAT=LATITUDE);
+    stns.pnts = tmp1 |>
+                wtsGIS::createSF_points(xCol="LON",yCol='LAT',crs = wtsGIS::get_crs(4326)) |>
                 wtsGIS::transformCRS(final_crs);
     rm(tmp,tmp1);
   }

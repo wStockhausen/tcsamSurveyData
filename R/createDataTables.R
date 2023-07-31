@@ -6,7 +6,7 @@
 #' @param species : character string indicating species (i.e., "Tanner crab","Snow crab","BKC", or "RKC")
 #' @param surveyType : survey type ("NMFS" or "BSFRF")
 #' @param bsfrfTypes : vector of BSFRF types to include ("SBS" and/or "IDX")
-#' @param strataTbl : dataframe previously created by call to \code{\link{selectStrata.TrawlSurvey}}
+#' @param strataTbl : dataframe previously created by call to [selectStrata.TrawlSurvey]
 #' @param strataFile : path to strata file (req'd if strataTbl is NULL)
 #' @param strataType : "2015"
 #' @param haulFiles : vector of paths to crabhaul files
@@ -18,18 +18,20 @@
 #' @param shell_condition : shell conditions to include ("NEW", "OLD", "ALL")
 #' @param minSize       : min size (CW) to include
 #' @param maxSize       : max size (CW) to include
+#' @param calcMaleMaturity : flag (T/F) to add male maturity info
 #' @param verbosity : integer flag indicating level of printed output (0=off,1=minimal,2=full)
 #'
 #'@details Returns a list with the following elements: \cr
 #'\itemize{
-#' \item {dfrStrataData} {- dataframe with stratum information; see \code{\link{selectStrata.TrawlSurvey}}}
-#' \item {dfrHaulData}   {- dataframe with haul information; see \code{\link{selectHauls.TrawlSurvey}}}
-#' \item {dfrIndivData}  {- dataframe with individual crab data; see \code{\link{selectIndivs.TrawlSurvey}}}
+#' \item {dfrStrataData} {- dataframe with stratum information; see [selectStrata.TrawlSurvey]}
+#' \item {dfrHaulData}   {- dataframe with haul information; see [selectHauls.TrawlSurvey]}
+#' \item {dfrIndivData}  {- dataframe with individual crab data; see [selectIndivs.TrawlSurvey]}
 #'}
 #'
 #'@return A list with three dataframes. See Details.
 #'
 #' @importFrom sqldf sqldf
+#' @importFrom utils read.csv
 #' @importFrom wtsUtilities selectFile
 #'
 #'@export

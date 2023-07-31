@@ -9,16 +9,17 @@
 #'
 #' @details dfr should be an output from \code{\link{calcResampledACDs}}.
 #'
+#'@importFrom stats sd
 #' @export
 #'
 plotResampledACDs<-function(dfr,
                             col=c("totBIOMASS","totABUNDANCE"),
                              scales="free_y"){
   #calculate mean size comps
-  mnN<-reshape2::dcast(dfr,YEAR+STRATUM+SEX+SHELL_CONDITION+MATURITY~.,fun.aggregate=mean,value.var=col);
+  mnN<-reshape2::dcast(dfr,YEAR+STRATUM+SEX+SHELL_CONDITION+MATURITY~.,fun.aggregate=stats::mean,value.var=col);
   names(mnN)[7]<-"mean";
   #calculate std dev by size for comps
-  sdN<-reshape2::dcast(dfr,YEAR+STRATUM+SEX+SHELL_CONDITION+MATURITY~.,fun.aggregate=sd,value.var=col);
+  sdN<-reshape2::dcast(dfr,YEAR+STRATUM+SEX+SHELL_CONDITION+MATURITY~.,fun.aggregate=stats::sd,value.var=col);
   #combine mean, std devs and drop unnecessary levels
   dfrStats<-cbind(mnN,stdev=sdN[["."]],ymin=mnN$mean-sdN[["."]],ymax=mnN$mean+sdN[["."]]);
   dfrStats<-wtsUtilities::dropLevels(

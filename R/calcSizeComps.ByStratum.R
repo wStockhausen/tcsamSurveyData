@@ -1,10 +1,10 @@
 #'
 #'@title Calculate size compositions by stratum from NMFS trawl survey data
 #'
-#'@param tbl_strata : data frame from call to \code{\link{selectStrata.TrawlSurvey}} [required]
-#'@param tbl_cpue   : data frame from call to \code{\link{calcCPUE.ByHaul}} or \code{\link{calcCPUE.ByStation}}, or filename for csv file, or NULL
-#'@param tbl_hauls  : dataframe from call to \code{\link{selectHauls.TrawlSurvey}} [required only if tbl_cpue not given]
-#'@param tbl_indivs : dataframe from call to \code{\link{selectIndivs.TrawlSurvey}} (or crab survey filename, or NULL) [required only if tbl_cpue not given]
+#'@param tbl_strata : data frame from call to \code{\link{selectStrata.TrawlSurvey}} \[required\]
+#'@param tbl_cpue   : data frame from call to [calcCPUE.ByHaul] or [calcCPUE.ByStation], or filename for csv file, or NULL
+#'@param tbl_hauls  : dataframe from call to \code{\link{selectHauls.TrawlSurvey}} \[required only if tbl_cpue not given\]
+#'@param tbl_indivs : dataframe from call to \code{\link{selectIndivs.TrawlSurvey}} (or crab survey filename, or NULL) \[required only if tbl_cpue not given\]
 #'@param avgHaulsByStation : flag (T/F) to average hauls by station before calc'ing size comps
 #'@param useStratumArea : flag (T/F) to use STRATUM_AREA to expand average CPUE to stratum abundance/biomass (default is T)
 #'@param bySex            : flag (T/F) to calc by sex

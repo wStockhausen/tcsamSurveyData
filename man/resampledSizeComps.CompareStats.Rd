@@ -20,29 +20,29 @@ resampledSizeComps.CompareStats(
 )
 }
 \arguments{
-\item{dfrStats}{- dataframe with "stacked" results from [resampledSizeComps.CalcStats]}
+\item{dfrStats}{: dataframe with "stacked" results from \link{resampledSizeComps.CalcStats}}
 
-\item{nrow}{- number of rows per plot page}
+\item{nrow}{: number of rows per plot page}
 
-\item{ncol}{- number of columns per plot page}
+\item{ncol}{: number of columns per plot page}
 
-\item{plotNorm}{- flag (T/F) to plot normalized (vs. un-normalized) size comps}
+\item{plotNorm}{: flag (T/F) to plot normalized (vs. un-normalized) size comps}
 
-\item{showCIs}{- flag (T/F) to plot confidence intervals (as ribbons)}
+\item{showCIs}{: flag (T/F) to plot confidence intervals (as ribbons)}
 
-\item{showPlots}{- flag (T/F) to}
+\item{showPlots}{: flag (T/F) to}
 
-\item{savePlots}{- flag (T/F) to}
+\item{savePlots}{: flag (T/F) to}
 
-\item{fn}{- base filename (with path to output folder; sex, maturity, shell condition and page number will be appended)}
+\item{fn}{: base filename (with path to output folder; sex, maturity, shell condition and page number will be appended)}
 
-\item{ext}{- extension for output plot files}
+\item{ext}{: extension for output plot files}
 
-\item{width}{- page width (in inches)}
+\item{width}{: page width (in inches)}
 
-\item{height}{- page height (in inches)}
+\item{height}{: page height (in inches)}
 
-\item{dpi}{- dots-per-inch}
+\item{dpi}{: dots-per-inch}
 }
 \value{
 list of plots
@@ -52,7 +52,7 @@ Function to create plots to compare resampled size comps statistics by year.
 }
 \details{
 Results from different datasets or scenarios should be "stacked" using
-[dplyr::bind_rows] after adding a "type" column to individual scenarios and assigning a unique name.
+\code{\link[dplyr:bind_rows]{dplyr::bind_rows()}} after adding a "type" column to individual scenarios and assigning a unique name.
 Values of \code{type} are used to distinguish separate scenarios and are assigned different colors in
 the resulting plots.
 }

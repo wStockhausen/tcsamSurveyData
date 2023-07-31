@@ -3,18 +3,18 @@
 #'
 #' @description Function to create plots for resampled size comps statistics by year.
 #'
-#' @param dfrStats - dataframe with "stacked" results from [resampledSizeComps.CalcStats]
-#' @param nrow - number of rows per plot page
-#' @param ncol - number of columns per plot page
-#' @param plotNorm - flgg (T/F) to plot normalized (vs. un-normalized) size comps
-#' @param showCIs - flag (T/F) to plot confidence intervals (as ribbons)
-#' @param showPlots - flag (T/F) to
-#' @param savePlots - flag (T/F) to
-#' @param fn - base filename (with path to output folder; sex, maturity, shell condition and page number will be appended)
-#' @param ext - extension for output plot files
-#' @param width - page width (in inches)
-#' @param height - page height (in inches)
-#' @param dpi - dots-per-inch
+#' @param dfrStats : dataframe with "stacked" results from [resampledSizeComps.CalcStats]
+#' @param nrow : number of rows per plot page
+#' @param ncol : number of columns per plot page
+#' @param plotNorm : flgg (T/F) to plot normalized (vs. un-normalized) size comps
+#' @param showCIs : flag (T/F) to plot confidence intervals (as ribbons)
+#' @param showPlots : flag (T/F) to
+#' @param savePlots : flag (T/F) to
+#' @param fn : base filename (with path to output folder; sex, maturity, shell condition and page number will be appended)
+#' @param ext : extension for output plot files
+#' @param width : page width (in inches)
+#' @param height : page height (in inches)
+#' @param dpi : dots-per-inch
 #'
 #' @return list of plots
 #'
@@ -34,6 +34,7 @@ resampledSizeComps.PlotStats<-function(dfrStats,
                                        plotNorm=TRUE,
                                        nrow=5,
                                        ncol=5,
+                                       showCIs=TRUE,   #--TODO: implement this!
                                        showPlots=FALSE,
                                        savePlots=TRUE,
                                        fn="fig_Stats",

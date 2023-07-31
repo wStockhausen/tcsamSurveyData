@@ -7,9 +7,9 @@
 addHaulInfoToIndivData(tbl_hauls, tbl_indivs)
 }
 \arguments{
-\item{tbl_hauls}{- hauls table (dataframe) from call to selectHauls.TrawlSurvey(...) [required]}
+\item{tbl_hauls}{: hauls table (dataframe) from call to selectHauls.TrawlSurvey(...) [required]}
 
-\item{tbl_indivs}{- indiv data table (dataframe) from call to selectIndivs.TrawlSurvey(...) [required]}
+\item{tbl_indivs}{: indiv data table (dataframe) from call to selectIndivs.TrawlSurvey(...) [required]}
 }
 \value{
 dataframe with haul-associated info dropped

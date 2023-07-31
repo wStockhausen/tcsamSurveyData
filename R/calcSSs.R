@@ -3,9 +3,9 @@
 #'
 #' @description Function to calculate total and relative sample sizes
 #'
-#' @param dfrACD - dataframe with aggregated catch data
-#' @param colName - column name with sample sizes
-#' @param totVal - total SS for relative SS calculations
+#' @param dfrACD : dataframe with aggregated catch data
+#' @param colName : column name with sample sizes
+#' @param totVal : total SS for relative SS calculations
 #'
 #' @return list with elements \code{totSS} and \code{relSS}. Both are dataframes.
 #'

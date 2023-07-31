@@ -3,7 +3,7 @@
 #'
 #'@description Function to calculate cpue by survey haul and other factors (e.g., sex) from station, haul and individual crab info.
 #'
-#'@param tbl_hauls   : dataframe from call to \code{\link{selectHauls.TrawlSurvey}} [required]
+#'@param tbl_hauls   : dataframe from call to \code{\link{selectHauls.TrawlSurvey}} \[required\]
 #'@param tbl_indivs  : dataframe from call to \code{\link{selectIndivs.TrawlSurvey}} (or crab survey filename, or NULL)
 #'@param  bySex            : flag (T/F) to calc by sex
 #'@param  byMaturity       : flag (T/F) to calc by maturity state
@@ -12,7 +12,7 @@
 #'@param  cutpts        : vector of cutpoints to create size bins from
 #'@param  truncate.low  : flag (T/F) to exclude individuals smaller than minSize
 #'@param  truncate.high : flag (T/F) to exclude individuals larger than maxSize
-#'@param checksSFs : flag to check consistency of scale factors
+#'@param checkSFs : flag to check consistency of scale factors
 #'@param export  : boolean flag to write results to csv file
 #'@param out.csv : output file name
 #'@param out.dir : output file directory
@@ -50,6 +50,7 @@
 #'@return A dataframe of cpue (numbers and weight) by haul. See Details.
 #'
 #' @importFrom sqldf sqldf
+#' @importFrom utils read.csv write.csv
 #' @importFrom wtsUtilities selectFile
 #'
 #'@export

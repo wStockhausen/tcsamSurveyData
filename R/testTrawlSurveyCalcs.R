@@ -15,6 +15,7 @@
 #'\cr Note: if \code{out.dir=NULL}, the directory associated with the
 #'trawl survey data file will be used as \code{out.dir}
 #'
+#' @importFrom utils read.csv
 #'@importFrom wtsUtilities selectFile
 #'
 #'@export

@@ -1,7 +1,7 @@
 #'
 #'@title Calculate average cpue, numbers and biomass by stratum from AFSC trawl survey data.
 #'
-#'@param   tbl_strata : data frame w/ stations/strata from call to selectStrata.TrawlSurvey(...)
+#'@param   tbl_strata : data frame w/ stations/strata from call to [selectStrata.TrawlSurvey]
 #'@param   tbl_cpue   : data frame w/ cpue by year, station, other factor levels (or csv filename or NULL)
 #'@param   export  : boolean flag to write results to csv file
 #'@param   out.csv : output file name
@@ -39,6 +39,7 @@
 #'}
 #'
 #' @importFrom sqldf sqldf
+#' @importFrom utils read.csv write.csv
 #' @importFrom wtsUtilities selectFile
 #'
 #'@export

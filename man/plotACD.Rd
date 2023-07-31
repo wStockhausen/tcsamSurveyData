@@ -24,37 +24,69 @@ plotACD(
 )
 }
 \arguments{
-\item{acd}{- dataframe with aggregated catch data (e.g., abundance or biomass)}
+\item{acd}{\itemize{
+\item dataframe with aggregated catch data (e.g., abundance or biomass)
+}}
 
-\item{type}{- "abundance" or "biomass"}
+\item{type}{\itemize{
+\item "abundance" or "biomass"
+}}
 
-\item{factors}{- column names to use as factors for plots}
+\item{factors}{\itemize{
+\item column names to use as factors for plots
+}}
 
-\item{faceting}{- faceting formula (depnds on ggplot2 version)}
+\item{faceting}{\itemize{
+\item faceting formula (depnds on ggplot2 version)
+}}
 
-\item{facetsScale}{- value for \code{scale} parameter passed to \code{facet_grid()} ("fixed","free_x","free_y","free")}
+\item{facetsScale}{\itemize{
+\item value for \code{scale} parameter passed to \code{facet_grid()} ("fixed","free_x","free_y","free")
+}}
 
-\item{facetsDrop}{- value for \code{drop} parameter passed to \code{facet_grid()} (drop missing facet levels)}
+\item{facetsDrop}{\itemize{
+\item value for \code{drop} parameter passed to \code{facet_grid()} (drop missing facet levels)
+}}
 
-\item{xlab}{- x-axis label ("year")}
+\item{xlab}{\itemize{
+\item x-axis label ("year")
+}}
 
-\item{ylab}{- y-axis label}
+\item{ylab}{\itemize{
+\item y-axis label
+}}
 
-\item{ci}{- confidence interval for error bars (e.g., 0.95)}
+\item{ci}{\itemize{
+\item confidence interval for error bars (e.g., 0.95)
+}}
 
-\item{ci.type}{- confidence interval type ('normal', 'lognormal')}
+\item{ci.type}{\itemize{
+\item confidence interval type ('normal', 'lognormal')
+}}
 
-\item{xlims}{- x-axis limits (calculated internally if NULL)}
+\item{xlims}{\itemize{
+\item x-axis limits (calculated internally if NULL)
+}}
 
-\item{ylims}{- y-axis limits (calculated internally if NULL)}
+\item{ylims}{\itemize{
+\item y-axis limits (calculated internally if NULL)
+}}
 
-\item{ggtheme}{- ggplot2 theme}
+\item{ggtheme}{\itemize{
+\item ggplot2 theme
+}}
 
-\item{jitter}{- flag to jitter points}
+\item{jitter}{\itemize{
+\item flag to jitter points
+}}
 
-\item{showPlots}{- flag to show plots immediately}
+\item{showPlots}{\itemize{
+\item flag to show plots immediately
+}}
 
-\item{verbosity}{- flag (>0) to print diagnostic output}
+\item{verbosity}{\itemize{
+\item flag (>0) to print diagnostic output
+}}
 }
 \value{
 list of ggplot2 plot objects

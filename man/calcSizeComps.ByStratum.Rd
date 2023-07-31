@@ -39,7 +39,7 @@ calcSizeComps.ByStratum(
 \arguments{
 \item{tbl_strata}{: data frame from call to \code{\link{selectStrata.TrawlSurvey}} [required]}
 
-\item{tbl_cpue}{: data frame from call to \code{\link{calcCPUE.ByHaul}} or \code{\link{calcCPUE.ByStation}}, or filename for csv file, or NULL}
+\item{tbl_cpue}{: data frame from call to \link{calcCPUE.ByHaul} or \link{calcCPUE.ByStation}, or filename for csv file, or NULL}
 
 \item{tbl_hauls}{: dataframe from call to \code{\link{selectHauls.TrawlSurvey}} [required only if tbl_cpue not given]}
 
@@ -61,17 +61,29 @@ calcSizeComps.ByStratum(
 
 \item{truncate.high}{: flag (T/F) to exclude individuals larger than maxSize}
 
-\item{Years}{- vector of survey years to include in hauls             (ignored if NULL)}
+\item{Years}{\itemize{
+\item vector of survey years to include in hauls             (ignored if NULL)
+}}
 
-\item{HaulTypes}{- vector of haul types to include in hauls               (ignored if NULL)}
+\item{HaulTypes}{\itemize{
+\item vector of haul types to include in hauls               (ignored if NULL)
+}}
 
-\item{YearRange}{- vector of min, max survey years to include in hauls    (ignored if NULL)}
+\item{YearRange}{\itemize{
+\item vector of min, max survey years to include in hauls    (ignored if NULL)
+}}
 
-\item{DepthRange}{- vector of min, max haul depths to include in hauls     (ignored if NULL)}
+\item{DepthRange}{\itemize{
+\item vector of min, max haul depths to include in hauls     (ignored if NULL)
+}}
 
-\item{LatRange}{- vector of min, max haul latitudes to include in hauls  (ignored if NULL)}
+\item{LatRange}{\itemize{
+\item vector of min, max haul latitudes to include in hauls  (ignored if NULL)
+}}
 
-\item{LonRange}{- vector of min, max haul longitudes to include in hauls (ignored if NULL)}
+\item{LonRange}{\itemize{
+\item vector of min, max haul longitudes to include in hauls (ignored if NULL)
+}}
 
 \item{col.Size}{: name of tbl_indivs column containing size (CL or CW) information}
 
@@ -122,9 +134,9 @@ a dialog box). \cr
 \cr
 Other notes: \cr
 \itemize{
-  \item{Area is in square nautical miles}
-  \item{Abundance is in 10^6 indivs}
-  \item{Biomass   is in 10^3 mt}
+\item{Area is in square nautical miles}
+\item{Abundance is in 10^6 indivs}
+\item{Biomass   is in 10^3 mt}
 }
 \cr If \code{useStratumArea} is true, the stratum area is used to expand mean cpue to stratum abundance/biomass.
 If it is false, the sum of STATION_AREAs associated with the stations included in the stratum is used for

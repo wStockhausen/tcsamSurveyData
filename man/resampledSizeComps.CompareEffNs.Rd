@@ -12,13 +12,21 @@ resampledSizeComps.CompareEffNs(
 )
 }
 \arguments{
-\item{dfrEffNs}{- a dataframe with "stacked" scenarios of effective Ns from [resampledSizeComps.calcEffN]}
+\item{dfrEffNs}{\itemize{
+\item a dataframe with "stacked" scenarios of effective Ns from \link{resampledSizeComps.calcEffN}
+}}
 
-\item{byFacs}{- vector of column names for factors other than YEAR and STRATUM}
+\item{byFacs}{\itemize{
+\item vector of column names for factors other than YEAR and STRATUM
+}}
 
-\item{nDefault}{- default sample size (for plotting)}
+\item{nDefault}{\itemize{
+\item default sample size (for plotting)
+}}
 
-\item{nStations}{- typical number of survey stations (for plotting)}
+\item{nStations}{\itemize{
+\item typical number of survey stations (for plotting)
+}}
 }
 \value{
 2-element list of plots (with and without number of crab sampled)
@@ -27,7 +35,7 @@ resampledSizeComps.CompareEffNs(
 Function to compare effective N's from several resampled size compositions "scenarios".
 }
 \details{
-dfrEffNs should "stacked" dataframe of outputs from [resampledSizeComps.calc],
+dfrEffNs should "stacked" dataframe of outputs from \link{resampledSizeComps.calc},
 with values of an additional column, \code{type}, that indicates the scenario each row
 is associated with.
 }

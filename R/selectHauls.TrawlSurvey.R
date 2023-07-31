@@ -3,24 +3,34 @@
 #'
 #'@description Function to extract NMFS crab survey hauls data from Excel csv file format by year.
 #'
-#'@param tbl_strata - dataframe from call to selectStrata.TrawlSurvey(...) [required]
-#'@param tbl        - trawl survey dataframe from previous call (or name of trawl survey csv datafile, or NULL)              (ignored if NULL)
-#'@param Years      - vector of survey years to include in output             (ignored if NULL)
-#'@param HaulTypes  - vector of haul types to include in output               (ignored if NULL)
-#'@param YearRange  - vector of min, max survey years to include in output    (ignored if NULL)
-#'@param DepthRange - vector of min, max haul depths to include in output     (ignored if NULL)
-#'@param LatRange   - vector of min, max haul latitudes to include in output  (ignored if NULL)
-#'@param LonRange   - vector of min, max haul longitudes to include in output (ignored if NULL)
-#'@param skip - number of rows to skip when reading crabhaul csv file (default=6 to match AKFIN crabhaul download)
-#'@param export  - boolean flag to export results to csv file
-#'@param out.csv - name of output csv file                    (ignored if NULL)
-#'@param out.dir - base path for output csv file              (set to folder of input csv file or current working directory)
+#'@param tbl_strata : dataframe from call to selectStrata.TrawlSurvey(...) \[required\]
+#'@param tbl        : trawl survey dataframe from previous call (or name of trawl survey csv datafile, or NULL)              (ignored if NULL)
+#'@param Years      : vector of survey years to include in output             (ignored if NULL)
+#'@param HaulTypes  : vector of haul types to include in output               (ignored if NULL)
+#'@param YearRange  : vector of min, max survey years to include in output    (ignored if NULL)
+#'@param DepthRange : vector of min, max haul depths to include in output     (ignored if NULL)
+#'@param LatRange   : vector of min, max haul latitudes to include in output  (ignored if NULL)
+#'@param LonRange   : vector of min, max haul longitudes to include in output (ignored if NULL)
+#'@param skip : number of rows to skip when reading crabhaul csv file (default=6 to match AKFIN crabhaul download)
+#'@param export  : boolean flag to export results to csv file
+#'@param out.csv : name of output csv file                    (ignored if NULL)
+#'@param out.dir : base path for output csv file              (set to folder of input csv file or current working directory)
 #'@param verbosity : integer flag indicating level of printed output (0=off,1=minimal,2=full)
 #'
 #' @return a dataframe w/ columns \cr
-#' YEAR,STRATUM,GIS_STATION,HAULJOIN,HAUL_TYPE, \cr
-#' START_DATE,MID_LATITUDE,MID_LONGITUDE,BOTTOM_DEPTH, \cr
-#' GEAR_TEMPERATURE,AREA_SWEPT_VARIABLE
+#' \itemize{
+#' \item{YEAR}
+#' \item{STRATUM}
+#' \item{GIS_STATION}
+#' \item{HAULJOIN}
+#' \item{HAUL_TYPE}
+#' \item{START_DATE}
+#' \item{MID_LATITUDE}
+#' \item{MID_LONGITUDE}
+#' \item{BOTTOM_DEPTH}
+#' \item{GEAR_TEMPERATURE}
+#' \item{AREA_SWEPT_VARIABLE}
+#' }
 #'
 #'@details If neither tbl or in.csv is given, the user will be prompted for a csv file via a file dialog box
 #'

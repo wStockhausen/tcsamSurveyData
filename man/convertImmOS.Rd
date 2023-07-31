@@ -7,11 +7,17 @@
 convertImmOS(dfr, colMat = "MATURITY", colSC = "SHELL_CONDITION")
 }
 \arguments{
-\item{dfr}{- dataframe to run re-classification on}
+\item{dfr}{\itemize{
+\item dataframe to run re-classification on
+}}
 
-\item{colMat}{- name of column with maturity designation}
+\item{colMat}{\itemize{
+\item name of column with maturity designation
+}}
 
-\item{colSC}{- name of column with shell condition designation}
+\item{colSC}{\itemize{
+\item name of column with shell condition designation
+}}
 }
 \value{
 dataframe with same strucuture as input and shell condition converted to "NEW_SHELL" for

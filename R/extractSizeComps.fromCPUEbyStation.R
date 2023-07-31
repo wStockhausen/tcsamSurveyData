@@ -42,6 +42,7 @@
 #'}
 #'
 #' @importFrom sqldf sqldf
+#' @importFrom utils head
 #' @importFrom wtsUtilities selectFile
 #'
 #'@export
@@ -106,7 +107,7 @@ extractSizeComps.fromCPUEbyStation<-function(
             YEAR,STRATUM,GIS_STATION,LONGITUDE,LATITUDE,
             SEX,MATURITY,SHELL_CONDITION,SIZE,numHauls;";
     tbl_uzfacs<-sqldf::sqldf(qry);
-    if (verbosity>1) print(head(tbl_uzfacs));
+    if (verbosity>1) print(utils::head(tbl_uzfacs));
 
     #expand tbl_cpue to include missing sizes
     qry<-"select

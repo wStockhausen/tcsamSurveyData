@@ -1,9 +1,9 @@
 #'
-#'@title Function to extract crab station data and strata information from a NMFS trawl survey strata file.
+#'@title Extract crab strata and associated station information from a NMFS trawl survey strata file
 #'
-#'@description Same as selectStations.TrawlSurvey(...)
+#'@description Function to extract crab strata and associated station information from a NMFS trawl survey strata file.
 #'
-#'@param tbl        : table (dataframe) of survey station/strata data (or name of survey station/strata csv file, or NULL)
+#'@param tbl        : table (dataframe) of survey strata /stationdata (or name of survey strata/station csv file, or NULL)
 #'@param species    : code ('BKC','BTC','RKC','OTC') indicating species
 #'@param strataType : type of strata ('orig','revd','2015')
 #'@param export     : boolean flag to export results to csv file

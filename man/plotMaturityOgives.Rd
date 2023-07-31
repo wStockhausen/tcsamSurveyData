@@ -13,15 +13,25 @@ plotMaturityOgives(
 )
 }
 \arguments{
-\item{dfrp}{- dataframe of maturity ogive data}
+\item{dfrp}{\itemize{
+\item dataframe of maturity ogive data
+}}
 
-\item{facet_grid}{- formula to use for a faceted grid plot (default=NULL)}
+\item{facet_grid}{\itemize{
+\item formula to use for a faceted grid plot (default=NULL)
+}}
 
-\item{ncol}{- number of plot columns to use when facet_grid is NULL}
+\item{ncol}{\itemize{
+\item number of plot columns to use when facet_grid is NULL
+}}
 
-\item{title}{- title for plot}
+\item{title}{\itemize{
+\item title for plot
+}}
 
-\item{showPlot}{- flag to show plots immediately}
+\item{showPlot}{\itemize{
+\item flag to show plots immediately
+}}
 }
 \value{
 ggplot2 plot object to print

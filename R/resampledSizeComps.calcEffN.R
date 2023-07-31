@@ -3,10 +3,8 @@
 #'
 #' @description Function to calculate and plot effective N from resampled size compositions.
 #'
-#' @param dfr - dataframe with resampled size compositions
-#' @param byFacs - vector of column names for factors other than YEAR and STRATUM
-#' @param nDefault - default sample size (for plotting)
-#' @param nStations - typical number of survey stations (for plotting)
+#' @param dfr : dataframe with resampled size compositions
+#' @param byFacs : vector of column names for factors other than YEAR and STRATUM
 #'
 #' @return a dataframe with the number of measured crab, the mean effective N's, the harmonic mean effective N's,
 #' and the number of non-zero stations, by stratum, year, and factors in \code{byFacs}.

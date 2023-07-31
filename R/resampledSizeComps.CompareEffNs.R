@@ -15,6 +15,8 @@
 #' is associated with.
 #'
 #' @import ggplot2
+#' @importFrom reshape2 melt
+#' @importFrom stats as.formula
 #'
 #' @export
 #'

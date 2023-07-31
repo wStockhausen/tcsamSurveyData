@@ -6,7 +6,11 @@
 #' @param dfr - dataframe with resampled size compositions
 #' @param scales - 'scales' parameter passed to facet_grid ("fixed" or "free_y")
 #'
-#' @details dfr should be an output from \code{\link{resampledSizeComps.calc}}.
+#' @details dfr should be an output from [resampledSizeComps.calc].
+#'
+#' @import ggplot2
+#' @importFrom reshape2 dcast
+#' @importFrom stats sd
 #'
 #' @export
 #'

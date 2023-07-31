@@ -16,38 +16,56 @@ gg_GetBasemapLayers(
 )
 }
 \arguments{
-\item{sf_land}{- a spatial layer representing land (or NULL)}
+\item{sf_land}{\itemize{
+\item a spatial layer representing land (or NULL)
+}}
 
-\item{sf_bathym}{- a spatial layer representing bathymetry (or NULL)}
+\item{sf_bathym}{\itemize{
+\item a spatial layer representing bathymetry (or NULL)
+}}
 
-\item{sfs_survey}{-  a list of spatial layers representing the survey grid and survey stations (or NULL)}
+\item{sfs_survey}{\itemize{
+\item a list of spatial layers representing the survey grid and survey stations (or NULL)
+}}
 
-\item{final_crs}{- string representation of CRS (default = WGS84) used for ALL shapefiles}
+\item{final_crs}{\itemize{
+\item string representation of CRS (default = WGS84) used for ALL shapefiles
+}}
 
-\item{bbox}{- a \code{sf::bbox} bounding box}
+\item{bbox}{\itemize{
+\item a \pkg{sf} bounding box object
+}}
 
-\item{bw}{- flag (T/F) to create layers in black & white (TRUE) or color (FALSE)}
+\item{bw}{\itemize{
+\item flag (T/F) to create layers in black & white (TRUE) or color (FALSE)
+}}
 
-\item{colors}{- list of colors to use for "land","bathym", "grid" and "stations"}
+\item{colors}{\itemize{
+\item list of colors to use for "land","bathym", "grid" and "stations"
+}}
 
-\item{size}{- point size for the station locations}
+\item{size}{\itemize{
+\item point size for the station locations
+}}
 }
 \value{
-- a list of \pkg{ggplot2} objects
+\itemize{
+\item a list of \pkg{ggplot2} objects
+}
 }
 \description{
 This function creates basemap layers for maps based on the \pkg{ggplot2} package
 }
 \details{
-Uses functions from package [wtsGIS].
+Uses functions from package \pkg{wtsGIS}.
 
 The returned list has elements:
 \itemize{
-  \item{bathym}
-  \item{land}
-  \item{grid}
-  \item{stations}
-  \item{map_scale}
-  \item{theme}
+\item{bathym}
+\item{land}
+\item{grid}
+\item{stations}
+\item{map_scale}
+\item{theme}
 }
 }

@@ -40,6 +40,8 @@ calcCPUE.ByHaul(
 
 \item{truncate.high}{: flag (T/F) to exclude individuals larger than maxSize}
 
+\item{checkSFs}{: flag to check consistency of scale factors}
+
 \item{export}{: boolean flag to write results to csv file}
 
 \item{out.csv}{: output file name}
@@ -47,8 +49,6 @@ calcCPUE.ByHaul(
 \item{out.dir}{: output file directory}
 
 \item{verbosity}{: integer flag indicating level of printed output (0=off,1=minimal,2=full)}
-
-\item{checksSFs}{: flag to check consistency of scale factors}
 }
 \value{
 A dataframe of cpue (numbers and weight) by haul. See Details.

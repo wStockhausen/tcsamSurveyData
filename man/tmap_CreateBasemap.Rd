@@ -15,26 +15,42 @@ tmap_CreateBasemap(
 )
 }
 \arguments{
-\item{layer.land}{- a spatial layer representing land (or NULL)}
+\item{layer.land}{\itemize{
+\item a spatial layer representing land (or NULL)
+}}
 
-\item{layer.bathym}{- a spatial layer representing bathymetry (or NULL)}
+\item{layer.bathym}{\itemize{
+\item a spatial layer representing bathymetry (or NULL)
+}}
 
-\item{layers.survey}{-  a list of spatial layers representing the survey grid and survey stations (or NULL)}
+\item{layers.survey}{\itemize{
+\item a list of spatial layers representing the survey grid and survey stations (or NULL)
+}}
 
-\item{final.crs}{- string representation of CRS (default = WGS84) used for ALL shapefiles}
+\item{final.crs}{\itemize{
+\item string representation of CRS (default = WGS84) used for ALL shapefiles
+}}
 
-\item{bbox}{- a \code{sf::bbox} bounding box}
+\item{bbox}{\itemize{
+\item a \pkg{sf} bounding box
+}}
 
-\item{colors.bathym}{- color for the bathymetry}
+\item{colors.bathym}{\itemize{
+\item color for the bathymetry
+}}
 
-\item{points.size}{- size for the station locations}
+\item{points.size}{\itemize{
+\item size for the station locations
+}}
 }
 \value{
-- a \pkg{tmap}-style basemap
+\itemize{
+\item a \pkg{tmap}-style basemap
+}
 }
 \description{
 This function creates a basemap layer for maps based on the \pkg{tmap} package
 }
 \details{
-Uses \code{wtsGIS::tmap_CreateBasemap} and \code{wtsGIS::transformCRS}.
+Uses \link[wtsGIS:tmap_CreateBasemap]{wtsGIS::tmap_CreateBasemap} and \link[wtsGIS:transformCRS]{wtsGIS::transformCRS}.
 }

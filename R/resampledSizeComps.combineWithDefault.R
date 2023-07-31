@@ -2,17 +2,17 @@
 #' @title Combine effective Ns from resampled size compositions with original Ns in dataframe
 #'
 #' @description Function to combine effective Ns from resampled size compositions, together
-#' with the original Ns that would have been used as input sample sizes
+#' with the original Ns that would have been used as input sample sizes.
 #'
-#' @param dfrEffNs - dataframe with effective Ns from resampled size compositions (output from [resampledSizeComps.calcEffNs])
-#' @param dfrOrgNs - dataframe with original Ns, for comparison
-#' @param frmla - formula for summing over factors (default: "stratum+year")
+#' @param dfrEffNs : dataframe with effective Ns from resampled size compositions (output from [resampledSizeComps.calcEffN])
+#' @param dfrOrgNs : dataframe with original Ns, for comparison
+#' @param frmla : formula for summing over factors (default: "stratum+year")
 #'
 #' @return a "melted" dataframe with values for default sample sizes (default N's),
 #' the mean effective N's, the harmonic mean effective N's, the number of crab sampled, and
 #' the number of non-zero stations in the "N" column, identified by the value in the "type" column.
 #'
-#' @details dfrEffNs should be a dataframe output from [resampledSizeComps.calcEffNs].
+#' @details dfrEffNs should be a dataframe output from [resampledSizeComps.calcEffN].
 #' dfrOrgNs should be a dataframe with columns
 #' \itemize{
 #'    \item{stratum}

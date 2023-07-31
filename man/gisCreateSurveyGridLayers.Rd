@@ -2,7 +2,7 @@
 % Please edit documentation in R/gisCreateSurveyGridLayers.R
 \name{gisCreateSurveyGridLayers}
 \alias{gisCreateSurveyGridLayers}
-\title{Create \code{sf} dataframes for a survey grid from polygon and point shapefiles}
+\title{Create \pkg{sf} dataframes for a survey grid from polygon and point shapefiles}
 \usage{
 gisCreateSurveyGridLayers(
   gisPath = NULL,
@@ -11,11 +11,17 @@ gisCreateSurveyGridLayers(
 )
 }
 \arguments{
-\item{gisPath}{- path to common toplevel folder for files}
+\item{gisPath}{\itemize{
+\item path to common toplevel folder for files
+}}
 
-\item{shapeFiles}{- a list of shapefiles to read ("grid" and "stations", either can be NULL to skip creation of that layer)}
+\item{shapeFiles}{\itemize{
+\item a list of shapefiles to read ("grid" and "stations", either can be NULL to skip creation of that layer)
+}}
 
-\item{final_crs}{- a \code{sf::crs} object to be used as the final coordinate reference system for the spatial layers}
+\item{final_crs}{\itemize{
+\item a \code{\link[sf:st_crs]{sf::st_crs()}} object to be used as the final coordinate reference system for the spatial layers
+}}
 }
 \value{
 a 2-element list with the grid and stations spatial layers as \pkg{sf} dataframes.

@@ -7,11 +7,11 @@
 calcSSs(dfrACD, colName = "numIndivs", totVal = 200)
 }
 \arguments{
-\item{dfrACD}{- dataframe with aggregated catch data}
+\item{dfrACD}{: dataframe with aggregated catch data}
 
-\item{colName}{- column name with sample sizes}
+\item{colName}{: column name with sample sizes}
 
-\item{totVal}{- total SS for relative SS calculations}
+\item{totVal}{: total SS for relative SS calculations}
 }
 \value{
 list with elements \code{totSS} and \code{relSS}. Both are dataframes.

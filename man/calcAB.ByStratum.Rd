@@ -55,9 +55,9 @@ This function calculates abundance, and biomass by stratum from cpue (by survey 
 If tbl_cpue is NULL, the user is prompted to enter a csv file with cpue info. \cr
 \cr Other notes: \cr
 \itemize{
-  \item Area is in square nautical miles
-  \item Abundance is in 10^6 indivs
-  \item Biomass   is in 10^3 mt
+\item Area is in square nautical miles
+\item Abundance is in 10^6 indivs
+\item Biomass   is in 10^3 mt
 }
 \cr If \code{useStratumArea} is true, the stratum area is used to expand mean cpue to stratum abundance/biomass.
 If it is false, the sum of STATION_AREAs associated with the stations included in the stratum is used for

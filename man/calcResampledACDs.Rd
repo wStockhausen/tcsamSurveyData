@@ -2,7 +2,7 @@
 % Please edit documentation in R/calcResampledACDs.R
 \name{calcResampledACDs}
 \alias{calcResampledACDs}
-\title{Resample haul data to bootstrap aggregated catch data by year/stratum from AFSC trawl survey data}
+\title{TODO: finish implementing this.}
 \usage{
 calcResampledACDs(
   tbl_strata,
@@ -15,6 +15,7 @@ calcResampledACDs(
   byShellCondition = FALSE,
   byMaturity = FALSE,
   minSize = 25,
+  maxSize = 185,
   truncate.low = TRUE,
   truncate.high = FALSE,
   verbosity = 0
@@ -39,6 +40,10 @@ calcResampledACDs(
 
 \item{byMaturity}{: flag (T/F) to calc by maturity state}
 
+\item{minSize}{: minimum size to include in calculations}
+
+\item{maxSize}{: maximum size to include in calculations}
+
 \item{truncate.low}{: flag (T/F) to exclude individuals smaller than minSize}
 
 \item{truncate.high}{: flag (T/F) to exclude individuals larger than maxSize}
@@ -62,16 +67,16 @@ data frame with ACDs by stratum. Columns are \cr
 }
 }
 \description{
-This function resamples size compositions by year/stratum for AFSC trawl survey data.
+Function to resample haul data to bootstrap aggregated catch data by year/stratum from AFSC trawl survey data
 }
 \details{
 This function performs two-stage resampling (hauls w/in strata, individuals w/in hauls)
-to calculate a set of resampled size compositions by year. \cr
+to calculate a set of resampled \strong{size compositions} (<-FIX THIS!) by year. \cr
 \cr
 Other notes: \cr
 \itemize{
-  \item{Area is in square nautical miles}
-  \item{Abundance is in 10^6 indivs}
-  \item{Biomass   is in 10^3 mt}
+\item{Area is in square nautical miles}
+\item{Abundance is in 10^6 indivs}
+\item{Biomass   is in 10^3 mt}
 }
 }

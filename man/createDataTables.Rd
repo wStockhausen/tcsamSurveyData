@@ -31,7 +31,7 @@ createDataTables(
 
 \item{bsfrfTypes}{: vector of BSFRF types to include ("SBS" and/or "IDX")}
 
-\item{strataTbl}{: dataframe previously created by call to \code{\link{selectStrata.TrawlSurvey}}}
+\item{strataTbl}{: dataframe previously created by call to \link{selectStrata.TrawlSurvey}}
 
 \item{strataFile}{: path to strata file (req'd if strataTbl is NULL)}
 
@@ -55,6 +55,8 @@ createDataTables(
 
 \item{maxSize}{: max size (CW) to include}
 
+\item{calcMaleMaturity}{: flag (T/F) to add male maturity info}
+
 \item{verbosity}{: integer flag indicating level of printed output (0=off,1=minimal,2=full)}
 }
 \value{
@@ -66,8 +68,8 @@ Function to create strata, haul and individual data tables (i.e., dataframes) fr
 \details{
 Returns a list with the following elements: \cr
 \itemize{
-\item {dfrStrataData} {- dataframe with stratum information; see \code{\link{selectStrata.TrawlSurvey}}}
-\item {dfrHaulData}   {- dataframe with haul information; see \code{\link{selectHauls.TrawlSurvey}}}
-\item {dfrIndivData}  {- dataframe with individual crab data; see \code{\link{selectIndivs.TrawlSurvey}}}
+\item {dfrStrataData} {- dataframe with stratum information; see \link{selectStrata.TrawlSurvey}}
+\item {dfrHaulData}   {- dataframe with haul information; see \link{selectHauls.TrawlSurvey}}
+\item {dfrIndivData}  {- dataframe with individual crab data; see \link{selectIndivs.TrawlSurvey}}
 }
 }

@@ -20,29 +20,53 @@ plotAZC(
 )
 }
 \arguments{
-\item{zcs}{- dataframe from call to aggregateSizeComps(...)}
+\item{zcs}{\itemize{
+\item dataframe from call to aggregateSizeComps(...)
+}}
 
-\item{byStratum}{- flag to plot size comps separately by stratum}
+\item{byStratum}{\itemize{
+\item flag to plot size comps separately by stratum
+}}
 
-\item{multipliers}{- list by factor of multipliers for factor levels}
+\item{multipliers}{\itemize{
+\item list by factor of multipliers for factor levels
+}}
 
-\item{zlab}{- 'z'-axis label}
+\item{zlab}{\itemize{
+\item 'z'-axis label
+}}
 
-\item{zlims}{- z-axis range (calculated internally if NULL)}
+\item{zlims}{\itemize{
+\item z-axis range (calculated internally if NULL)
+}}
 
-\item{xlims}{- size limits (calculated internally if NULL)}
+\item{xlims}{\itemize{
+\item size limits (calculated internally if NULL)
+}}
 
-\item{ylims}{- year limits (calculated internally if NULL)}
+\item{ylims}{\itemize{
+\item year limits (calculated internally if NULL)
+}}
 
-\item{ggtheme}{- ggplot2 theme}
+\item{ggtheme}{\itemize{
+\item ggplot2 theme
+}}
 
-\item{ncol}{- number of columns of plots per page}
+\item{ncol}{\itemize{
+\item number of columns of plots per page
+}}
 
-\item{nrow}{- number of rows of plots per page}
+\item{nrow}{\itemize{
+\item number of rows of plots per page
+}}
 
-\item{showPlots}{- flag to show plots immediately}
+\item{showPlots}{\itemize{
+\item flag to show plots immediately
+}}
 
-\item{verbosity}{- integer flag (>0) to print diagnostic output}
+\item{verbosity}{\itemize{
+\item integer flag (>0) to print diagnostic output
+}}
 }
 \value{
 list of ggplot2 plot objects
@@ -53,5 +77,5 @@ Function to plot aggregated size comps from survey data as bars.
 \details{
 'multipliers' is a list of lists, with each sublist has two elements, 'factors' and 'value'.
 'factors' should be a list of factor=level pairs. 'value' should be the value to multiply by. Requires
-\code{scales::squish}.
+\link[scales:oob]{scales::squish}.
 }

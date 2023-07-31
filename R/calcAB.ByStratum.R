@@ -42,6 +42,7 @@
 #'}
 #'
 #' @importFrom sqldf sqldf
+#' @importFrom utils read.csv write.csv
 #' @importFrom wtsUtilities selectFile
 #'
 #'@export
@@ -51,9 +52,9 @@ calcAB.ByStratum<-function(tbl_strata,
                            tbl_cpue=NULL,
                            useStratumArea=TRUE,
                            export=FALSE,
-                            out.csv='SurveyBiomass.ByStratum.csv',
-                            out.dir=NULL,
-                            verbosity=0){
+                           out.csv='SurveyBiomass.ByStratum.csv',
+                           out.dir=NULL,
+                           verbosity=0){
     if (verbosity>1) cat("starting calcAB.ByStratum\n");
 
     if (!is.data.frame(tbl_strata)) {

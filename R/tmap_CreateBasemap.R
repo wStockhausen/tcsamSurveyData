@@ -3,13 +3,13 @@
 #'
 #' @description This function creates a basemap layer for maps based on the \pkg{tmap} package
 #'
-#' @details Uses \code{wtsGIS::tmap_CreateBasemap} and \code{wtsGIS::transformCRS}.
+#' @details Uses [wtsGIS::tmap_CreateBasemap] and [wtsGIS::transformCRS].
 #'
 #' @param layer.land - a spatial layer representing land (or NULL)
 #' @param layer.bathym - a spatial layer representing bathymetry (or NULL)
 #' @param layers.survey -  a list of spatial layers representing the survey grid and survey stations (or NULL)
 #' @param final.crs - string representation of CRS (default = WGS84) used for ALL shapefiles
-#' @param bbox - a \code{sf::bbox} bounding box
+#' @param bbox - a \pkg{sf} bounding box
 #' @param colors.bathym - color for the bathymetry
 #' @param points.size - size for the station locations
 #'

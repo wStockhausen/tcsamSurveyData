@@ -7,13 +7,17 @@
 resampledSizeComps.plot(dfr, scales = "free_y")
 }
 \arguments{
-\item{dfr}{- dataframe with resampled size compositions}
+\item{dfr}{\itemize{
+\item dataframe with resampled size compositions
+}}
 
-\item{scales}{- 'scales' parameter passed to facet_grid ("fixed" or "free_y")}
+\item{scales}{\itemize{
+\item 'scales' parameter passed to facet_grid ("fixed" or "free_y")
+}}
 }
 \description{
 Function to plot resampled size compositions.
 }
 \details{
-dfr should be an output from \code{\link{resampledSizeComps.calc}}.
+dfr should be an output from \link{resampledSizeComps.calc}.
 }

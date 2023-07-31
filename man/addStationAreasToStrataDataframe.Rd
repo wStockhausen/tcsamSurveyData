@@ -7,28 +7,28 @@
 addStationAreasToStrataDataframe(dfrSD)
 }
 \arguments{
-\item{dfrSD}{-table (dataframe) of survey station/strata data}
+\item{dfrSD}{: table (dataframe) of survey station/strata data}
 }
 \value{
 a dataframe with strata/stations info + (effective) area by individual station.
 }
 \description{
 This function counts the number of stations conducted per year and stratum,
-            calculates the (effective) area associated with each individual station,
-            and adds it as a column to the input dataframe. Note that this function is
-            now (20190823) called in the course of evaluating \code{selectStrat.TrawlSurvey}.
+calculates the (effective) area associated with each individual station,
+and adds it as a column to the input dataframe. Note that this function is
+now (20190823) called in the course of evaluating \code{selectStrat.TrawlSurvey}.
 }
 \details{
 The returned dataframe has columns:
 \itemize{\item {YEAR}
-        \item {STRATUM}
-        \item {STRATUM_CODE}
-        \item {STRATUM_AREA}
-        \item {GIS_STATION}
-        \item {STATION_LONGITUDE}
-        \item {STATION_LATITUDE}
-        \item {STATION_AREA}
-        \item {STRATUM_AREA_BYSTATION}
-        }
+\item {STRATUM}
+\item {STRATUM_CODE}
+\item {STRATUM_AREA}
+\item {GIS_STATION}
+\item {STATION_LONGITUDE}
+\item {STATION_LATITUDE}
+\item {STATION_AREA}
+\item {STRATUM_AREA_BYSTATION}
+}
 Areas are in square nautical miles.
 }

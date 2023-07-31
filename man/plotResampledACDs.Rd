@@ -11,11 +11,17 @@ plotResampledACDs(
 )
 }
 \arguments{
-\item{dfr}{- dataframe with resampled aggregated catch data}
+\item{dfr}{\itemize{
+\item dataframe with resampled aggregated catch data
+}}
 
-\item{col}{- column to plot}
+\item{col}{\itemize{
+\item column to plot
+}}
 
-\item{scales}{- 'scales' parameter passed to facet_grid ("fixed" or "free_y")}
+\item{scales}{\itemize{
+\item 'scales' parameter passed to facet_grid ("fixed" or "free_y")
+}}
 }
 \description{
 Function to plot resampled aggregated catch data.

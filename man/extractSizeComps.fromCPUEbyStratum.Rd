@@ -54,8 +54,8 @@ If tbl_cpue is not a dataframe, it can be a cpue csv file or NULL.\cr
 \cr
 Other notes: \cr
 \itemize{
-  \item{Area is in square nautical miles}
-  \item{avgNumCPUE is in indivs/square nautical mile}
-  \item{avgBioCPUE is in mt/square nautical mile}
+\item{Area is in square nautical miles}
+\item{avgNumCPUE is in indivs/square nautical mile}
+\item{avgBioCPUE is in mt/square nautical mile}
 }
 }

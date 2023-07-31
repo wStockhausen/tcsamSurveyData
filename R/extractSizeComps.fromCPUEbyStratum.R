@@ -39,6 +39,7 @@
 #'}
 #'
 #' @importFrom sqldf sqldf
+#' @importFrom utils head read.csv write.csv
 #' @importFrom wtsUtilities selectFile
 #'
 #'@export
@@ -65,7 +66,7 @@ extractSizeComps.fromCPUEbyStratum<-function(
         if (verbosity>1) cat("reading cpue file\n")
         if (is.null(out.dir)) out.dir<-dirname(in.csv);
         if (verbosity>1) cat("Reading cpue file.\n",sep='')
-        tbl_cpue<-read.csv(in.csv,stringsAsFactors=FALSE);
+        tbl_cpue<-utils::read.csv(in.csv,stringsAsFactors=FALSE);
         if (verbosity>1) cat("Done reading input csv file.\n")
     }#read in or created tbl_cpue
 
@@ -81,12 +82,12 @@ extractSizeComps.fromCPUEbyStratum<-function(
           from tbl_ufacs;";
     qry<-gsub("&&ucols",paste(ucols[1:(length(ucols)-1)],collapse=","),qry)
     tbl_ufacs<-sqldf(qry);
-    if (verbosity>1) print(head(tbl_ufacs));
+    if (verbosity>1) print(utils::head(tbl_ufacs));
 
     tbl_zs<-as.data.frame(list(SIZE=cutpts[1:(length(cutpts)-1)]))
     qry<-"select * from tbl_ufacs, tbl_zs;";
     tbl_uzfacs<-sqldf(qry);
-    if (verbosity>1) print(head(tbl_uzfacs));
+    if (verbosity>1) print(utils::head(tbl_uzfacs));
 
     #rearrange column names to get SIZE at end of other factors (if any)
     nms<-names(tbl_uzfacs);
@@ -138,7 +139,7 @@ extractSizeComps.fromCPUEbyStratum<-function(
             }
             out.csv<-file.path(out.dir,out.csv)
         }
-        write.csv(tbl_zcs,out.csv,na='',row.names=FALSE);
+        utils::write.csv(tbl_zcs,out.csv,na='',row.names=FALSE);
     }
 
     if (verbosity>1) cat("finished extractSizeComps.fromCPUEbyStratum\n");

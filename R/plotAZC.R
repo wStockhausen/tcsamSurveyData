@@ -20,12 +20,13 @@
 #'
 #'@details 'multipliers' is a list of lists, with each sublist has two elements, 'factors' and 'value'.
 #''factors' should be a list of factor=level pairs. 'value' should be the value to multiply by. Requires
-#'\code{scales::squish}.
+#'[scales::squish].
 #'
 #'@import ggplot2
 #'@importFrom plyr .
 #'@importFrom reshape2 dcast
 #'@importFrom reshape2 melt
+#'@importFrom utils View
 #
 #'
 #'@export
@@ -125,7 +126,7 @@ plotAZC<-function(zcs,
         yrs<-c(yrs,newyrs);
         if (verbosity>1) {
             cat("verbosity = ",verbosity,'\n');
-            View(dfrnew);
+            utils::View(dfrnew);
             print(yrs);
         }
     } else {

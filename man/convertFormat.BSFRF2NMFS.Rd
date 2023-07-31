@@ -7,11 +7,11 @@
 convertFormat.BSFRF2NMFS(tbl, types = c("SBS", "IDX"), verbosity = TRUE)
 }
 \arguments{
-\item{tbl}{- filename for BSFRF  csv file to read or dataframe from reading csv file}
+\item{tbl}{: filename for BSFRF  csv file to read or dataframe from reading csv file}
 
-\item{types}{- BSFRF study types to select ("SBS", "IDX", or both)}
+\item{types}{: BSFRF study types to select ("SBS", "IDX", or both)}
 
-\item{verbose}{- flag to print debug info}
+\item{verbosity}{: integer flag to print debug info}
 }
 \value{
 dataframe "almost" in CRABHAUL_DATA format.
@@ -22,33 +22,33 @@ Function to convert BSFRF data to (almost) NMFS CRABHAUL_DATA format.
 \details{
 returned dataframe has columns
 \itemize{
-  \item {AKFIN_SURVEY_YEAR}
-  \item {HAULJOIN}
-  \item {VESSEL}
-  \item {CRUISE}
-  \item {HAUL}
-  \item {HAUL_TYPE}
-  \item {START_DATE}
-  \item {AKFIN_SURVEY_DATE}
-  \item {START_HOUR}
-  \item {MID_LATITUDE}
-  \item {MID_LONGITUDE}
-  \item {GIS_STATION}
-  \item {BOTTOM_DEPTH (in meters)}
-  \item {GEAR_TEMPERATURE (deg C)}
-  \item {AREA_SWEPT_VARIABLE (nm^2)}
-  \item {SPECIES_CODE}
-  \item {SPECIES_NAME}
-  \item {SEX}
-  \item {WIDTH (mm)}
-  \item {SHELL_CONDITION}
-  \item {EGG_COLOR}
-  \item {EGG_CONDITION}
-  \item {CLUTCH_SIZE}
-  \item {CHELA_HEIGHT}
-  \item {CALCULATED_WEIGHT}
-  \item {WEIGHT}
-  \item {SAMPLING_FACTOR}
-  \item {CPUE_NUM}
+\item {AKFIN_SURVEY_YEAR}
+\item {HAULJOIN}
+\item {VESSEL}
+\item {CRUISE}
+\item {HAUL}
+\item {HAUL_TYPE}
+\item {START_DATE}
+\item {AKFIN_SURVEY_DATE}
+\item {START_HOUR}
+\item {MID_LATITUDE}
+\item {MID_LONGITUDE}
+\item {GIS_STATION}
+\item {BOTTOM_DEPTH (in meters)}
+\item {GEAR_TEMPERATURE (deg C)}
+\item {AREA_SWEPT_VARIABLE (nm^2)}
+\item {SPECIES_CODE}
+\item {SPECIES_NAME}
+\item {SEX}
+\item {WIDTH (mm)}
+\item {SHELL_CONDITION}
+\item {EGG_COLOR}
+\item {EGG_CONDITION}
+\item {CLUTCH_SIZE}
+\item {CHELA_HEIGHT}
+\item {CALCULATED_WEIGHT}
+\item {WEIGHT}
+\item {SAMPLING_FACTOR}
+\item {CPUE_NUM}
 }
 }

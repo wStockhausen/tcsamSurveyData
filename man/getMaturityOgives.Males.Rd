@@ -18,25 +18,25 @@ getMaturityOgives.Males(
 )
 }
 \arguments{
-\item{fn}{- filename for maturity-classified chela height dataset}
+\item{fn}{: filename for maturity-classified chela height dataset}
 
 \item{tbl_strata}{: data frame from call to \code{\link{selectStrata.TrawlSurvey}} [required]}
 
-\item{cutpts}{- vector of cutpoints to create size bins from}
+\item{cutpts}{: vector of cutpoints to create size bins from}
 
 \item{byEBS}{: flag to aggregate across strata to EBS}
 
-\item{showPlot}{- flag to show plot of ogives}
+\item{showPlot}{: flag to show plot of ogives}
 
-\item{export}{- boolean flag to export results to csv file}
+\item{export}{: boolean flag to export results to csv file}
 
-\item{out.csv}{- name of output csv file                    (ignored if NULL)}
+\item{out.csv}{: name of output csv file                    (ignored if NULL)}
 
-\item{out.dir}{- base path for output csv file              (set to folder of input csv file or current working directory)}
+\item{out.dir}{: base path for output csv file              (set to folder of input csv file or current working directory)}
 
-\item{verbosity}{- flags for intermediate output}
+\item{verbosity}{: flags for intermediate output}
 
-\item{...}{- parameters passed to plotMaturityOgives(...)}
+\item{...}{: parameters passed to plotMaturityOgives(...)}
 }
 \value{
 dataframe with columns: \cr

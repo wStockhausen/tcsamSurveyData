@@ -9,6 +9,7 @@ resampledSizeComps.PlotStats(
   plotNorm = TRUE,
   nrow = 5,
   ncol = 5,
+  showCIs = TRUE,
   showPlots = FALSE,
   savePlots = TRUE,
   fn = "fig_Stats",
@@ -19,29 +20,29 @@ resampledSizeComps.PlotStats(
 )
 }
 \arguments{
-\item{dfrStats}{- dataframe with "stacked" results from [resampledSizeComps.CalcStats]}
+\item{dfrStats}{: dataframe with "stacked" results from \link{resampledSizeComps.CalcStats}}
 
-\item{plotNorm}{- flgg (T/F) to plot normalized (vs. un-normalized) size comps}
+\item{plotNorm}{: flgg (T/F) to plot normalized (vs. un-normalized) size comps}
 
-\item{nrow}{- number of rows per plot page}
+\item{nrow}{: number of rows per plot page}
 
-\item{ncol}{- number of columns per plot page}
+\item{ncol}{: number of columns per plot page}
 
-\item{showPlots}{- flag (T/F) to}
+\item{showCIs}{: flag (T/F) to plot confidence intervals (as ribbons)}
 
-\item{savePlots}{- flag (T/F) to}
+\item{showPlots}{: flag (T/F) to}
 
-\item{fn}{- base filename (with path to output folder; sex, maturity, shell condition and page number will be appended)}
+\item{savePlots}{: flag (T/F) to}
 
-\item{ext}{- extension for output plot files}
+\item{fn}{: base filename (with path to output folder; sex, maturity, shell condition and page number will be appended)}
 
-\item{width}{- page width (in inches)}
+\item{ext}{: extension for output plot files}
 
-\item{height}{- page height (in inches)}
+\item{width}{: page width (in inches)}
 
-\item{dpi}{- dots-per-inch}
+\item{height}{: page height (in inches)}
 
-\item{showCIs}{- flag (T/F) to plot confidence intervals (as ribbons)}
+\item{dpi}{: dots-per-inch}
 }
 \value{
 list of plots
@@ -52,5 +53,5 @@ Function to create plots for resampled size comps statistics by year.
 \details{
 This function makes plots for a single "scenario" of resampled size comps, showing
 mean and median, in addition to original and (optionally) CIs. Use
-[resampledSizeComps.CompareStats] to compare results from multiple scenarios.
+\link{resampledSizeComps.CompareStats} to compare results from multiple scenarios.
 }

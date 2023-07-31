@@ -24,11 +24,11 @@ resampledSizeComps.calc(
 \arguments{
 \item{N}{: number of resamples/year}
 
-\item{tbl_strata}{: data frame from call to \code{\link{selectStrata.TrawlSurvey}} [required]}
+\item{tbl_strata}{: data frame from call to \link{selectStrata.TrawlSurvey} [required]}
 
-\item{tbl_hauls}{: dataframe from call to \code{\link{selectHauls.TrawlSurvey}} [required]}
+\item{tbl_hauls}{: dataframe from call to \link{selectHauls.TrawlSurvey} [required]}
 
-\item{tbl_indivs}{: dataframe from call to \code{\link{selectIndivs.TrawlSurvey}} (or crab survey filename)}
+\item{tbl_indivs}{: dataframe from call to \link{selectIndivs.TrawlSurvey} (or crab survey filename)}
 
 \item{avgHaulsByStation}{: flag (T/F) to average hauls by station before calc'ing size comps}
 
@@ -79,8 +79,8 @@ are the observed size comps.\cr
 \cr
 Other notes: \cr
 \itemize{
-  \item{Area is in square nautical miles}
-  \item{Abundance is in 10^6 indivs}
-  \item{Biomass   is in 10^3 mt}
+\item{Area is in square nautical miles}
+\item{Abundance is in 10^6 indivs}
+\item{Biomass   is in 10^3 mt}
 }
 }
