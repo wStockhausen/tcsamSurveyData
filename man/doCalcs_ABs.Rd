@@ -9,6 +9,7 @@ doCalcs_ABs(
   tbl_hauls,
   tbl_indivs,
   averageHaulsByStation = TRUE,
+  useStratumArea = TRUE,
   calcByEW166 = TRUE,
   aggBySex = FALSE,
   aggByMaturity = FALSE,
@@ -37,6 +38,8 @@ doCalcs_ABs(
 \item{averageHaulsByStation}{\itemize{
 \item TRUE (average hauls by station prior to calculating stratum-level quantities)
 }}
+
+\item{useStratumArea}{: flag (T/F) to use STRATUM_AREA to expand average CPUE to stratum abundance/biomass (default is T)}
 
 \item{calcByEW166}{: TRUE (calculate AB by EW166 prior to calculating total for EBS)}
 

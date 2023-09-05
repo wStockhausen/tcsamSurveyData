@@ -131,7 +131,7 @@ calcAB.ByStratum<-function(tbl_strata,
     #calculate number of unique stations
     #calculate average cpues over strata
     stratum_area_str<-"STRATUM_AREA";
-    if (!useStratumArea) straum_area_str<-"SUM(STATION_AREA) as STRATUM_AREA";
+    if (!useStratumArea) stratum_area_str<-"SUM(STATION_AREA) as STRATUM_AREA";
     qry<-"select
             YEAR,
             STRATUM,

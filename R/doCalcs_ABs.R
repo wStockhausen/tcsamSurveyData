@@ -7,6 +7,7 @@
 #' @param tbl_hauls   - dataframe with hauls info (output from \code{\link{selectHauls.TrawlSurvey}})
 #' @param tbl_indivs  - dataframe with individual crab info (output from \code{\link{selectIndivs.TrawlSurvey}})
 #' @param averageHaulsByStation - TRUE (average hauls by station prior to calculating stratum-level quantities)
+#' @param useStratumArea : flag (T/F) to use STRATUM_AREA to expand average CPUE to stratum abundance/biomass (default is T)
 #' @param calcByEW166 : TRUE (calculate AB by EW166 prior to calculating total for EBS)
 #' @param aggBySex            - flag to agregate CPUE over sexes
 #' @param aggByMaturity       - flag to aggregate of maturity states
@@ -44,6 +45,7 @@ doCalcs_ABs<-function(tbl_strata,
                        tbl_hauls,
                        tbl_indivs,
                        averageHaulsByStation=TRUE,
+                       useStratumArea=TRUE,
                        calcByEW166=TRUE,
                        aggBySex=FALSE,
                        aggByMaturity=FALSE,
@@ -97,12 +99,14 @@ doCalcs_ABs<-function(tbl_strata,
 
         bio.byStr<-calcAB.ByStratum(tbl_strata=tbl_strata,
                                      tbl_cpue=cpue.byS,
+                                     useStratumArea=useStratumArea,
                                      export=FALSE,
                                      verbosity=verbosity);
     } else {
         message("NOT averaging cpue by station.")
         bio.byStr<-calcAB.ByStratum(tbl_strata=tbl_strata,
                                      tbl_cpue=cpue.byH,
+                                     useStratumArea=useStratumArea,
                                      export=FALSE,
                                      verbosity=verbosity);
     }
