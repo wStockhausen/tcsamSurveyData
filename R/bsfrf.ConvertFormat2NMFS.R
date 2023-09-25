@@ -3,11 +3,25 @@
 #'
 #' @description Function to convert BSFRF data to (almost) NMFS CRABHAUL_DATA format.
 #'
-#' @param tbl : filename for BSFRF  csv file to read or dataframe from reading csv file
+#' @param tbl : filename for BSFRF  csv file to read or dataframe from reading csv file with [bsfrf.ReadCSV()]
 #' @param types : BSFRF study types to select ("SBS", "IDX", or both)
+#' @param size_col : column name with crab sizes (default = 'fixed_cw')
+#' @param bsfrf_species : BSFRF species to extract (default = "BRD")
+#' @param nmfs_species_code : appropriate NMFS species code (default = 68560 for Bairdi)
+#' @param nmfs_species_name : appropriate NMFS species name (default = 'Bairdi Tanner Crab')
 #' @param verbosity : integer flag to print debug info
 #'
 #' @return dataframe "almost" in CRABHAUL_DATA format.
+#'
+#' @details BSFRF station ids are not necessarily correct. For example, the
+#' so-called corner stations in the NMFS survey grid use the format 'aaxxxx' whereas
+#' the BSFRF format is typically 'aa-xxxx' , where aa is a 2-letter code and
+#' xxxx is a 4-digit code. NMFS station 'H-21' has also been mis-coded 'H21' in
+#' the BSFRF data in some years. Rather than deal with these instances piecemeal,
+#' the NMFS survey grid layers ([gisGetSurveyGridLayers()]) are used to reassign NMFS station ids to the
+#' BSFRF data based on the mid-tow coordinates for the BSFRF data. The hauls
+#' that will be changed can be identified by running [bsfrf.CheckStation()] on the
+#' BSFRF haul dataframe/csv file before making the conversion here.
 #'
 #' @details returned dataframe has columns
 #' \itemize{
@@ -45,8 +59,12 @@
 #'
 #' @export
 #'
-convertFormat.BSFRF2NMFS<-function(tbl,
+bsfrf.ConvertFormat2NMFS<-function(tbl,
                                    types=c("SBS","IDX"),
+                                   sizeCol="fixed_cw",
+                                   bsfrf_species="BRD",
+                                   nmfs_species_code=68560,
+                                   nmfs_species_name="Bairdi Tanner Crab",
                                    verbosity=TRUE){
   in.csv<-NULL;
   if (!is.data.frame(tbl)){
@@ -58,15 +76,25 @@ convertFormat.BSFRF2NMFS<-function(tbl,
           in.csv<-tbl;#tbl is a filename
       }
       if (verbosity>1) cat("Reading BSFRF trawl survey csv.\n",sep='')
-      tbl<-read.csv(in.csv,check.names=FALSE,stringsAsFactors=FALSE);
+      tbl<-bsfrf.ReadCSV(in.csv);
       if (verbosity>1) cat("Done reading input csv file.\n")
   }
 
-  #Reformat input table
-  ##-convert column names to lower case
-  names(tbl)<-tolower(names(tbl));
-  ##-select only "type" stations
-  tbl<-tbl[tbl$study%in%types,];
+  #--get NMFS station grid
+  grid = tcsamSurveyData::gisGetSurveyGridLayers();
+
+  #--select only "type" stations and
+  #----do spatial join to classify hauls by NMFS survey station based on mid-haul locations
+  sfHD = tbl |>
+          dplyr::filter(tolower(study)%in%tolower(types),species==bsfrf_species) |>
+           wtsGIS::createSF_points(xCol="midtowlongitude",yCol="midtowlatitude",crs=wtsGIS::get_crs(4326)) |>
+           sf::st_join(grid$grid,join=sf::st_within);  #--now has "nmfs_stn" and "STATION_ID" columns
+
+  tbl = sfHD |> sf::st_drop_geometry() |>
+          dplyr::mutate(nmfs_stn=STATION_ID) |>
+          dplyr::select(year,study,boat,tow,date,time,
+                        midtowlongitude,midtowlatitude,nmfs_stn,depth_ftm,temp_c,aswept_nm2,
+                        sex,tidyselect::all_of(sizeCol),shell,col,con,full,sampfactor,cpuenum);
 
   start_date<-as.numeric(format(as.Date(tbl$date,format="%m/%d/%y"),"%m%d%Y"));
 
@@ -86,10 +114,10 @@ convertFormat.BSFRF2NMFS<-function(tbl,
   tbl$BOTTOM_DEPTH       <-as.numeric(tbl$depth_ftm*6*(0.3048));
   tbl$GEAR_TEMPERATURE   <-as.numeric(tbl$temp_c);
   tbl$AREA_SWEPT_VARIABLE<-as.numeric(tbl$aswept_nm2);
-  tbl$SPECIES_CODE       <-68560;
-  tbl$SPECIES_NAME       <-"Bairdi Tanner Crab";
+  tbl$SPECIES_CODE       <-nmfs_species_code;
+  tbl$SPECIES_NAME       <-nmfs_species_name;
   tbl$SEX                <-as.integer(tbl$sex);
-  tbl$WIDTH              <-as.numeric(tbl$fixed_cl);
+  tbl$WIDTH              <-as.numeric(tbl[[sizeCol]]);
   tbl$SHELL_CONDITION    <-as.integer(tbl$shell);
   tbl$EGG_COLOR          <-as.integer(tbl$col);
   tbl$EGG_CONDITION      <-as.integer(tbl$con);
@@ -108,7 +136,7 @@ convertFormat.BSFRF2NMFS<-function(tbl,
           "SPECIES_CODE","SPECIES_NAME","SEX","WIDTH","SHELL_CONDITION",
           "EGG_COLOR","EGG_CONDITION","CLUTCH_SIZE",
           "CHELA_HEIGHT","CALCULATED_WEIGHT","WEIGHT","SAMPLING_FACTOR","CPUE_NUM");
-  tbl<-tbl[,cols];
+  tbl<-tbl |> dplyr::select(tidyselect::all_of(cols));
 
   #make sure that female variables for males are NA
   idx<-tbl$SEX==1;
@@ -117,8 +145,7 @@ convertFormat.BSFRF2NMFS<-function(tbl,
   tbl$CLUTCH_SIZE[idx]  <- NA;
 
   #keep only tows with recorded lat/lons
-  idx<-is.na(tbl$MID_LATITUDE)|is.na(tbl$MID_LATITUDE);
-  tbl<-tbl[!idx,];
+  tbl<-tbl |> dplyr::filter(!is.na(MID_LATITUDE),!is.na(MID_LATITUDE));
 
   return(tbl);
 }
