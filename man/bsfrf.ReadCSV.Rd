@@ -29,7 +29,7 @@ input csv file column names/types are:
 \item{NMFS_Stn = col_character()}
 \item{Year = col_double()}
 \item{Date = col_character()}
-\item{Time = col_time(format = "")}
+\item{Time = col_character()}
 \item{Depth_ftm = col_double()}
 \item{Temp_C = col_double()}
 \item{Aswept_nm2 = col_double()}
@@ -40,9 +40,9 @@ input csv file column names/types are:
 \item{LineNum = col_double()}
 \item{Species = col_character()}
 \item{Sex = col_character()}
-\item{shell = col_double()}
-\item{Carapace = col_double()}
-\item{Fixed_CW = col_double()}
+\item{Shell = col_double()}
+\item{Size = col_double()}
+\item{Fixed_Size = col_double()}
 \item{Sub = col_character()}
 \item{SampFactor = col_double()}
 \item{col = col_character()}

@@ -19,7 +19,7 @@
 #'   \item{NMFS_Stn = col_character()}
 #'   \item{Year = col_double()}
 #'   \item{Date = col_character()}
-#'   \item{Time = col_time(format = "")}
+#'   \item{Time = col_character()}
 #'   \item{Depth_ftm = col_double()}
 #'   \item{Temp_C = col_double()}
 #'   \item{Aswept_nm2 = col_double()}
@@ -30,9 +30,9 @@
 #'   \item{LineNum = col_double()}
 #'   \item{Species = col_character()}
 #'   \item{Sex = col_character()}
-#'   \item{shell = col_double()}
-#'   \item{Carapace = col_double()}
-#'   \item{Fixed_CW = col_double()}
+#'   \item{Shell = col_double()}
+#'   \item{Size = col_double()}
+#'   \item{Fixed_Size = col_double()}
 #'   \item{Sub = col_character()}
 #'   \item{SampFactor = col_double()}
 #'   \item{col = col_character()}
@@ -57,7 +57,7 @@ bsfrf.ReadCSV<-function(fn,cts=NULL){
                 NMFS_Stn = readr::col_character(),
                 Year = readr::col_double(),
                 Date = readr::col_character(),
-                Time = readr::col_time(format = ""),
+                Time = readr::col_character(),
                 Depth_ftm = readr::col_double(),
                 Temp_C = readr::col_double(),
                 Aswept_nm2 = readr::col_double(),
@@ -68,9 +68,9 @@ bsfrf.ReadCSV<-function(fn,cts=NULL){
                 LineNum = readr::col_double(),
                 Species = readr::col_character(),
                 Sex = readr::col_character(),
-                shell = readr::col_double(),
-                Carapace = readr::col_double(),
-                Fixed_CW = readr::col_double(),
+                Shell = readr::col_double(),
+                Size = readr::col_double(),
+                Fixed_Size = readr::col_double(),
                 Sub = readr::col_character(),
                 SampFactor = readr::col_double(),
                 col = readr::col_character(),

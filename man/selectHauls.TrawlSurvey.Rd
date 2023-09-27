@@ -56,6 +56,7 @@ a dataframe w/ columns \cr
 \item{HAULJOIN}
 \item{HAUL_TYPE}
 \item{START_DATE}
+\item{START_TIME}
 \item{MID_LATITUDE}
 \item{MID_LONGITUDE}
 \item{BOTTOM_DEPTH}

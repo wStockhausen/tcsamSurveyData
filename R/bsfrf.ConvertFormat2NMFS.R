@@ -16,7 +16,7 @@
 #' @details BSFRF station ids are not necessarily correct. For example, the
 #' so-called corner stations in the NMFS survey grid use the format 'aaxxxx' whereas
 #' the BSFRF format is typically 'aa-xxxx' , where aa is a 2-letter code and
-#' xxxx is a 4-digit code. NMFS station 'H-21' has also been mis-coded 'H21' in
+#' xxxx is a 4-digit code. Also, NMFS station 'H-21' has also been mis-coded 'H21' in
 #' the BSFRF data in some years. Rather than deal with these instances piecemeal,
 #' the NMFS survey grid layers ([gisGetSurveyGridLayers()]) are used to reassign NMFS station ids to the
 #' BSFRF data based on the mid-tow coordinates for the BSFRF data. The hauls
@@ -25,43 +25,48 @@
 #'
 #' @details returned dataframe has columns
 #' \itemize{
-#'   \item {AKFIN_SURVEY_YEAR}
-#'   \item {HAULJOIN}
-#'   \item {VESSEL}
-#'   \item {CRUISE}
-#'   \item {HAUL}
-#'   \item {HAUL_TYPE}
-#'   \item {START_DATE}
-#'   \item {AKFIN_SURVEY_DATE}
-#'   \item {START_HOUR}
-#'   \item {MID_LATITUDE}
-#'   \item {MID_LONGITUDE}
-#'   \item {GIS_STATION}
-#'   \item {BOTTOM_DEPTH (in meters)}
-#'   \item {GEAR_TEMPERATURE (deg C)}
-#'   \item {AREA_SWEPT_VARIABLE (nm^2)}
-#'   \item {SPECIES_CODE}
-#'   \item {SPECIES_NAME}
-#'   \item {SEX}
-#'   \item {WIDTH (mm)}
-#'   \item {SHELL_CONDITION}
-#'   \item {EGG_COLOR}
-#'   \item {EGG_CONDITION}
-#'   \item {CLUTCH_SIZE}
-#'   \item {CHELA_HEIGHT}
-#'   \item {CALCULATED_WEIGHT}
-#'   \item {WEIGHT}
-#'   \item {SAMPLING_FACTOR}
-#'   \item {CPUE_NUM}
+#'   \item {AKFIN_SURVEY_YEAR - year}
+#'   \item {HAULJOIN - paste(toupper(study),boat,start_date,start_hour,tow,sep=";")}
+#'   \item {VESSEL - boat}
+#'   \item {CRUISE - -1}
+#'   \item {HAUL - tow}
+#'   \item {HAUL_TYPE - toupper(study)}
+#'   \item {START_DATE - character: mmddyyyy}
+#'   \item {AKFIN_SURVEY_DATE - character: dd-mm-yyyy}
+#'   \item {START_HOUR - character: hhmm}
+#'   \item {MID_LATITUDE - midtowlatitude (numeric)}
+#'   \item {MID_LONGITUDE - midtowlongitude (numeric)}
+#'   \item {GIS_STATION - nmfs_stn}
+#'   \item {BOTTOM_DEPTH -  depth_ftm, converted to meters}
+#'   \item {GEAR_TEMPERATURE -  temp_c (in deg C)}
+#'   \item {AREA_SWEPT_VARIABLE -  aswept_nm2 (in nm^2)}
+#'   \item {SPECIES_CODE - nmfs_species_code}
+#'   \item {SPECIES_NAME - nmfs_species_name}
+#'   \item {SEX - sex}
+#'   \item {WIDTH - sizeCol (in mm)}
+#'   \item {SHELL_CONDITION - shell/Shell}
+#'   \item {EGG_COLOR - col}
+#'   \item {EGG_CONDITION - con}
+#'   \item {CLUTCH_SIZE - full}
+#'   \item {CHELA_HEIGHT - NA}
+#'   \item {CALCULATED_WEIGHT - NA}
+#'   \item {WEIGHT - NA}
+#'   \item {SAMPLING_FACTOR - sampfactor}
+#'   \item {CPUE_NUM - cpuenum (expanded number/nm^2)}
 #' }
 #'
-#' @importFrom utils read.csv write.csv
+#' @importFrom dplyr filter mutate select
+#' @importFrom stringr str_sub str_replace
+#' @importFrom tidyselect all_of
+#' @importFrom sf st_drop_geometry st_join st_within
+#' @importFrom wtsGIS createSF_points
+#' @importFrom wtsUtilities selectFile
 #'
 #' @export
 #'
 bsfrf.ConvertFormat2NMFS<-function(tbl,
                                    types=c("SBS","IDX"),
-                                   sizeCol="fixed_cw",
+                                   sizeCol="fixed_size",
                                    bsfrf_species="BRD",
                                    nmfs_species_code=68560,
                                    nmfs_species_name="Bairdi Tanner Crab",
@@ -96,18 +101,21 @@ bsfrf.ConvertFormat2NMFS<-function(tbl,
                         midtowlongitude,midtowlatitude,nmfs_stn,depth_ftm,temp_c,aswept_nm2,
                         sex,tidyselect::all_of(sizeCol),shell,col,con,full,sampfactor,cpuenum);
 
-  start_date<-as.numeric(format(as.Date(tbl$date,format="%m/%d/%y"),"%m%d%Y"));
+  start_date<-format(as.Date(tbl$date,format="%m/%d/%y"),"%m%d%Y");
+  start_hour<-stringr::str_sub(tbl$time,1,5) |> stringr::str_replace(":","");
+  start_hour<-paste0(wtsUtilities::formatZeros(stringr::str_split_fixed(tbl$time,":",3)[,1],width=2),
+                     wtsUtilities::formatZeros(stringr::str_split_fixed(tbl$time,":",3)[,2],width=2));
 
   tbl$AKFIN_SURVEY_YEAR  <-tbl$year;
-  tbl$HAULJOIN           <-paste(tbl$study,tbl$boat,start_date,tbl$tow,sep=";");
+  tbl$HAULJOIN           <-paste(toupper(tbl$study),tbl$boat,start_date,start_hour,tbl$tow,sep=";");
   tbl$VESSEL             <-tbl$boat;
   tbl$CRUISE             <--1;
   tbl$HAUL               <-tbl$tow;
-  tbl$HAUL_TYPE          <-tbl$study;
+  tbl$HAUL_TYPE          <-toupper(tbl$study);
   tbl$PERFORMANCE        <-0;
   tbl$START_DATE         <-start_date;
   tbl$AKFIN_SURVEY_DATE  <-format(as.Date(tbl$date,format="%m/%d/%y"),"%d-%m-%y");
-  tbl$START_HOUR         <-tbl$time;
+  tbl$START_HOUR         <-start_hour;
   tbl$MID_LATITUDE       <-as.numeric(tbl$midtowlatitude);
   tbl$MID_LONGITUDE      <-as.numeric(tbl$midtowlongitude);
   tbl$GIS_STATION        <-tbl$nmfs_stn;
@@ -117,7 +125,7 @@ bsfrf.ConvertFormat2NMFS<-function(tbl,
   tbl$SPECIES_CODE       <-nmfs_species_code;
   tbl$SPECIES_NAME       <-nmfs_species_name;
   tbl$SEX                <-as.integer(tbl$sex);
-  tbl$WIDTH              <-as.numeric(tbl[[sizeCol]]);
+  tbl$WIDTH              <-as.numeric(tbl[[tolower(sizeCol)]]);
   tbl$SHELL_CONDITION    <-as.integer(tbl$shell);
   tbl$EGG_COLOR          <-as.integer(tbl$col);
   tbl$EGG_CONDITION      <-as.integer(tbl$con);

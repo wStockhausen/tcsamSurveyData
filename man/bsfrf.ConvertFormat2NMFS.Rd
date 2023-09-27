@@ -7,7 +7,7 @@
 bsfrf.ConvertFormat2NMFS(
   tbl,
   types = c("SBS", "IDX"),
-  sizeCol = "fixed_cw",
+  sizeCol = "fixed_size",
   bsfrf_species = "BRD",
   nmfs_species_code = 68560,
   nmfs_species_name = "Bairdi Tanner Crab",
@@ -39,7 +39,7 @@ Function to convert BSFRF data to (almost) NMFS CRABHAUL_DATA format.
 BSFRF station ids are not necessarily correct. For example, the
 so-called corner stations in the NMFS survey grid use the format 'aaxxxx' whereas
 the BSFRF format is typically 'aa-xxxx' , where aa is a 2-letter code and
-xxxx is a 4-digit code. NMFS station 'H-21' has also been mis-coded 'H21' in
+xxxx is a 4-digit code. Also, NMFS station 'H-21' has also been mis-coded 'H21' in
 the BSFRF data in some years. Rather than deal with these instances piecemeal,
 the NMFS survey grid layers (\code{\link[=gisGetSurveyGridLayers]{gisGetSurveyGridLayers()}}) are used to reassign NMFS station ids to the
 BSFRF data based on the mid-tow coordinates for the BSFRF data. The hauls
@@ -48,33 +48,33 @@ BSFRF haul dataframe/csv file before making the conversion here.
 
 returned dataframe has columns
 \itemize{
-\item {AKFIN_SURVEY_YEAR}
-\item {HAULJOIN}
-\item {VESSEL}
-\item {CRUISE}
-\item {HAUL}
-\item {HAUL_TYPE}
-\item {START_DATE}
-\item {AKFIN_SURVEY_DATE}
-\item {START_HOUR}
-\item {MID_LATITUDE}
-\item {MID_LONGITUDE}
-\item {GIS_STATION}
-\item {BOTTOM_DEPTH (in meters)}
-\item {GEAR_TEMPERATURE (deg C)}
-\item {AREA_SWEPT_VARIABLE (nm^2)}
-\item {SPECIES_CODE}
-\item {SPECIES_NAME}
-\item {SEX}
-\item {WIDTH (mm)}
-\item {SHELL_CONDITION}
-\item {EGG_COLOR}
-\item {EGG_CONDITION}
-\item {CLUTCH_SIZE}
-\item {CHELA_HEIGHT}
-\item {CALCULATED_WEIGHT}
-\item {WEIGHT}
-\item {SAMPLING_FACTOR}
-\item {CPUE_NUM}
+\item {AKFIN_SURVEY_YEAR - year}
+\item {HAULJOIN - paste(toupper(study),boat,start_date,start_hour,tow,sep=";")}
+\item {VESSEL - boat}
+\item {CRUISE - -1}
+\item {HAUL - tow}
+\item {HAUL_TYPE - toupper(study)}
+\item {START_DATE - character: mmddyyyy}
+\item {AKFIN_SURVEY_DATE - character: dd-mm-yyyy}
+\item {START_HOUR - character: hhmm}
+\item {MID_LATITUDE - midtowlatitude (numeric)}
+\item {MID_LONGITUDE - midtowlongitude (numeric)}
+\item {GIS_STATION - nmfs_stn}
+\item {BOTTOM_DEPTH -  depth_ftm, converted to meters}
+\item {GEAR_TEMPERATURE -  temp_c (in deg C)}
+\item {AREA_SWEPT_VARIABLE -  aswept_nm2 (in nm^2)}
+\item {SPECIES_CODE - nmfs_species_code}
+\item {SPECIES_NAME - nmfs_species_name}
+\item {SEX - sex}
+\item {WIDTH - sizeCol (in mm)}
+\item {SHELL_CONDITION - shell/Shell}
+\item {EGG_COLOR - col}
+\item {EGG_CONDITION - con}
+\item {CLUTCH_SIZE - full}
+\item {CHELA_HEIGHT - NA}
+\item {CALCULATED_WEIGHT - NA}
+\item {WEIGHT - NA}
+\item {SAMPLING_FACTOR - sampfactor}
+\item {CPUE_NUM - cpuenum (expanded number/nm^2)}
 }
 }

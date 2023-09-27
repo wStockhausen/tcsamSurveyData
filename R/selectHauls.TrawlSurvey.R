@@ -24,12 +24,13 @@
 #' \item{GIS_STATION}
 #' \item{HAULJOIN}
 #' \item{HAUL_TYPE}
-#' \item{START_DATE}
+#' \item{START_DATE - format: mmddyyyy}
+#' \item{START_HOUR - format: hhmm}
 #' \item{MID_LATITUDE}
 #' \item{MID_LONGITUDE}
-#' \item{BOTTOM_DEPTH}
-#' \item{GEAR_TEMPERATURE}
-#' \item{AREA_SWEPT_VARIABLE}
+#' \item{BOTTOM_DEPTH - in meters}
+#' \item{GEAR_TEMPERATURE - in deg C}
+#' \item{AREA_SWEPT_VARIABLE - in nm^2}
 #' }
 #'
 #'@details If neither tbl or in.csv is given, the user will be prompted for a csv file via a file dialog box
@@ -88,7 +89,7 @@ selectHauls.TrawlSurvey<-function(tbl_strata,
     }
     if (verbosity>0) cat("Output directory for selectHauls.TrawlSurvey will be '",out.dir,"'\n",sep='');
 
-    req_cols<-c("HAUL_TYPE","START_DATE","GIS_STATION","HAULJOIN",
+    req_cols<-c("HAUL_TYPE","START_DATE","START_HOUR","GIS_STATION","HAULJOIN",
                 "MID_LATITUDE","MID_LONGITUDE","BOTTOM_DEPTH",
                 "GEAR_TEMPERATURE","AREA_SWEPT_VARIABLE");
     if (any(!(req_cols %in% names(tbl)))){
@@ -108,7 +109,7 @@ selectHauls.TrawlSurvey<-function(tbl_strata,
     uniq.yrs<-unique(yrs);
     if (verbosity>1) cat("survey years = {",paste(uniq.yrs,collapse=','),"}\n",sep='');
 
-    cols<-c("HAUL_TYPE","START_DATE",
+    cols<-c("HAUL_TYPE","START_DATE","START_HOUR",
             "MID_LATITUDE","MID_LONGITUDE","BOTTOM_DEPTH",
             "GEAR_TEMPERATURE","AREA_SWEPT_VARIABLE");
 
