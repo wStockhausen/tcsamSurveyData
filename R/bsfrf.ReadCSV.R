@@ -31,8 +31,10 @@
 #'   \item{Species = col_character()}
 #'   \item{Sex = col_character()}
 #'   \item{Shell = col_double()}
-#'   \item{Size = col_double()}
-#'   \item{Fixed_Size = col_double()}
+#'   \item{Carapace = col_double(): possible size column}
+#'   \item{Fixed_CL = col_double(): possible size column}
+#'   \item{Size = col_double(): possible size column}
+#'   \item{Fixed_Size = col_double(): possible size column}
 #'   \item{Sub = col_character()}
 #'   \item{SampFactor = col_double()}
 #'   \item{col = col_character()}
@@ -42,7 +44,8 @@
 #'   \item{`5mmSizes` = col_character()}
 #' }
 #'
-#' @import readr
+#' @importFrom dplyr rename
+#' @importFrom readr cols read_csv
 #'
 #' @export
 #'
@@ -69,6 +72,8 @@ bsfrf.ReadCSV<-function(fn,cts=NULL){
                 Species = readr::col_character(),
                 Sex = readr::col_character(),
                 Shell = readr::col_double(),
+                Carapace = readr::col_double(),
+                Fixed_CL = readr::col_double(),
                 Size = readr::col_double(),
                 Fixed_Size = readr::col_double(),
                 Sub = readr::col_character(),
@@ -83,5 +88,9 @@ bsfrf.ReadCSV<-function(fn,cts=NULL){
   dfr = readr::read_csv(fn,
                         col_types=cts);
   names(dfr) = tolower(names(dfr));
+  if (any(names(dfr)=="fixed_cl"))
+      dfr = dfr |> dplyr::rename(fixed_size=fixed_cl);
+  if (any(names(dfr)=="carapace"))
+      dfr = dfr |> dplyr::rename(size=carapace);
   return(dfr);
 }

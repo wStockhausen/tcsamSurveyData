@@ -21,7 +21,7 @@ selectHauls.TrawlSurvey(
 )
 }
 \arguments{
-\item{tbl_strata}{: dataframe from call to selectStrata.TrawlSurvey(...) [required]}
+\item{tbl_strata}{: dataframe from call to \code{\link[=selectStrata.TrawlSurvey]{selectStrata.TrawlSurvey()}} (required)}
 
 \item{tbl}{: trawl survey dataframe from previous call (or name of trawl survey csv datafile, or NULL)              (ignored if NULL)}
 
@@ -55,13 +55,13 @@ a dataframe w/ columns \cr
 \item{GIS_STATION}
 \item{HAULJOIN}
 \item{HAUL_TYPE}
-\item{START_DATE}
-\item{START_TIME}
+\item{START_DATE - format: mmddyyyy}
+\item{START_HOUR - format: hhmm}
 \item{MID_LATITUDE}
 \item{MID_LONGITUDE}
-\item{BOTTOM_DEPTH}
-\item{GEAR_TEMPERATURE}
-\item{AREA_SWEPT_VARIABLE}
+\item{BOTTOM_DEPTH - in meters}
+\item{GEAR_TEMPERATURE - in deg C}
+\item{AREA_SWEPT_VARIABLE - in nm^2}
 }
 }
 \description{

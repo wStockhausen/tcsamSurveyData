@@ -4,7 +4,7 @@
 #'@description This function counts the number of stations conducted per year and stratum,
 #'             calculates the (effective) area associated with each individual station,
 #'             and adds it as a column to the input dataframe. Note that this function is
-#'             now (20190823) called in the course of evaluating \code{selectStrat.TrawlSurvey}.
+#'             now (20190823) called in the course of evaluating \code{selectStrata.TrawlSurvey}.
 #'
 #'@param dfrSD : table (dataframe) of survey station/strata data
 #'
@@ -12,12 +12,12 @@
 #'\itemize{\item {YEAR}
 #'         \item {STRATUM}
 #'         \item {STRATUM_CODE}
-#'         \item {STRATUM_AREA}
+#'         \item {STRATUM_AREA - in square nautical miles}
 #'         \item {GIS_STATION}
 #'         \item {STATION_LONGITUDE}
 #'         \item {STATION_LATITUDE}
-#'         \item {STATION_AREA}
-#'         \item {STRATUM_AREA_BYSTATION}
+#'         \item {STATION_AREA - in square nautical miles}
+#'         \item {STRATUM_AREA_BYSTATION - in square nautical miles}
 #'         }
 #' Areas are in square nautical miles.
 #'
@@ -31,7 +31,7 @@
 #'
 addStationAreasToStrataDataframe<-function(dfrSD){
   #----get the survey grid layers (grid and stations)
-  grid = tcsamSurveyData::gisGetSurveyGridLayers()$grid %>%
+  grid = tcsamSurveyData::gisGetSurveyGridLayers()$grid |>
            dplyr::transmute(AREA=TOTAL_AREA,STATION_ID=STATION_ID);
   #merge stations from dfrSD with GIS polygon information
   dfrUniqStns<-unique(dfrSD[,c("YEAR","STRATUM","GIS_STATION")]);
@@ -43,9 +43,8 @@ addStationAreasToStrataDataframe<-function(dfrSD){
   #----calculate the area of each stratum by summing over the area associated with each station
   #-----NOTE: STATION_AREA, STRATUM_AREA_BYSTATION will be in square nautical miles
   if ("TOTAL_AREA" %in% names(polysUniqStns)) polysUniqStns[["AREA"]] = polysUniqStns[["TOTAL_AREA"]];
-  if ("TOTAL_AREA" %in% names(polysUniqStns)) polysUniqStns[["AREA"]] = polysUniqStns[["TOTAL_AREA"]];
   tmp1<-polysUniqStns[,c("YEAR","STRATUM","GIS_STATION","AREA"),drop=TRUE];#keep some columns, drop geometry
-  tmp1$STATION_AREA <- tmp1$AREA/(1852*1852);#convert to sq. nm.
+  tmp1$STATION_AREA <- tmp1$AREA; #--already in sq. nmi.
   qry<-"select YEAR,STRATUM,
         sum(STATION_AREA) as STRATUM_AREA_BYSTATION
         from tmp1
@@ -61,7 +60,7 @@ addStationAreasToStrataDataframe<-function(dfrSD){
         where t1.YEAR=t2.YEAR and t1.STRATUM=t2.STRATUM;"
   tmp3<-sqldf::sqldf(qry);
 
-  #----add station area and straum area based on sum over station areas
+  #----add station area and stratum area based on sum over station areas
   qry<-"select
           s.YEAR,s.STRATUM,s.STRATUM_CODE,s.STRATUM_AREA,
           s.GIS_STATION,s.STATION_LONGITUDE,s.STATION_LATITUDE,

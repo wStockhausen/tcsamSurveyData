@@ -3,7 +3,7 @@
 #'
 #'@description Function to extract crab data on individuals w/ selected characteristics from trawl survey data in NMFS csv format.
 #'
-#'@param tbl_hauls : hauls table (dataframe) from call to [selectHauls.TrawlSurvey] \[required\]
+#'@param tbl_hauls : hauls table (dataframe) from call to [selectHauls.TrawlSurvey()] (required)
 #'@param tbl       : table (dataframe) of survey data (or csv filename or NULL)
 #'@param col.Size  : column name for size information
 #'@param sex             : one of 'MALE','FEMALE','MISSING', 'HERMAPHRODITE', or 'ALL' for narrowing selection of individuals
@@ -90,7 +90,7 @@ selectIndivs.TrawlSurvey<-function(tbl_hauls,
         } else {
             in.csv<-tbl;#tbl is a filename
         }
-        if (verbosity>1) message("Reading AFSC crabhaul survey csv file for individual crab info.");
+        if (verbosity>1) message("Reading AFSC crabhaul survey csv file for individual crab info, skipping ",skip," lines.");
         tbl<-readr::read_csv(in.csv,skip=skip,guess_max=10000000);
         if (verbosity>1) message("Done reading input csv file.")
     }
@@ -227,11 +227,11 @@ selectIndivs.TrawlSurvey<-function(tbl_hauls,
         tbl.NM<-tbl[!idx,];
         frac.mat<-calc.prMat.Males(tbl.M$SIZE,tbl.M$SHELL_CONDITION);
         tbl.ImmM<-tbl.M;
-        tbl.ImmM$numIndivs      <-(1-frac.mat)*tbl.ImmM$numIndivs;#"effective" number of immmature males
+        tbl.ImmM$numIndivs      <-(1-frac.mat)*tbl.ImmM$numIndivs;#"effective" number of immature males
         #tbl.ImmM$SAMPLING_FACTOR<-(1-frac.mat)*tbl.ImmM$SAMPLING_FACTOR; <-NOTE: no need to adjust sampling factor
         tbl.ImmM$MATURITY<-'IMMATURE';
         tbl.MatM<-tbl.M;
-        tbl.MatM$numIndivs      <-frac.mat*tbl.MatM$numIndivs;#"effective" number of mmature males
+        tbl.MatM$numIndivs      <-frac.mat*tbl.MatM$numIndivs;#"effective" number of mature males
         #tbl.MatM$SAMPLING_FACTOR<-frac.mat*tbl.MatM$SAMPLING_FACTOR; <-NOTE: no need to adjust sampling factor
         tbl.MatM$MATURITY<-'MATURE';
 

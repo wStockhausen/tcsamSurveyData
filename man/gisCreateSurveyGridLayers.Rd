@@ -27,8 +27,12 @@ gisCreateSurveyGridLayers(
 a 2-element list with the grid and stations spatial layers as \pkg{sf} dataframes.
 }
 \description{
-This function reads shapefile and creates \pkg{sf} polygon and point dataframes for a survey grid.
+This function reads shapefiles and creates \pkg{sf} polygon and point dataframes for a survey grid.
 }
 \details{
 None.
+}
+\seealso{
+\code{\link[wtsGIS:getPackagedLayer]{wtsGIS::getPackagedLayer()}} for pre-packaged \pkg{sf} datasets that will be
+used in the event that input \code{grid} and \code{stations} shapefiles are NULL (the default).
 }

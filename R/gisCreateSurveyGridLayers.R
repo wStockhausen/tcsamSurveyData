@@ -1,7 +1,7 @@
 #'
 #' @title Create \pkg{sf} dataframes for a survey grid from polygon and point shapefiles
 #'
-#' @description This function reads shapefile and creates \pkg{sf} polygon and point dataframes for a survey grid.
+#' @description This function reads shapefiles and creates \pkg{sf} polygon and point dataframes for a survey grid.
 #'
 #' @param gisPath - path to common toplevel folder for files
 #' @param shapeFiles - a list of shapefiles to read ("grid" and "stations", either can be NULL to skip creation of that layer)
@@ -11,7 +11,10 @@
 #'
 #' @details None.
 #'
-#' @import dplyr
+#' @seealso [wtsGIS::getPackagedLayer()] for pre-packaged \pkg{sf} datasets that will be
+#' used in the event that input \code{grid} and \code{stations} shapefiles are NULL (the default).
+#'
+#' @importFrom dplyr transmute
 #' @import wtsGIS
 #'
 #' @md

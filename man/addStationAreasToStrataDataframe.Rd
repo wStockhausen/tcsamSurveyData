@@ -16,19 +16,19 @@ a dataframe with strata/stations info + (effective) area by individual station.
 This function counts the number of stations conducted per year and stratum,
 calculates the (effective) area associated with each individual station,
 and adds it as a column to the input dataframe. Note that this function is
-now (20190823) called in the course of evaluating \code{selectStrat.TrawlSurvey}.
+now (20190823) called in the course of evaluating \code{selectStrata.TrawlSurvey}.
 }
 \details{
 The returned dataframe has columns:
 \itemize{\item {YEAR}
 \item {STRATUM}
 \item {STRATUM_CODE}
-\item {STRATUM_AREA}
+\item {STRATUM_AREA - in square nautical miles}
 \item {GIS_STATION}
 \item {STATION_LONGITUDE}
 \item {STATION_LATITUDE}
-\item {STATION_AREA}
-\item {STRATUM_AREA_BYSTATION}
+\item {STATION_AREA - in square nautical miles}
+\item {STRATUM_AREA_BYSTATION - in square nautical miles}
 }
 Areas are in square nautical miles.
 }

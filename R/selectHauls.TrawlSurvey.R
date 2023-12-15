@@ -3,7 +3,7 @@
 #'
 #'@description Function to extract NMFS crab survey hauls data from Excel csv file format by year.
 #'
-#'@param tbl_strata : dataframe from call to selectStrata.TrawlSurvey(...) \[required\]
+#'@param tbl_strata : dataframe from call to [selectStrata.TrawlSurvey()] (required)
 #'@param tbl        : trawl survey dataframe from previous call (or name of trawl survey csv datafile, or NULL)              (ignored if NULL)
 #'@param Years      : vector of survey years to include in output             (ignored if NULL)
 #'@param HaulTypes  : vector of haul types to include in output               (ignored if NULL)
@@ -72,9 +72,9 @@ selectHauls.TrawlSurvey<-function(tbl_strata,
         } else {
             in.csv<-tbl;#tbl is a filename
         }
-        if (verbosity>1) cat("Reading AFSC crab trawl survey csv file for hauls info, skipping first 5 lines.\n",sep='')
+        if (verbosity>1) message("Reading AFSC crab trawl survey csv file for hauls info, skipping first ",skip," lines.")
         tbl<-readr::read_csv(in.csv,skip=skip,guess_max=10000000);
-        if (verbosity>1) cat("Done reading input csv file.\n")
+        if (verbosity>1) message("Done reading input csv file.")
     }
 
     #----check for possibly changed column names

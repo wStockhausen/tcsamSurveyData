@@ -24,7 +24,7 @@ selectIndivs.TrawlSurvey(
 )
 }
 \arguments{
-\item{tbl_hauls}{: hauls table (dataframe) from call to \link{selectHauls.TrawlSurvey} [required]}
+\item{tbl_hauls}{: hauls table (dataframe) from call to \code{\link[=selectHauls.TrawlSurvey]{selectHauls.TrawlSurvey()}} (required)}
 
 \item{tbl}{: table (dataframe) of survey data (or csv filename or NULL)}
 
