@@ -48,8 +48,10 @@ bsfrf.AssignNMFSStations<-function(tbl,
              wtsGIS::createSF_points(xCol=colLon,yCol=colLat,crs=wtsGIS::get_crs(4326)) |> #--create sf dataframe using tow locations
              sf::st_join(grid$grid,join=sf::st_within) |> #--join to NMFS EBS shelf station grid, now has "STATION_ID" column
              dplyr::mutate(nmfs_stn=STATION_ID) |>        #--revise (or add) nmfs_stn column
-             dplyr::select(!STATION_ID) |>                #--drop STATION_ID column
              sf::st_drop_geometry();                      #--revert to dataframe
-
+  #--keep only original columns + nmfs_stn (if not originally present)
+  nms = names(tbl);
+  if (!("nmfs_stn" %in% nms)) nms = c(nms,"nmfs_stn");
+  dfrHD = dfrHD[,nms];
   return(dfrHD);
 }
