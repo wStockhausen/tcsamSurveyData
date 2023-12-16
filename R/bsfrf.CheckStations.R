@@ -1,10 +1,11 @@
 #'
-#' @title Check BSFRF data for bad station ids
+#' @title Check BSFRF data for bad haul-level info
 #'
-#' @description Function to check BSFRF data for bad station ids.
+#' @description Function to check BSFRF data for bad haul-level info.
 #'
 #' @param tbl : path to BSFRF csv file to read or dataframe created by [bsfrf.ReadCSV()]
-#' @return dataframe with "bad" station ids
+#'
+#' @return dataframe with "bad" station ids and/or missing area swept values
 #'
 #' @details If \code{tbl} is a character string, it is assumed to be a file path; the
 #' associated csv fle is read using [bsfrf.ReadCSV()]. This function extracts the
@@ -15,6 +16,7 @@
 #'
 #' @seealso [sf::st_within()].
 #'
+#' @importFrom dplyr bind_rows
 #' @importFrom dplyr distinct
 #' @importFrom dplyr filter
 #' @importFrom dplyr select
@@ -42,9 +44,15 @@ bsfrf.CheckStations<-function(tbl){
              sf::st_join(grid$grid,join=sf::st_within);#--now has "nmfs_stn" and "STATION_ID" columns
 
   ##--check for inconsistent nmfs_stn and NMFS station IDs and create table with non-joining IDs
-  dfrBad = sfHD |> sf::st_drop_geometry() |>
-                   dplyr::filter(nmfs_stn!=STATION_ID) |>
-                   dplyr::select(year,study,boat,tow,nmfs_stn,STATION_ID,date,time,
+  dfrBad1 = sfHD |> sf::st_drop_geometry() |>
+                    dplyr::filter(nmfs_stn!=STATION_ID) |>
+                    dplyr::select(year,study,boat,tow,nmfs_stn,STATION_ID,date,time,
                                   depth_ftm,temp_c,aswept_nm2,midtowlatitude,midtowlongitude);
+  ##--check for missing area swept among other
+  dfrBad2 = sfHD |> sf::st_drop_geometry() |>
+                    dplyr::filter(nmfs_stn==STATION_ID,is.na(aswept_nm2)) |>
+                    dplyr::select(year,study,boat,tow,nmfs_stn,STATION_ID,date,time,
+                                  depth_ftm,temp_c,aswept_nm2,midtowlatitude,midtowlongitude);
+  dfrBad = dplyr::bind_rows(dfrBad1,dfrBad2);
   return(dfrBad);
 }

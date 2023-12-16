@@ -2,7 +2,7 @@
 % Please edit documentation in R/bsfrf.CheckStations.R
 \name{bsfrf.CheckStations}
 \alias{bsfrf.CheckStations}
-\title{Check BSFRF data for bad station ids}
+\title{Check BSFRF data for bad haul-level info}
 \usage{
 bsfrf.CheckStations(tbl)
 }
@@ -10,10 +10,10 @@ bsfrf.CheckStations(tbl)
 \item{tbl}{: path to BSFRF csv file to read or dataframe created by \code{\link[=bsfrf.ReadCSV]{bsfrf.ReadCSV()}}}
 }
 \value{
-dataframe with "bad" station ids
+dataframe with "bad" station ids and/or missing area swept values
 }
 \description{
-Function to check BSFRF data for bad station ids.
+Function to check BSFRF data for bad haul-level info.
 }
 \details{
 If \code{tbl} is a character string, it is assumed to be a file path; the

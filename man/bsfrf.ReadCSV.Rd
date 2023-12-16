@@ -41,8 +41,10 @@ input csv file column names/types are:
 \item{Species = col_character()}
 \item{Sex = col_character()}
 \item{Shell = col_double()}
-\item{Size = col_double()}
-\item{Fixed_Size = col_double()}
+\item{Carapace = col_double(): possible size column}
+\item{Fixed_CL = col_double(): possible size column}
+\item{Size = col_double(): possible size column}
+\item{Fixed_Size = col_double(): possible size column}
 \item{Sub = col_character()}
 \item{SampFactor = col_double()}
 \item{col = col_character()}
