@@ -1,8 +1,8 @@
 Package: tcsamSurveyData
 Type: Package
 Title: Functions to process AFSC and BSFRF trawl survey data
-Version: 2023.12.16
-Date: 2023-12-16
+Version: 2024.07.11
+Date: 2024-07-12
 Author: William Stockhausen
 Maintainer: William Stockhausen <william.stockhausen@noaa.gov>
 Description: Provides a set of functions to calculate and plot abundance,
@@ -33,4 +33,5 @@ Suggests:
     rmarkdown (>= 1.8),
     raster
 Roxygen: list(markdown=TRUE) 
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.1
+Encoding: UTF-8

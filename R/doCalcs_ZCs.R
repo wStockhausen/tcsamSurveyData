@@ -6,6 +6,7 @@
 #' @param tbl_strata  : dataframe with survey strata info (output from \code{\link{selectStrata.TrawlSurvey}})
 #' @param tbl_hauls   : dataframe with hauls info (output from \code{\link{selectHauls.TrawlSurvey}})
 #' @param tbl_indivs  : dataframe with individual crab info (output from \code{\link{selectIndivs.TrawlSurvey}})
+#' @param useStratumArea : flag (T/F) to use STRATUM_AREA to expand average CPUE to stratum abundance/biomass (default is T)
 #' @param calcByEW166: TRUE (calculate size compositions by EW166 prior to calculating total for EBS)
 #' @param aggBySex            - flag to agregate CPUE over sexes
 #' @param aggByMaturity       - flag to aggregate of maturity states
@@ -34,6 +35,7 @@
 doCalcs_ZCs<-function(tbl_strata,
                       tbl_hauls,
                       tbl_indivs,
+                      useStratumArea=TRUE,
                       calcByEW166=TRUE,
                       aggBySex=FALSE,
                       aggByMaturity=FALSE,
@@ -52,6 +54,7 @@ doCalcs_ZCs<-function(tbl_strata,
                                       tbl_hauls=tbl_hauls,
                                       tbl_indivs=tbl_indivs,
                                       avgHaulsByStation=TRUE,
+                                      useStratumArea=useStratumArea,
                                       bySex=!aggBySex,
                                       byMaturity=!aggByMaturity,
                                       byShellCondition=!aggByShellCondition,

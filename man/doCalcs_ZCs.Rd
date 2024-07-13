@@ -8,6 +8,7 @@ doCalcs_ZCs(
   tbl_strata,
   tbl_hauls,
   tbl_indivs,
+  useStratumArea = TRUE,
   calcByEW166 = TRUE,
   aggBySex = FALSE,
   aggByMaturity = FALSE,
@@ -26,6 +27,8 @@ doCalcs_ZCs(
 \item{tbl_hauls}{: dataframe with hauls info (output from \code{\link{selectHauls.TrawlSurvey}})}
 
 \item{tbl_indivs}{: dataframe with individual crab info (output from \code{\link{selectIndivs.TrawlSurvey}})}
+
+\item{useStratumArea}{: flag (T/F) to use STRATUM_AREA to expand average CPUE to stratum abundance/biomass (default is T)}
 
 \item{aggBySex}{\itemize{
 \item flag to agregate CPUE over sexes
