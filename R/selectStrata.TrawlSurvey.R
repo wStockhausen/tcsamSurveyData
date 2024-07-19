@@ -63,18 +63,22 @@ selectStrata.TrawlSurvey<-function(tbl=NULL,
     #rearrange columns, drop some
     if ("TOTAL_AREA_SQ_NM" %in% names(tbl)){
       cols<-c("SURVEY_YEAR","STATION_ID","STRATUM","TOTAL_AREA_SQ_NM","LONGITUDE","LATITUDE");
+      tbl = tbl |> dplyr::select(SURVEY_YEAR,STATION_ID,
+                                 STRATUM_CODE=STRATUM,TOTAL_AREA=TOTAL_AREA_SQ_NM,
+                                 LONGITUDE,LATITUDE);
     } else if ("TOTAL_AREA" %in% names(tbl)){
       cols<-c("SURVEY_YEAR","STATION_ID","STRATUM","TOTAL_AREA","LONGITUDE","LATITUDE");
+      tbl = tbl |> dplyr::select(SURVEY_YEAR,STATION_ID,
+                                 STRATUM_CODE=STRATUM,TOTAL_AREA,
+                                 LONGITUDE,LATITUDE);
     }
-    tbl<-tbl[,cols];
-    new.cols<-c("SURVEY_YEAR","STATION_ID","STRATUM_CODE","TOTAL_AREA","LONGITUDE","LATITUDE")
-    names(tbl)<-new.cols;
 
-    qry<-"select distinct
-            SURVEY_YEAR, STRATUM_CODE, TOTAL_AREA
-          from tbl
-          order by SURVEY_YEAR, STRATUM_CODE;"
-    tbl_areas<-sqldf::sqldf(qry);
+    # qry<-"select distinct
+    #         SURVEY_YEAR, STRATUM_CODE, TOTAL_AREA
+    #       from tbl
+    #       order by SURVEY_YEAR, STRATUM_CODE;"
+    # tbl_areas<-sqldf::sqldf(qry);
+    tbl_areas = tbl |> dplyr::distinct(SURVEY_YEAR, STRATUM_CODE, TOTAL_AREA);
 
     strata<-NULL;
     codes<-Codes.TrawlSurvey();
@@ -89,44 +93,63 @@ selectStrata.TrawlSurvey<-function(tbl=NULL,
         return(NULL);
     }
 
-    qry<-"select
-            SURVEY_YEAR,
-            STRATUM,
-            sum(TOTAL_AREA) as STRATUM_AREA
-          from
-            tbl_areas as t,
-            strata as s
-          where
-            t.STRATUM_CODE=s.code
-          group by
-            SURVEY_YEAR,STRATUM
-          order by
-            SURVEY_YEAR,STRATUM;"
-    if (verbosity>1) cat("\nquery is:\n",qry,"\n");
-    tbl_areas1<-sqldf::sqldf(qry);
+    #--substitute STRATUM name for STRATUM_CODE
+    #----older strata definitions combine hot spot and multiple tow strata
+    #----into single tow strata, hence grouping/summation
+    # qry<-"select
+    #         SURVEY_YEAR,
+    #         STRATUM,
+    #         sum(TOTAL_AREA) as STRATUM_AREA
+    #       from
+    #         tbl_areas as t,
+    #         strata as s
+    #       where
+    #         t.STRATUM_CODE=s.code
+    #       group by
+    #         SURVEY_YEAR,STRATUM
+    #       order by
+    #         SURVEY_YEAR,STRATUM;"
+    # if (verbosity>1) cat("\nquery is:\n",qry,"\n");
+    # tbl_areas1<-sqldf::sqldf(qry);
+    tbl_areas1 = tbl_areas |>
+                   dplyr::inner_join(strata,by=c("STRATUM_CODE"="code")) |>
+                   dplyr::group_by(SURVEY_YEAR,stratum) |>
+                   dplyr::summarize(STRATUM_AREA=sum(TOTAL_AREA)) |>
+                   dplyr::ungroup();
 
-    qry<-"select
-            t.SURVEY_YEAR as YEAR,
-            s.STRATUM as STRATUM,
-            t.STRATUM_CODE as STRATUM_CODE,
-            a.STRATUM_AREA as STRATUM_AREA,
-            t.STATION_ID as GIS_STATION,
-            t.LONGITUDE as STATION_LONGITUDE,
-            t.LATITUDE as STATION_LATITUDE
-          from
-            tbl as t,
-            strata as s,
-            tbl_areas1 as a
-          where
-            t.SURVEY_YEAR=a.SURVEY_YEAR and
-            t.STRATUM_CODE=s.code and
-            s.STRATUM=a.STRATUM
-          order by
-            t.SURVEY_YEAR,s.STRATUM,t.STATION_ID;"
+    # qry<-"select
+    #         t.SURVEY_YEAR as YEAR,
+    #         s.STRATUM as STRATUM,
+    #         t.STRATUM_CODE as STRATUM_CODE,
+    #         a.STRATUM_AREA as STRATUM_AREA,
+    #         t.STATION_ID as GIS_STATION,
+    #         t.LONGITUDE as STATION_LONGITUDE,
+    #         t.LATITUDE as STATION_LATITUDE
+    #       from
+    #         tbl as t,
+    #         strata as s,
+    #         tbl_areas1 as a
+    #       where
+    #         t.SURVEY_YEAR=a.SURVEY_YEAR and
+    #         t.STRATUM_CODE=s.code and
+    #         s.STRATUM=a.STRATUM
+    #       order by
+    #         t.SURVEY_YEAR,s.STRATUM,t.STATION_ID;"
+    #
+    # if (verbosity>1) cat("\nquery is:\n",qry,"\n");
+    # tbl1<-sqldf::sqldf(qry)
 
-    if (verbosity>1) cat("\nquery is:\n",qry,"\n");
-    tbl1<-sqldf::sqldf(qry)
-
+    tbl1 = tbl |>
+              dplyr::inner_join(strata,by=c("STRATUM_CODE"="code")) |>
+              dplyr::inner_join(tbl_areas1,by=c("SURVEY_YEAR","stratum")) |>
+              dplyr::arrange(SURVEY_YEAR,stratum,STATION_ID) |>
+              dplyr::select(YEAR=SURVEY_YEAR,
+                            STRATUM=stratum,
+                            STRATUM_CODE,
+                            STRATUM_AREA,
+                            GIS_STATION=STATION_ID,
+                            STATION_LONGITUDE=LONGITUDE,
+                            STATION_LATITUDE=LATITUDE);
     #--add STATION_AREA to table
     tbl2<-addStationAreasToStrataDataframe(tbl1);
 

@@ -2,7 +2,7 @@
 % Please edit documentation in R/addStationAreasToStrataDataframe.R
 \name{addStationAreasToStrataDataframe}
 \alias{addStationAreasToStrataDataframe}
-\title{Add station area to strata information from a NMFS trawl survey strata file}
+\title{Add station area to strata information from a NMFS trawl survey strata dataframe}
 \usage{
 addStationAreasToStrataDataframe(dfrSD)
 }
@@ -23,12 +23,16 @@ The returned dataframe has columns:
 \itemize{\item {YEAR}
 \item {STRATUM}
 \item {STRATUM_CODE}
-\item {STRATUM_AREA - in square nautical miles}
+\item {STRATUM_AREA - full stratum area, in square nautical miles}
 \item {GIS_STATION}
 \item {STATION_LONGITUDE}
 \item {STATION_LATITUDE}
 \item {STATION_AREA - in square nautical miles}
-\item {STRATUM_AREA_BYSTATION - in square nautical miles}
+\item {STRATUM_AREA_BYSTATION - 'stratum' area for included stations only, in square nautical miles}
 }
-Areas are in square nautical miles.
+Areas are in square nautical miles (worth repeating).
+
+If the \code{STATION_AREA} and/or \code{STRATUM_AREA_BYSTATION} columns are present in the input
+dataframe \code{dfrSD}, they are dropped prior to any other processing and re-created based only
+on the stations included in \code{dfrSD}.
 }

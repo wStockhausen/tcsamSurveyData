@@ -52,7 +52,7 @@ Codes.TrawlSurvey<-function(){
                               ));
     lst[["strata.orig.BTC"]]<-strata.BTC;
 
-    #Revised strata for Bairdi Tanner crab
+    #Revised strata for Bairdi Tanner crab (combines hot spot and multiple tow strata with single tow strata)
     strata.BTC<-as.data.frame(list(
                               code    =c(               10,                 11,                 98,             14,                      99,               15,                 16,                17),
                               district=c("East 166 Single","East 166 Multiple","East 166 Hot Spot","Pribilof MTCA","Pribilof MTCA Hot Spot","West 166 Single","West 166 Multiple","St. Matthew MTCA"),
@@ -60,7 +60,7 @@ Codes.TrawlSurvey<-function(){
                               ));
     lst[["strata.revd.BTC"]]<-strata.BTC;
 
-    #New strata for 2015 for Bairdi Tanner crab
+    #New strata for 2015 for Bairdi Tanner crab (eleminates hotspot and multiple tow strata)
     strata.BTC<-as.data.frame(list(
                               code    =c(        10,             14,        15,                17),
                               district=c("East 166","Pribilof MTCA","West 166","St. Matthew MTCA"),
@@ -92,12 +92,12 @@ Codes.TrawlSurvey<-function(){
 
 
     #New strata for 2015 for Opilio Tanner crab
-    strata.BTC<-as.data.frame(list(
+    strata.OTC<-as.data.frame(list(
                               code    =c(14,        15,                17),
                               district=c("Pribilof MTCA","West 166","St. Matthew MTCA"),
                               stratum =c("Pribilof MTCA","West 166","St. Matthew MTCA")
                               ));
-    lst[["strata.2015.OTC"]]<-strata.BTC;
+    lst[["strata.2015.OTC"]]<-strata.OTC;
 
     return(lst);
 }
