@@ -68,7 +68,6 @@
 #' @importFrom wtsUtilities selectFile
 #'
 #' @import dplyr
-#' @import magrittr
 #'
 #'@export
 #'
@@ -191,12 +190,12 @@ calcSizeComps.ByStratum<-function(tbl_strata,
 
 
     #Calculate numbers of hauls with non-zero catch
-    tbl_nonZeroHauls = tbl_cpue %>%
-                         dplyr::select(YEAR,STRATUM,SEX,MATURITY,SHELL_CONDITION,GIS_STATION,numIndivs) %>%
-                         dplyr::group_by(YEAR,STRATUM,SEX,MATURITY,SHELL_CONDITION,GIS_STATION) %>%
-                         dplyr::summarize(nonZeroHaul=sum(numIndivs)>0) %>%
-                         dplyr::group_by(YEAR,STRATUM,SEX,MATURITY,SHELL_CONDITION) %>%
-                         dplyr::summarize(numNonZeroHauls=sum(nonZeroHaul)) %>%
+    tbl_nonZeroHauls = tbl_cpue |>
+                         dplyr::select(YEAR,STRATUM,SEX,MATURITY,SHELL_CONDITION,GIS_STATION,numIndivs) |>
+                         dplyr::group_by(YEAR,STRATUM,SEX,MATURITY,SHELL_CONDITION,GIS_STATION) |>
+                         dplyr::summarize(nonZeroHaul=sum(numIndivs)>0) |>
+                         dplyr::group_by(YEAR,STRATUM,SEX,MATURITY,SHELL_CONDITION) |>
+                         dplyr::summarize(numNonZeroHauls=sum(nonZeroHaul)) |>
                          dplyr::ungroup();
 
     #Now calculate size comps
@@ -254,8 +253,8 @@ calcSizeComps.ByStratum<-function(tbl_strata,
     tbl_zcs1$totBIOMASS[idx]<-0;
 
     #--add in numbers of non-zero catch hauls
-    tbl_zcs2 = tbl_zcs1 %>%
-                 dplyr::select(-numNonZeroHauls) %>%
+    tbl_zcs2 = tbl_zcs1 |>
+                 dplyr::select(!numNonZeroHauls) |>
                  dplyr::inner_join(tbl_nonZeroHauls,by=c("YEAR","STRATUM","SEX","MATURITY","SHELL_CONDITION"));
 
     if (export){

@@ -83,6 +83,13 @@ calcAB.ByStratum<-function(tbl_strata,
     }
     if (verbosity>0) cat("Output directory for calcCPUE.ByStratum will be '",out.dir,"'\n",sep='');
 
+    #--determine if STATION_AREA is column name in strata table
+    if ("STATION_AREA" %in% names(tbl_strata)) {
+      strStnAreaSub = "s.STATION_AREA,";
+    } else {
+      strStnAreaSub = "";
+    }
+
     #determine factor column names in cpue table
     cols<-names(tbl_cpue);
     nonFacs<-c("YEAR","STRATUM","HAULJOIN","GIS_STATION","LONGITUDE","LATITUDE",
@@ -105,7 +112,7 @@ calcAB.ByStratum<-function(tbl_strata,
             s.STRATUM,
             s.STRATUM_AREA,
             c.GIS_STATION,
-            s.STATION_AREA,
+            &&StationArea
             &&byHaulSub
             &&facs
             &&numHaulSub
@@ -118,6 +125,7 @@ calcAB.ByStratum<-function(tbl_strata,
           where
             c.YEAR=s.YEAR and
             c.GIS_STATION=s.GIS_STATION;";
+    qry<-gsub("&&StationArea",strStnAreaSub,qry);
     qry<-gsub("&&byHaulSub",byHaulSub,qry);
     qry<-gsub("&&numHaulSub",numHaulSub,qry);
     if (length(facs)==0){

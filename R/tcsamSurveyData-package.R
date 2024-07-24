@@ -20,10 +20,7 @@
 #' \code{system.file("rmd/rmdFileName",package="tcsamSurveyData")},
 #' where \code{rmdFileName} is the name of the Rmd file.
 #'
-#' @docType package
+#' @keywords internal
 #' @name tcsamSurveyData
 #'
-
-#this file provides a means to document the package, as well as contents
-#not associated with a function. It does not define any functions.
-NULL
+"_PACKAGE"
