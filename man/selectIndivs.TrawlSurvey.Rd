@@ -88,6 +88,10 @@ Returned dataframe will have columns:
 \item {SAMPLING_FACTOR}   {sub-sampling ratio (>= 1)}
 \item {WEIGHT}            {measured weight of an individual crab, in grams}
 \item {CALCULATED_WEIGHT} {weight of an individual crab, in grams}
+\item {DISEASE_CODE}
+\item {DISEASE_DORSAL}
+\item {DISEASE_VENTRAL}
+\item {DISEASE_LEGS}
 } \cr
 Notes:
 \itemize{

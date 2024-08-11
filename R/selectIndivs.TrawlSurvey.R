@@ -39,6 +39,10 @@
 #'          \item {SAMPLING_FACTOR}   {sub-sampling ratio (>= 1)}
 #'          \item {WEIGHT}            {measured weight of an individual crab, in grams}
 #'          \item {CALCULATED_WEIGHT} {weight of an individual crab, in grams}
+#'          \item {DISEASE_CODE}
+#'          \item {DISEASE_DORSAL}
+#'          \item {DISEASE_VENTRAL}
+#'          \item {DISEASE_LEGS}
 #'         } \cr
 #' Notes:
 #' \itemize{
@@ -112,7 +116,8 @@ selectIndivs.TrawlSurvey<-function(tbl_hauls,
     #extract columns of interest
     cols<-c("HAULJOIN","SEX","SIZE","SHELL_CONDITION",
             "EGG_COLOR","EGG_CONDITION","CLUTCH_SIZE","CHELA_HEIGHT",
-            "WEIGHT","CALCULATED_WEIGHT","SAMPLING_FACTOR");
+            "WEIGHT","CALCULATED_WEIGHT","SAMPLING_FACTOR",
+            "DISEASE_CODE","DISEASE_DORSAL","DISEASE_VENTRAL","DISEASE_LEGS");
     if (!all(cols %in% names(tbl))){
       msg<-paste0("\n#--ERROR in selectIndivs.TrawlSurvey:\n",
                   "Required column(s) ",paste0("'",req_cols[!(req_cols %in% names(tbl))],"'",collapse=", "),"\n",
@@ -180,7 +185,11 @@ selectIndivs.TrawlSurvey<-function(tbl_hauls,
             t.CHELA_HEIGHT as CHELA_HEIGHT,
             t.SAMPLING_FACTOR as SAMPLING_FACTOR,
             t.WEIGHT as WEIGHT,
-            t.CALCULATED_WEIGHT as CALCULATED_WEIGHT
+            t.CALCULATED_WEIGHT as CALCULATED_WEIGHT,
+            t.DISEASE_CODE as DISEASE_CODE,
+            t.DISEASE_DORSAL as DISEASE_DORSAL,
+            t.DISEASE_VENTRAL as DISEASE_VENTRAL,
+            t.DISEASE_LEGS as DISEASE_LEGS
           from
             tbl as t,
             &&sq.sex,
