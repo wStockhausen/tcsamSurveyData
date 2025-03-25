@@ -26,6 +26,7 @@ a list with the following elements: \cr
 \item strata.orig.BKC : original strata for blue king crab
 \item strata.2015.BKC : 2015 strata for blue king crab
 \item strata.2015.OTC : 2015 strata for Opilio Tanner crab (i.e., snow crab)
+\item strata.2015.RKC : 2015 strata for red king crab
 \item strata.EW166    : E/W 166W strata
 }
 }

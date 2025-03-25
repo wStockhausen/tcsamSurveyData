@@ -85,7 +85,7 @@ selectStrata.TrawlSurvey<-function(tbl=NULL,
     if (tolower(strataType)=='orig'){strata<-codes[[paste("strata.orig",species,sep='.')]];} else
     if (tolower(strataType)=='revd'){strata<-codes[[paste("strata.revd",species,sep='.')]];} else
     if (tolower(strataType)=='2015'){strata<-codes[[paste("strata.2015",species,sep='.')]];} else
-    {cat("strataType '",strataType,"' not recognized.\nAborting...\n");
+    {cat("strataType '",strataType,"' for species '",species,"' not recognized.\nAborting...\n");
      return(NULL);}
 
     if (is.null(strata)){

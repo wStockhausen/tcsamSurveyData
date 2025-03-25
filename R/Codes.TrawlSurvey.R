@@ -18,6 +18,7 @@
 #'\item strata.orig.BKC : original strata for blue king crab
 #'\item strata.2015.BKC : 2015 strata for blue king crab
 #'\item strata.2015.OTC : 2015 strata for Opilio Tanner crab (i.e., snow crab)
+#'\item strata.2015.RKC : 2015 strata for red king crab
 #'\item strata.EW166    : E/W 166W strata
 #'}
 #'
@@ -98,6 +99,14 @@ Codes.TrawlSurvey<-function(){
                               stratum =c("Pribilof MTCA","West 166","St. Matthew MTCA")
                               ));
     lst[["strata.2015.OTC"]]<-strata.OTC;
+
+    #New strata for 2015 for red king crab
+    strata.RKC<-as.data.frame(list(
+                              code    =c(10,           14,             15,               90),
+                              district=c("Bristol Bay","Pribilof MTCA","Pribilof Single","Northern Unstratified"),
+                              stratum =c("Bristol Bay","Pribilof MTCA","Pribilof Single","Northern Unstratified")
+                              ));
+    lst[["strata.2015.RKC"]]<-strata.RKC;
 
     return(lst);
 }
