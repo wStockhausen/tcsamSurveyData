@@ -19,7 +19,7 @@ selectStrata.TrawlSurvey(
 
 \item{species}{: code ('BKC','BTC','RKC','OTC') indicating species}
 
-\item{strataType}{: type of strata ('orig','revd','2015')}
+\item{strataType}{: type of strata ('orig','revd','2015','crabpack')}
 
 \item{export}{: boolean flag to export results to csv file}
 

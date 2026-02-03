@@ -43,7 +43,7 @@ xxxx is a 4-digit code. Also, NMFS station 'H-21' has also been mis-coded 'H21' 
 the BSFRF data in some years. Rather than deal with these instances piecemeal,
 the NMFS survey grid layers (\code{\link[=gisGetSurveyGridLayers]{gisGetSurveyGridLayers()}}) are used to reassign NMFS station ids to the
 BSFRF data based on the mid-tow coordinates for the BSFRF data. The hauls
-that will be changed can be identified by running \code{\link[=bsfrf.CheckStation]{bsfrf.CheckStation()}} on the
+that will be changed can be identified by running \code{\link[=bsfrf.CheckStations]{bsfrf.CheckStations()}} on the
 BSFRF haul dataframe/csv file before making the conversion here.
 
 returned dataframe has columns

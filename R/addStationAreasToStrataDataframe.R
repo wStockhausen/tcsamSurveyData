@@ -65,7 +65,7 @@ addStationAreasToStrataDataframe<-function(dfrSD){
                               dplyr::ungroup());
 
   #--add station areas and summed station area stratum areas-by year, station to strata table
-  dfr = dfrSD |> dplyr::inner_join(tmp1);
+  dfr = dfrSD |> dplyr::left_join(tmp1,c("YEAR","STRATUM","GIS_STATION")); ##-changed from inner_join to left_join for crabpack compatibility
 
   return(dfr)
 }

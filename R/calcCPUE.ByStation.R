@@ -111,13 +111,38 @@ calcCPUE.ByStation<-function(tbl_strata=NULL,
 
     #Calculate and average cpue by year, station and factor levels
     #(e.g., sex, shell condition) over hauls.
+    ##--pre-2026-02-03, was:
+    # qry<-"select
+    #         YEAR,STRATUM,GIS_STATION&&facs,
+    #         count(distinct HAULJOIN) as numHauls,
+    #         sum(numIndivs>0) as numNonZeroHauls,
+    #         sum(numIndivs) as numIndivs,
+    #         CASE WHEN sum(numIndivs)>0 THEN sum(numIndivs*SAMPLING_FACTOR)/sum(numIndivs) ELSE avg(SAMPLING_FACTOR)     END as SAMPLING_FACTOR,
+    #         CASE WHEN avg(numCPUE)>0   THEN sum(numIndivs)/avg(numCPUE)                   ELSE avg(AREA_SWEPT_VARIABLE) END as AREA_SWEPT_VARIABLE,
+    #         avg(numCPUE)   as numCPUE,
+    #         avg(wgtCPUE)   as wgtCPUE
+    #       from
+    #         tbl_cpue
+    #       group by
+    #         YEAR,STRATUM,GIS_STATION&&facs
+    #       order by
+    #         YEAR,STRATUM,GIS_STATION&&facs;";
+    ##--2026-02-03:
+    ###--want avgNUM_CPUE = avgEXP_NUM * avgASV where
+    ####--avgNUM_CPUE = avg(numCPUE)                   across hauls within pop category (sex, mat state, shell condition, size bin)
+    ####--avgEXP_NUM  = avg(numIndivs*SAMPLING_FACTOR) across hauls within pop category (sex, mat state, shell condition, size bin)
+    ###--so avgASV = avgEXP_NUM / avgNUM_CPUE = avg(numIndivs*SAMPLING_FACTOR) / avg(numCPUE), NOT sum(numIndivs)/avg(numCPUE) as in above
+    ###--FORTUNATELY, avgASV (the resulting AREA_SWEPT_VARIABLE from the query either above or following) is not used in any "downstream" calculations, including
+    ###--calcAB.ByStratum, calcAB.EW166, calcAB.EBS, doCalcs_CPUEbyStation, doCalcs_ABs,
+    ###--calcSizeComps.ByStratum, calcSizeComps.EW166, calcSizeComps.EBS, doCalcs_ZCs,
+    ###--calcSSs, doCalcs_SSs
     qry<-"select
             YEAR,STRATUM,GIS_STATION&&facs,
             count(distinct HAULJOIN) as numHauls,
             sum(numIndivs>0) as numNonZeroHauls,
             sum(numIndivs) as numIndivs,
             CASE WHEN sum(numIndivs)>0 THEN sum(numIndivs*SAMPLING_FACTOR)/sum(numIndivs) ELSE avg(SAMPLING_FACTOR)     END as SAMPLING_FACTOR,
-            CASE WHEN avg(numCPUE)>0   THEN sum(numIndivs)/avg(numCPUE)                   ELSE avg(AREA_SWEPT_VARIABLE) END as AREA_SWEPT_VARIABLE,
+            CASE WHEN avg(numCPUE)>0   THEN avg(numIndivs*SAMPLING_FACTOR)/avg(numCPUE)   ELSE avg(AREA_SWEPT_VARIABLE) END as AREA_SWEPT_VARIABLE,
             avg(numCPUE)   as numCPUE,
             avg(wgtCPUE)   as wgtCPUE
           from

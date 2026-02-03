@@ -5,7 +5,7 @@
 #'
 #'@param tbl        : table (dataframe) of survey strata /stationdata (or name of survey strata/station csv file, or NULL)
 #'@param species    : code ('BKC','BTC','RKC','OTC') indicating species
-#'@param strataType : type of strata ('orig','revd','2015')
+#'@param strataType : type of strata ('orig','revd','2015','crabpack')
 #'@param export     : boolean flag to export results to csv file
 #'@param out.csv    : output file name
 #'@param out.dir    : output file directory
@@ -85,6 +85,7 @@ selectStrata.TrawlSurvey<-function(tbl=NULL,
     if (tolower(strataType)=='orig'){strata<-codes[[paste("strata.orig",species,sep='.')]];} else
     if (tolower(strataType)=='revd'){strata<-codes[[paste("strata.revd",species,sep='.')]];} else
     if (tolower(strataType)=='2015'){strata<-codes[[paste("strata.2015",species,sep='.')]];} else
+    if (tolower(strataType)=='crabpack'){strata<-codes[[paste("strata.crabpack",species,sep='.')]];} else
     {cat("strataType '",strataType,"' for species '",species,"' not recognized.\nAborting...\n");
      return(NULL);}
 
