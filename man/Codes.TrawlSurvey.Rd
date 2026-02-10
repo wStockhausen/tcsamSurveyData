@@ -20,13 +20,17 @@ a list with the following elements: \cr
 \item sex             : table to convert between survey and assessment sex codes
 \item shell_condition : table to convert between survey and assessment shell condition codes
 \item clutch_size     : table to convert between survey and assessment clutch size codes
-\item strata.orig.BTC : original strata for Bairdi Tanner crab
-\item strata.revd.BTC : revised strata for Bairdi Tanner crab
-\item strata.2015.BTC : 2015 strata for Bairdi Tanner crab
-\item strata.orig.BKC : original strata for blue king crab
-\item strata.2015.BKC : 2015 strata for blue king crab
-\item strata.2015.OTC : 2015 strata for Opilio Tanner crab (i.e., snow crab)
-\item strata.2015.RKC : 2015 strata for red king crab
-\item strata.EW166    : E/W 166W strata
+\item strata.orig.BTC     : original strata for Bairdi Tanner crab
+\item strata.revd.BTC     : revised strata for Bairdi Tanner crab
+\item strata.2015.BTC     : 2015 strata for Bairdi Tanner crab
+\item strata.crabpack.BTC : crabpack strata (2025+) for Bairdi Tanner crab
+\item strata.crabpack.HTC : crabpack strata (2025+) for Hybrid Tanner crab
+\item strata.orig.BKC     : original strata for blue king crab
+\item strata.2015.BKC     : 2015 strata for blue king crab
+\item strata.crabpack.BKC : crabpack strata (2025+) strata for blue king crab
+\item strata.2015.OTC     : 2015 strata for Opilio Tanner crab (i.e., snow crab)
+\item strata.crabpack.OTC : crabpack strata (2025+) for Opilio Tanner crab (NOT YET IMPLEMENTED!!)
+\item strata.2015.RKC     : 2015 strata for red king crab
+\item strata.EW166        : E/W 166W strata
 }
 }
